@@ -1,0 +1,1618 @@
+//===== eAthena Script ============================================
+//= Favorite Warper
+//===== By: =======================================================
+//= ~AnnieRuru~
+//===== Current Version: ==========================================
+//= 4.2
+//===== Compatible With: ==========================================
+//= eAthena Trunk 14214
+//===== Description: ==============================================
+//= Super Warper + players can store their favorite maps
+//===== Topic =====================================================
+//= http://www.eathena.ws/board/index.php?showtopic=240936
+//===== Additional Comments: ======================================
+//= I just dumped all the new maps to J group,
+//= only after these are official in eathena only I'll add into main part
+//=================================================================
+
+-	script	warpra	-1,{
+OnInit:
+//	Config Start -------------------------
+
+	// set the numbers of favorite maps player can save
+	set .fav_size, 15; // maximum is 40... but I think no need to put that high right ?
+
+	// set the minimum GM level to use favorite options
+	// this is made to let donors (GM01~GM20) on your server can use favorite options
+	// while normal player will see this as normal super warper
+	set .gmlevel, 0;
+
+	// allow extra custom maps on your server
+	//	menu setting inside - Others
+	set .@menu[0], 0; // Turn Group A On/Off -> others
+	set .@menu[1], 0; // Turn Group B On/Off
+	set .@menu[2], 0; // Turn Group C On/Off
+	set .@menu[3], 0; // Turn Group D On/Off
+	set .@menu[4], 0; // Turn Group E On/Off
+	set .@menu[5], 0; // Turn Group F On/Off
+	set .@menu[6], 0; // Turn Group G On/Off
+	set .@menu[7], 0; // Turn Group H On/Off
+	set .@menu[8], 0; // Turn Group I On/Off
+	set .@menu[9], 1; // Turn Group J On/Off -> new maps, turn on if your server support it
+
+	//	Note : if you wanna add more location, only add at the end of the array
+	//	DO NOT add in between !
+
+	set .customnameA$, "Others";
+	setarray .custommapA$,
+	//	<display name>, <map name>,<x>,<y>
+		"nyd_dun01", "nyd_dun01",99,100,
+		"nyd_dun02", "nyd_dun02",179,129;
+
+	set .customnameB$, "B";
+	setarray .custommapB$,
+	//	<display name>, <map name>,<x>,<y>
+		"market", "turbo_room",99,100,
+		"casino", "cmd_in02",179,129;
+
+	set .customnameC$, "C";
+	setarray .custommapC$,
+	//	<display name>, <map name>,<x>,<y>
+		"market", "turbo_room",99,100,
+		"casino", "cmd_in02",179,129;
+
+	set .customnameD$, "D";
+	setarray .custommapD$,
+	//	<display name>, <map name>,<x>,<y>
+		"market", "turbo_room",99,100,
+		"casino", "cmd_in02",179,129;
+
+	set .customnameE$, "E";
+	setarray .custommapE$,
+	//	<display name>, <map name>,<x>,<y>
+		"market", "turbo_room",99,100,
+		"casino", "cmd_in02",179,129;
+
+	set .customnameF$, "F";
+	setarray .custommapF$,
+	//	<display name>, <map name>,<x>,<y>
+		"market", "turbo_room",99,100,
+		"casino", "cmd_in02",179,129;
+
+	set .customnameG$, "G";
+	setarray .custommapG$,
+	//	<display name>, <map name>,<x>,<y>
+		"market", "turbo_room",99,100,
+		"casino", "cmd_in02",179,129;
+
+	set .customnameH$, "H";
+	setarray .custommapH$,
+	//	<display name>, <map name>,<x>,<y>
+		"market", "turbo_room",99,100,
+		"casino", "cmd_in02",179,129;
+
+	set .customnameI$, "I";
+	setarray .custommapI$,
+	//	<display name>, <map name>,<x>,<y>
+		"lala", "prontera",146,186,
+		"lolo", "prontera",156,186;
+
+	set .customnameJ$, "new maps";
+	setarray .custommapJ$,
+	//	<display name>, <map name>,<x>,<y>
+		"Brasilis", "brasilis", 201,217,
+		"Brasilis Field 1", "bra_fild01",74,32,
+		"Brasilis Dungeon - At the Dusk - 01", "bra_dun01",87,47,
+		"Brasilis Dungeon - At the Dusk - 02", "bra_dun02",262,262,
+		"El Dicastes", "dicastes01", 198,190,
+		"El Dicastes Field 1", "dic_fild01",150,277,
+		"El Dicastes Field 2", "dic_fild02",71,371,
+		"El Dicastes Dungeon Level 1", "dic_dun01",367,44,
+		"El Dicastes Dungeon Level 2", "dic_dun02",102,144,
+		"nyd_dun01", "nyd_dun01",85,217,
+		"nyd_dun02", "nyd_dun02",179,129,
+		"1@nyd", "1@nyd",32,35;		
+
+//	Config Ends --------------------------------
+	setarray .abc$, "a","b","c","d","e","f","g","h","i","j";
+	while ( .@i < 10 ) {
+		set .menu$, .menu$ + ( (.@menu[.@i])? getd(".customname"+ .abc$[.@i] +"$"):"" )+":";
+		if ( .@menu[.@i] ) {
+			set .@size, getarraysize( getd(".custommap"+ .abc$[.@i] +"$") );
+			set .@j, 0;
+			while ( .@j < .@size ) {
+				setd ".menu"+ .abc$[.@i] +"$", getd(".menu"+ .abc$[.@i] +"$") + getd(".custommap"+ .abc$[.@i] +"$["+ .@j +"]") +":";
+				set .@j, .@j +4 ;
+			}
+			set .filled$[ getarraysize(.filled$) ], .abc$[.@i];
+		}
+		set .@i, .@i +1 ;
+	}
+	if ( .fav_size > 40 ) set .fav_size, 40;
+	end;
+OnWhisperGlobal: // I think need to off this ... I smell players might spam this. Uncomment to on it back
+	if ( hp == 0 ) end;
+	getmapxy .@map$, .@x, .@y, 0;
+	if ( getmapflag(.@map$, mf_nowarp) ) {
+		dispbottom "Warper : You cannot call for warper in current map.";
+		end;
+	}
+	else if ( compare(@whispervar0$, "list") ) {
+		dispbottom "Last warp - "+ @fav_warp_name$[0];
+		for ( set .@i, 1; .@i <= .fav_size; set .@i, .@i +1 )
+			dispbottom .@i +". "+ @fav_warp_name$[.@i];
+		end;
+	}
+	else if ( compare(@whispervar0$, "warp") ) {
+		set .@num, atoi(@whispervar1$);
+//	just for debug purpose ...
+//		callfunc "fav_maps", @whispervar1$;
+//		warp @map$[1], @map$[2], @map$[3];
+//		deletearray @map$;
+//		end;
+		if ( .@num < 0 || .@num > .fav_size ) {
+			dispbottom "Warper : Invalid number";
+			end;
+		}
+		if ( @fav_warp_name$[.@num] == "" ) {
+			if ( .@num == 0 )
+				dispbottom "Warper : Your Last warp is empty !";
+			else
+				dispbottom "Warper : Your slot number "+ .@num +" is empty !";
+			end;
+		}
+		callfunc "fav_maps", @fav_warp_code$[.@num];
+		set @fav_warp_code$[0], @fav_warp_code$[.@num];
+		set @fav_warp_name$[0], @map$;
+		set fav_warp$, @fav_warp_code$[0];
+		for ( set .@i, 1; .@i <= .fav_size; set .@i, .@i +1 )
+			set fav_warp$, fav_warp$ +"#"+ @fav_warp_code$[.@i];
+		warp @map$[1], @map$[2], @map$[3];
+		deletearray @map$;
+		end;
+	}
+	doevent "Warper::OnStart";
+	end;
+OnPCLoginEvent:
+	if ( fav_warp$ == "" ) end;
+	set .@tmp$, "|~key~|"; // explode
+	set .@str$, .@tmp$ + fav_warp$;
+	set .@len, getstrlen(fav_warp$);
+	setarray .@char$, "#",
+		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+		"a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
+		"k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+		"u", "v", "w", "x", "y", "z";
+	while( .@len > .@s ) {
+		set .@i, 0;
+		while ( .@i < 37 ) {
+			if ( compare( .@str$ , .@tmp$ + .@char$[.@i] ) ) {
+				set .@tmp$, .@tmp$ + .@char$[.@i];
+				if ( .@i == 0 ) {
+					callfunc "fav_maps", @fav_warp_code$[.@p];
+					set @fav_warp_name$[.@p], @map$;
+					deletearray @map$;
+					set .@p, .@p +1 ;
+				}
+				else
+					set @fav_warp_code$[.@p], @fav_warp_code$[.@p] + .@char$[.@i];
+				break;
+			}
+			set .@i, .@i +1 ;
+		}
+		set .@s, .@s +1 ;
+		if ( .@p % 5 == 4 ) sleep2 1;
+	}
+	callfunc "fav_maps", @fav_warp_code$[.fav_size];
+	set @fav_warp_name$[.fav_size], @map$;
+	deletearray @map$;
+	end;
+}
+
+-	script	Warper#00::Warper	-1,{
+OnStart:
+	while (1) {
+		mes "[Warp NPC]";
+		mes "Hello "+ strcharinfo(0) +" ,";
+		mes "I can teleport you to any Town or Dungeon!";
+		mes "Where do you want to go?";
+		next;
+		if ( getgmlevel() < getvariableofnpc( .gmlevel, "warpra") ) {
+			set .@num$, callsub(L_select, 0, 1);
+			callfunc "fav_maps", .@num$;
+			warp @map$[1], @map$[2], @map$[3];
+			deletearray @map$;
+			end;
+		}
+		switch ( select ( "Favorites", "Normal warp", "Manage Favorites" ) ) {
+			case 1:
+				set .@menu$, "Last - "+ ( ( @fav_warp_code$[0] )?"^FF9900"+ @fav_warp_name$[0] +"^000000":"^FF0000Empty^000000");
+				for ( set .@i, 1; .@i <= getvariableofnpc( .fav_size, "warpra") ; set .@i, .@i +1 )
+					set .@menu$, .@menu$ +":"+ .@i +". "+ ( ( @fav_warp_code$[.@i] )?"^FF9900"+ @fav_warp_name$[.@i] +"^000000":"^FF0000Empty^000000");
+				set .@menu, select(.@menu$) -1; 
+				callfunc "fav_maps", @fav_warp_code$[.@menu];
+				if ( @map$ == "" ) {
+					mes "[Warp NPC]";
+					if ( .@menu )
+						mes "You haven't set for that option.";
+					else 
+						mes "You have no previous map visited.";
+					next;
+					break;
+				}
+				set @fav_warp_code$[0], @fav_warp_code$[.@menu];
+				set @fav_warp_name$[0], @map$;
+				callsub L_save;
+				warp @map$[1], @map$[2], @map$[3];
+				deletearray @map$;
+				end;
+			case 2:
+				set .@num$, callsub(L_select, 0, 1);
+				callfunc "fav_maps", .@num$;
+				set @fav_warp_code$[0], .@num$;
+				set @fav_warp_name$[0], @map$;
+				callsub L_save;
+				warp @map$[1], @map$[2], @map$[3];
+				deletearray @map$;
+				end;
+			case 3:
+				mes "[Warp NPC]";
+				mes "^6600FF*Manage Your Favorite Maps*^000000";
+				next;
+				set .@menu$, "Last - "+ ( ( @fav_warp_code$[0] )?"^FF9900"+ @fav_warp_name$[0] +"^000000":"^FF0000Empty^000000");
+				for ( set .@i, 1; .@i <= getvariableofnpc( .fav_size, "warpra"); set .@i, .@i +1 )
+					set .@menu$, .@menu$ +":"+ .@i +". "+ ( ( @fav_warp_code$[.@i] )?"^FF9900"+ @fav_warp_name$[.@i] +"^000000":"^FF0000Empty^000000");
+				set .@menu, select(.@menu$) -1; 
+				set .@num$, callsub(L_select, (.@menu)?1:0, 0);
+				if ( .@num$ == "delete" ) {
+					set @fav_warp_code$[.@menu], "";
+					set @fav_warp_name$[.@menu], "";
+					mes "[Warp NPC]";
+					mes "Your^996600 slot number "+ .@menu +" ^FF0000is removed^000000";
+				}
+				else {
+					callfunc "fav_maps", .@num$;
+					set @fav_warp_code$[.@menu], .@num$;
+					set @fav_warp_name$[.@menu], @map$;
+					mes "[Warp NPC]";
+					if ( .@menu )
+						mes "Your^996600 slot number "+ .@menu +"^000000 set to";
+					else
+						mes "Your ^996600Last warp^000000 set to";
+					mes "^FF9900"+ @map$ +"^000000";
+				}
+				callsub L_save;
+				deletearray @map$;
+				next;
+				break;
+		}
+	}
+	end;
+L_save: // implode
+	set fav_warp$, @fav_warp_code$[0];
+	for ( set .@i, 1; .@i <= getvariableofnpc( .fav_size, "warpra"); set .@i, .@i +1 )
+		set fav_warp$, fav_warp$ +"#"+ @fav_warp_code$[.@i];
+	return;
+L_select:
+	set .@warp1, select (
+		"Town",
+		"Fields",
+		"Dungeon",
+		"Guild Castles",
+		"Others",
+		( getarg(0) )?"^FF0000Remove^000000":"" );
+	switch ( .@warp1 ) {
+		case 1:
+			set .@warp1$, "t";
+			set .@warp2, select (
+				"Alberta",
+				"Aldebaran",
+				"Amatsu",
+				"Ayothaya",
+				"Comodo",
+				"Einbech (Mining Village)",
+				"Einbroch",
+				"Geffen",
+				"Gonryun",
+				"Hugel",
+				"Izlude",
+				"Jawaii",
+				"Lighthalzen",
+				"Louyang",
+				"Lutie",
+				"Manuk",
+				"Midgarts Expedition Camp",
+				"Morroc",
+				"Moscovia",
+				"Nameless Island",
+				"Niflheim",
+				"Payon",
+				"Prontera",
+				"Rachel",
+				"Splendide",
+				"Thor Camp",
+				"Umbala",
+				"Veins",
+				"Yuno" );
+			switch ( .@warp2 ) {
+				case 1: set .@warp2$, "ab"; break;
+				case 2: set .@warp2$, "ad"; break;
+				case 3: set .@warp2$, "am"; break;
+				case 4: set .@warp2$, "ay"; break;
+				case 5: set .@warp2$, "co"; break;
+				case 6: set .@warp2$, "ei"; break;
+				case 7: set .@warp2$, "er"; break;
+				case 8: set .@warp2$, "ge"; break;
+				case 9: set .@warp2$, "go"; break;
+				case 10: set .@warp2$, "hu"; break;
+				case 11: set .@warp2$, "iz"; break;
+				case 12: set .@warp2$, "ja"; break;
+				case 13: set .@warp2$, "li"; break;
+				case 14: set .@warp2$, "lo"; break;
+				case 15: set .@warp2$, "lu"; break;
+				case 16: set .@warp2$, "ma"; break;
+				case 17: set .@warp2$, "mi"; break;
+				case 18: set .@warp2$, "mo"; break;
+				case 19: set .@warp2$, "ms"; break;
+				case 20: set .@warp2$, "na"; break;
+				case 21: set .@warp2$, "ni"; break;
+				case 22: set .@warp2$, "pa"; break;
+				case 23: set .@warp2$, "pr"; break;
+				case 24: set .@warp2$, "ra"; break;
+				case 25: set .@warp2$, "sp"; break;
+				case 26: set .@warp2$, "th"; break;
+				case 27: set .@warp2$, "um"; break;
+				case 28: set .@warp2$, "ve"; break;
+				case 29: set .@warp2$, "yu"; break;
+				default:
+			}
+			break;
+		case 2:
+			set .@warp1$, "f";
+			set .@warp2, select (
+				"Amatsu Fields",
+				"Ayothaya Fields",
+				"Comodo Fields",
+				"Einbroch Fields",
+				"Geffen Fields",
+				"Gonryun Fields",
+				"Hugel Fields",
+				"Lighthalzen Fields",
+				"Louyang Field",
+				"Lutie Field",
+				"Manuk Fields",
+				"Mjolnir Fields",
+				"Niflheim Fields",
+				"Odin Temple",
+				"Payon Forests",
+				"Prontera Fields",
+				"Rachel Fields",
+				"Sograt Deserts",
+				"Splendide Fields",
+				"Umbala Fields",
+				"Veins Fields",
+				"Yuno Fields" );
+			if ( getarg(1) ) {
+				mes "[Warp NPC]";
+				mes "Please select a Field. You will be warped to the center of that map.";
+				next;
+			}
+			switch ( .@warp2 ) {
+				case 1:
+					set .@warp2$, "am";
+					set .@warp3, select(
+						"Amatsu Field 1" );
+					break;
+				case 2:
+					set .@warp2$, "ay";
+					set .@warp3, select( 
+						"Ayothaya Field 1",
+						"Ayothaya Field 2" );
+					break;
+				case 3:
+					set .@warp2$, "co";
+					set .@warp3, select(
+						"Comodo Field 1",
+						"Comodo Field 2",
+						"Comodo Field 3",
+						"Comodo Field 4",
+						"Comodo Field 5",
+						"Comodo Field 6",
+						"Comodo Field 7",
+						"Comodo Field 8",
+						"Comodo Field 9" );
+					break;
+				case 4:
+					set .@warp2$, "ei";
+					set .@warp3, select(
+						"Einbroch Field 1",
+						"Einbroch Field 2",
+						"Einbroch Field 3",
+						"Einbroch Field 4",
+						"Einbroch Field 5",
+						"Einbroch Field 6",
+						"Einbroch Field 7",
+						"Einbroch Field 8",
+						"Einbroch Field 9",
+						"Einbroch Field 10" );
+					break;
+				case 5:
+					set .@warp2$, "ge";
+					set .@warp3, select(
+						"Geffen Field 0",
+						"Geffen Field 1",
+						"Geffen Field 2",
+						"Geffen Field 3",
+						"Geffen Field 4",
+						"Geffen Field 5",
+						"Geffen Field 6",
+						"Geffen Field 7",
+						"Geffen Field 8",
+						"Geffen Field 9",
+						"Geffen Field 10",
+						"Geffen Field 11",
+						"Geffen Field 12",
+						"Geffen Field 13",
+						"Geffen Field 14" );
+					break;
+				case 6:
+					set .@warp2$, "go";
+					set .@warp3, select(
+						"Gonryun Field 1" );
+					break;
+				case 7:
+					set .@warp2$, "hu";
+					set .@warp3, select(
+						"Hugel Field 1",
+						"Hugel Field 2",
+						"Hugel Field 3",
+						"Hugel Field 4",
+						"Hugel Field 5",
+						"Hugel Field 6",
+						"Hugel Field 7" );
+					break;
+				case 8:
+					set .@warp2$, "li";
+					set .@warp3, select(
+						"Lighthalzen Field 1",
+						"Lighthalzen Field 2",
+						"Lighthalzen Field 3" );
+					break;
+				case 9:
+					set .@warp2$, "lo";
+					set .@warp3, select(
+						"Louyang Field 1" );
+					break;
+				case 10:
+					set .@warp2$, "lu";
+					set .@warp3, select(
+						"Lutie Field 1" );
+					break;
+				case 11:
+					set .@warp2$, "ma";
+					set .@warp3, select(
+						"Manuk Field 1",
+						"Manuk Field 2",
+						"Manuk Field 3" );
+					break;
+				case 12:
+					set .@warp2$, "mj";
+					set .@warp3, select(
+						"Mjolnir Field 1",
+						"Mjolnir Field 2",
+						"Mjolnir Field 3",
+						"Mjolnir Field 4",
+						"Mjolnir Field 5",
+						"Mjolnir Field 6",
+						"Mjolnir Field 7",
+						"Mjolnir Field 8",
+						"Mjolnir Field 9",
+						"Mjolnir Field 10",
+						"Mjolnir Field 11",
+						"Mjolnir Field 12" );
+					break;
+				case 13:
+					set .@warp2$, "ni";
+					set .@warp3, select(
+						"Niflheim Field 1",
+						"Niflheim Field 2" );
+					break;
+				case 14:
+					set .@warp2$, "od";
+					set .@warp3, select(
+						"Odin Temple 1",
+						"Odin Temple 2",
+						"Odin Temple 3" );
+					break;
+				case 15:
+					set .@warp2$, "pa";
+					set .@warp3, select(
+						"Payon Forest 1",
+						"Payon Forest 2",
+						"Payon Forest 3",
+						"Payon Forest 4",
+						"Payon Forest 5",
+						"Payon Forest 6",
+						"Payon Forest 7",
+						"Payon Forest 8",
+						"Payon Forest 9",
+						"Payon Forest 10",
+						"Payon Forest 11" );
+					break;
+				case 16:
+					set .@warp2$, "pr";
+					set .@warp3, select(
+						"Prontera Field 0",
+						"Prontera Field 1",
+						"Prontera Field 2",
+						"Prontera Field 3",
+						"Prontera Field 4",
+						"Prontera Field 5",
+						"Prontera Field 6",
+						"Prontera Field 7",
+						"Prontera Field 8",
+						"Prontera Field 9",
+						"Prontera Field 10",
+						"Prontera Field 11" );
+					break;
+				case 17:
+					set .@warp2$, "ra";
+					set .@warp3, select(
+						"Rachel Field 1",
+						"Rachel Field 2",
+						"Rachel Field 3",
+						"Rachel Field 4",
+						"Rachel Field 5",
+						"Rachel Field 6",
+						"Rachel Field 7",
+						"Rachel Field 8",
+						"Rachel Field 9",
+						"Rachel Field 10",
+						"Rachel Field 11",
+						"Rachel Field 12",
+						"Rachel Field 13" );
+					break;
+				case 18:
+					set .@warp2$, "so";
+					set .@warp3, select(
+						"Sograt Desert 1",
+						"Sograt Desert 2",
+						"Sograt Desert 3",
+						"Sograt Desert 4",
+						"Sograt Desert 5",
+						"Sograt Desert 6",
+						"Sograt Desert 7",
+						"Sograt Desert 8",
+						"Sograt Desert 9",
+						"Sograt Desert 10",
+						"Sograt Desert 11",
+						"Sograt Desert 12",
+						"Sograt Desert 13",
+						"Sograt Desert 14",
+						"Sograt Desert 15",
+						"Sograt Desert 16",
+						"Sograt Desert 17",
+						"Sograt Desert 18",
+						"Sograt Desert 19",
+						"Sograt Desert 20",
+						"Sograt Desert 21",
+						"Sograt Desert 22" );
+					break;
+				case 19:
+					set .@warp2$, "sp";
+					set .@warp3, select(
+						"Splendide Field 1",
+						"Splendide Field 2",
+						"Splendide Field 3" );
+					break;
+				case 20:
+					set .@warp2$, "um";
+					set .@warp3, select(
+						"Umbala Field 1",
+						"Umbala Field 2",
+						"Umbala Field 3", 
+						"Umbala Field 4" );
+					break;
+				case 21:
+					set .@warp2$, "ve";
+					set .@warp3, select(
+						"Veins Field 1",
+						"Veins Field 2",
+						"Veins Field 3",
+						"Veins Field 4",
+						"Veins Field 5",
+						"Veins Field 6",
+						"Veins Field 7" );
+					break;
+				case 22:
+					set .@warp2$, "yu";
+					set .@warp3, select(
+						"Yuno Field 1",
+						"Yuno Field 2",
+						"Yuno Field 3",
+						"Yuno Field 4",
+						"Yuno Field 5",
+						"Yuno Field 6",
+						"Yuno Field 7",
+						"Yuno Field 8",
+						"Yuno Field 9",
+						"Yuno Field 10",
+						"Yuno Field 11", 
+						"Yuno Field 12" );
+					break;
+				default:
+			}
+			set .@warp3$, ( .@warp3 < 10 )?"0"+ .@warp3:.@warp3;
+			break;
+		case 3:
+			set .@warp1$, "d";
+			set .@warp2, select (
+				"Abbey, Cursed Monastery",
+				"Abyss Lakes",
+				"Amatsu Dungeon",
+				"Anthell",
+				"Ayothaya Dungeon",
+				"Beach Dungeon",
+				"Byalan Dungeon",
+				"Clock Tower",
+				"Coal Mines",
+				"Culverts",
+				"Einbroch Dungeon",
+				"Gefenia",
+				"Geffen Dungeon",
+				"Glast Heim",
+				"Gonryun Dungeon",
+				"Hidden Dungeon",
+				"Ice Cave",
+				"Juperos Dungeon",
+				"Kiel Dungeon",
+				"Lighthalzen",
+				"Louyang Dungeon",
+				"Magma Dungeon",
+				"Moscovia Dungeon",
+				"Orc Dungeon",
+				"Payon Dungeon",
+				"Pyramids",
+				"Rachel Sanctuary",
+				"Sphinx",
+				"Sunken Ship",
+				"Thanatos Tower",
+				"Thor Volcano",
+				"Toy Factory",
+				"Turtle Dungeon",
+				"Umbala Dungeon" );
+			if ( getarg(1) ) {
+				mes "[Warp NPC]";
+				mes "Please select a Level. Beware that you will be warped directly into the dungeon.";
+				next;
+			}
+			switch ( .@warp2 ) {
+				case 1:
+					set .@warp2$, "ab";
+					set .@warp3, select(
+						"Cursed Abbey Dungeon - Level 1",
+						"Cursed Abbey Dungeon - Level 2",
+						"Cursed Abbey Dungeon - Level 3" );
+					break;
+				case 2:
+					set .@warp2$, "ai";
+					set .@warp3, select(
+						"Abyss Lakes Underground Cave F1",
+						"Abyss Lakes Underground Cave F2",
+						"Abyss Lakes Underground Cave F3" );
+					break;
+				case 3:
+					set .@warp2$, "am";
+					set .@warp3, select(
+						"Amatsu Dungeon - Level 1",
+						"Amatsu Dungeon - Level 2",
+						"Amatsu Dungeon - Level 3" );
+					break;
+				case 4:
+					set .@warp2$, "an";
+					set .@warp3, select(
+						"Anthell F1",
+						"Anthell F2" );
+					break;
+				case 5:
+					set .@warp2$, "ay";
+					set .@warp3, select(
+						"Ayothaya - Ancient Shrine Maze",
+						"Ayothaya - Inside Ancient Shrine" );
+					break;
+				case 6:
+					set .@warp2$, "be";
+					set .@warp3, select(
+						"Beach Dungeon - Karu, west cave",
+						"Beach Dungeon - Ruande, north cave",
+						"Beach Dungeon - Mao, east cave" );
+					break;
+				case 7:
+					set .@warp2$, "by";
+					set .@warp3, select(
+						"Byalan Dungeon - Undersea Tunnel F1",
+						"Byalan Dungeon - Undersea Tunnel F2",
+						"Byalan Dungeon - Undersea Tunnel F3",
+						"Byalan Dungeon - Undersea Tunnel F4",
+						"Byalan Dungeon - Undersea Tunnel F5" );
+					break;
+				case 8:
+					set .@warp2$, "cl";
+					set .@warp3, select(
+						"Clock Tower F1",
+						"Clock Tower F2",
+						"Clock Tower F3",
+						"Clock Tower F4",
+						"Clock Tower B1",
+						"Clock Tower B2",
+						"Clock Tower B3",
+						"Clock Tower B4" );
+					break;
+				case 9:
+					set .@warp2$, "co";
+					set .@warp3, select(
+						"Coal Mines - Mjolnir Dead Pit F1",
+						"Coal Mines - Mjolnir Dead Pit F2",
+						"Coal Mines - Mjolnir Dead Pit F3" );
+					break;
+				case 10:
+					set .@warp2$, "cu";
+					set .@warp3, select(
+						"Prontera Culvert F1",
+						"Prontera Culvert F2",
+						"Prontera Culvert F3",
+						"Prontera Culvert F4" );
+					break;
+				case 11:
+					set .@warp2$, "ei";
+					set .@warp3, select(
+						"Einbroch Dungeon - Mine Dungeon F1",
+						"Einbroch Dungeon - Mine Dungeon F2" );
+					break;
+				case 12:
+					set .@warp2$, "ge";
+					set .@warp3, select(
+						"Gefenia - Level 1",
+						"Gefenia - Level 2",
+						"Gefenia - Level 3",
+						"Gefenia - Level 4" );
+					break;
+				case 13:
+					set .@warp2$, "gf";
+					set .@warp3, select(
+						"Geffen Dungeon F1",
+						"Geffen Dungeon F2",
+						"Geffen Dungeon F3",
+						"Geffen Dungeon F4" );
+					break;
+				case 14:
+					set .@warp2$, "gl";
+					set .@warp3, select(
+						"Glast Heim - Entrance",
+						"Glast Heim - Castle F1",
+						"Glast Heim - Castle F2",
+						"Glast Heim - Chivalry F1",
+						"Glast Heim - Chivalry F2",
+						"Glast Heim - St.Abbey",
+						"Glast Heim - Churchyard",
+						"Glast Heim - Culvert F1",
+						"Glast Heim - Culvert F2",
+						"Glast Heim - Culvert F3",
+						"Glast Heim - Culvert F4",
+						"Glast Heim - Staircase Dungeon",
+						"Glast Heim - Underground Cave 1",
+						"Glast Heim - Underground Cave 2",
+						"Glast Heim - Underground Prison 1",
+						"Glast Heim - Underground Prison 2" );
+					break;
+				case 15:
+					set .@warp2$, "go";
+					set .@warp3, select(
+						"Gonryun Dungeon - Level 1",
+						"Gonryun Dungeon - Level 2",
+						"Gonryun Dungeon - Level 3" );
+					break;
+				case 16:
+					set .@warp2$, "hi";
+					set .@warp3, select(
+						"Hidden Dungeon - Labyrinth Forest F1",
+						"Hidden Dungeon - Labyrinth Forest F2",
+						"Hidden Dungeon - Labyrinth Forest F3" );
+					break;
+				case 17:
+					set .@warp2$, "ic";
+					set .@warp3, select(
+						"Ice Cave F1",
+						"Ice Cave F2",
+						"Ice Cave F3",
+						"Ice Cave F4" );
+					break;
+				case 18:
+					set .@warp2$, "ju";
+					set .@warp3, select(
+						"The Ruins of Juperos F1",
+						"The Ruins of Juperos F2",
+						"Center of Juperos" );
+					break;
+				case 19:
+					set .@warp2$, "ki";
+					set .@warp3, select(
+						"Kiel Dungeon - Robot Factory Level 1",
+						"Kiel Dungeon - Robot Factory Level 2" );
+					break;
+				case 20:
+					set .@warp2$, "li";
+					set .@warp3, select(
+						"Lighthalzen - Somatology Labotory F1",
+						"Lighthalzen - Somatology Labotory F2",
+						"Lighthalzen - Somatology Labotory F3" );
+					break;
+				case 21:
+					set .@warp2$, "lo";
+					set .@warp3, select(
+						"Louyang Dungeon - Level 1",
+						"Louyang Dungeon - Level 2",
+						"Louyang Dungeon - Level 3" );
+					break;
+				case 22:
+					set .@warp2$, "ma";
+					set .@warp3, select(
+						"Magma Dungeon - Nogg Road F1",
+						"Magma Dungeon - Nogg Road F2" );
+					break;
+				case 23:
+					set .@warp2$, "mo";
+					set .@warp3, select(
+						"Moscovia Dungeon - Level 1",
+						"Moscovia Dungeon - Level 2",
+						"Moscovia Dungeon - Level 3" );
+					break;
+				case 24:
+					set .@warp2$, "or";
+					set .@warp3, select(
+						"Orc Dungeon F1",
+						"Orc Dungeon F2" );
+					break;
+				case 25:
+					set .@warp2$, "pa";
+					set .@warp3, select(
+						"Payon Cave F1",
+						"Payon Cave F2",
+						"Payon Cave F3",
+						"Payon Cave F4",
+						"Payon Cave F5" );
+					break;
+				case 26:
+					set .@warp2$, "py";
+					set .@warp3, select(
+						"Inside Pyramids F1",
+						"Inside Pyramids F2",
+						"Inside Pyramids F3",
+						"Inside Pyramids F4",
+						"Inside Pyramids B1",
+						"Inside Pyramids B2" );
+					break;
+				case 27:
+					set .@warp2$, "ra";
+					set .@warp3, select(
+						"Rachel Sanctuary - Level 1",
+						"Rachel Sanctuary - Level 2",
+						"Rachel Sanctuary - Level 3",
+						"Rachel Sanctuary - Level 4",
+						"Rachel Sanctuary - Level 5" );
+					break;
+				case 28:
+					set .@warp2$, "sp";
+					set .@warp3, select(
+						"Sphinx F1",
+						"Sphinx F2",
+						"Sphinx F3",
+						"Sphinx F4",
+						"Sphinx F5" );
+					break;
+				case 29:
+					set .@warp2$, "su";
+					set .@warp3, select(
+						"Sunken Ship F1",
+						"Sunken Ship F2" );
+					break;
+				case 30:
+					set .@warp2$, "ta";
+					set .@warp3, select(
+						"Thanatos Tower - Level 1",
+						"Thanatos Tower - Level 2",
+						"Thanatos Tower - Level 3",
+						"Thanatos Tower - Level 4",
+						"Thanatos Tower - Level 5",
+						"Thanatos Tower - Level 6",
+						"Thanatos Tower - Level 7",
+						"Thanatos Tower - Level 8",
+						"Thanatos Tower - Level 9",
+						"Thanatos Tower - Level 10",
+						"Thanatos Tower - Level 11",
+						"Thanatos Tower - Level 12" );
+					break;
+				case 31:
+					set .@warp2$, "th";
+					set .@warp3, select(
+						"Thor's Volcano Dungeon F1",
+						"Thor's Volcano Dungeon F2",
+						"Thor's Volcano Dungeon F3" );
+					break;
+				case 32:
+					set .@warp2$, "to";
+					set .@warp3, select(
+						"Toy Factory - Level 1",
+						"Toy Factory - Level 2" );
+					break;
+				case 33:
+					set .@warp2$, "tu";
+					set .@warp3, select(
+						"Turtle Dungeon - Entrance",
+						"Turtle Dungeon - Level 1",
+						"Turtle Dungeon - Level 2",
+						"Turtle Dungeon - Level 3" );
+					break;
+				case 34:
+					set .@warp2$, "um";
+					set .@warp3, select(
+						"Umbala Dungeon - Level 1",
+						"Umbala Dungeon - Level 2" );
+					break;
+				default:
+			}
+			set .@warp3$, ( .@warp3 < 10 )?"0"+ .@warp3:.@warp3;
+			break;
+		case 4:
+			set .@warp1$, "w";
+			set .@warp2, select (
+				"War of Emperium Castles",
+				"WOE.SE Castles" );
+			switch ( .@warp2 ) {
+				case 1:
+					set .@warp2$, "fi";
+					set .@warp3, select (
+						"Neuschwanstein - Aldebaran Castle 1",
+						"Hohenschwangau - Aldebaran Castle 2",
+						"Nuenberg - Aldebaran Castle 3",
+						"Wuerzburg - Aldebaran Castle 4",
+						"Rothenburg - Aldebaran Castle 5",
+						"Repherion - Geffen Castle 1",
+						"Eeyolbriggar - Geffen Castle 2",
+						"Yesnelph - Geffen Castle 3",
+						"Bergel - Geffen Castle 4",
+						"Mersetzdeitz - Geffen Castle 5",
+						"Bright Arbor - Payon Castle 1",
+						"Scarlet Palace - Payon Castle 2",
+						"Holy Shadow - Payon Castle 3",
+						"Sacred Altar - Payon Castle 4",
+						"Bamboo Grove Hill - Payon Castle 5",
+						"Kriemhild - Prontera Castle 1",
+						"Swanhild - Prontera Castle 2",
+						"Fadhgridh - Prontera Castle 3",
+						"Skoegul - Prontera Castle 4",
+						"Gondul - Prontera Castle 5" );
+					break;
+				case 2:
+					set .@warp2$, "se";
+					set .@warp3, select (
+						"Himinn - Schwaltzvalt Castle 1",
+						"Andlangr - Schwaltzvalt Castle 2",
+						"Viblainn - Schwaltzvalt Castle 3",
+						"Hljod - Schwaltzvalt Castle 4",
+						"Skidbladnir - Schwaltzvalt Castle 5",
+						"Mardol - Arunafeltz Castle 1",
+						"Cyr - Arunafeltz Castle 2",
+						"Horn - Arunafeltz Castle 3",
+						"Gefn - Arunafeltz Castle 4",
+						"Bandis - Arunafeltz Castle 5" );
+					break;
+
+				default:
+			}
+			set .@warp3$, ( .@warp3 < 10 )?"0"+ .@warp3:.@warp3;
+			break;
+		case 5:
+			set .@warp1$, "o";
+			set .@warp2, select ( getvariableofnpc( .menu$, "warpra") ) -1;
+			set .@abc$, getvariableofnpc( .abc$[.@warp2], "warpra");
+			set .@warp2$, .@abc$;
+			set .@warp3, select ( getvariableofnpc( getd(".menu"+ .@abc$ +"$"), "warpra") );
+			set .@warp3$, ( .@warp3 < 10 )?"0"+ .@warp3:.@warp3;
+			break;
+		case 6:
+			set .@warp1$, "delete";
+	}
+	return .@warp1$ + .@warp2$ + .@warp3$;
+}
+function	script	fav_maps	{
+	deletearray @map$;
+	set .@tmp$, "|~key~|";
+	set .@str$, .@tmp$ + getarg(0);
+	if ( compare( .@str$ , .@tmp$ + "t" ) ) {
+		if ( compare( .@str$, .@tmp$ +"tab" ) ) setarray @map$, "Alberta", "alberta",28,234;
+		else if ( compare( .@str$, .@tmp$ +"tad" ) ) setarray @map$, "Aldebaran", "aldebaran",140,131;
+		else if ( compare( .@str$, .@tmp$ +"tam" ) ) setarray @map$, "Amatsu", "amatsu",198,84;
+		else if ( compare( .@str$, .@tmp$ +"tay" ) ) setarray @map$, "Ayothaya", "ayothaya",151,117;
+		else if ( compare( .@str$, .@tmp$ +"tco" ) ) setarray @map$, "Comodo", "comodo",209,143;
+		else if ( compare( .@str$, .@tmp$ +"tei" ) ) setarray @map$, "Einbech (Mining Village)", "einbech",70,95;
+		else if ( compare( .@str$, .@tmp$ +"ter" ) ) setarray @map$, "Einbroch", "einbroch",64,200;
+		else if ( compare( .@str$, .@tmp$ +"tge" ) ) setarray @map$, "Geffen", "geffen",119,59;
+		else if ( compare( .@str$, .@tmp$ +"tgo" ) ) setarray @map$, "Gonryun", "gonryun",160,121;
+		else if ( compare( .@str$, .@tmp$ +"thu" ) ) setarray @map$, "Hugel", "hugel",96,145;
+		else if ( compare( .@str$, .@tmp$ +"tiz" ) ) setarray @map$, "Izlude", "izlude",128,114;
+		else if ( compare( .@str$, .@tmp$ +"tja" ) ) setarray @map$, "Jawaii", "jawaii",177,171;
+		else if ( compare( .@str$, .@tmp$ +"tli" ) ) setarray @map$, "Lighthalzen", "lighthalzen",158,92;
+		else if ( compare( .@str$, .@tmp$ +"tlo" ) ) setarray @map$, "Louyang", "louyang",217,107;
+		else if ( compare( .@str$, .@tmp$ +"tlu" ) ) setarray @map$, "Lutie", "xmas",147,134;
+		else if ( compare( .@str$, .@tmp$ +"tma" ) ) setarray @map$, "Manuk", "manuk",276,122;
+		else if ( compare( .@str$, .@tmp$ +"tmi" ) ) setarray @map$, "Midgarts Expedition Camp", "mid_camp",210,288;
+		else if ( compare( .@str$, .@tmp$ +"tmo" ) ) setarray @map$, "Morroc", "morocc",156,93;
+		else if ( compare( .@str$, .@tmp$ +"tms" ) ) setarray @map$, "Moscovia", "moscovia",156,93;
+		else if ( compare( .@str$, .@tmp$ +"tna" ) ) setarray @map$, "Nameless Island", "nameless_n",256,215;
+		else if ( compare( .@str$, .@tmp$ +"tni" ) ) setarray @map$, "Niflheim", "niflheim",85,154;
+		else if ( compare( .@str$, .@tmp$ +"tpa" ) ) setarray @map$, "Payon", "payon",170,98;
+		else if ( compare( .@str$, .@tmp$ +"tpr" ) ) setarray @map$, "Prontera", "prontera",155,183;
+		else if ( compare( .@str$, .@tmp$ +"tra" ) ) setarray @map$, "Rachel", "rachel",130,137;
+		else if ( compare( .@str$, .@tmp$ +"tsp" ) ) setarray @map$, "Splendide", "splendide",208,158;
+		else if ( compare( .@str$, .@tmp$ +"tth" ) ) setarray @map$, "Thor Camp", "thor_camp",254,90;
+		else if ( compare( .@str$, .@tmp$ +"tve" ) ) setarray @map$, "Veins", "veins",216,123;
+		else if ( compare( .@str$, .@tmp$ +"tyu" ) ) setarray @map$, "Yuno", "yuno",157,51;
+		else if ( compare( .@str$, .@tmp$ +"tum" ) ) setarray @map$, "Umbala", "umbala",145,155;
+	}
+	else if ( compare( .@str$ , .@tmp$ + "f" ) ) {
+		if ( compare( .@str$, .@tmp$ +"fam" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fam01" ) ) setarray @map$, "Amatsu Field 1", "ama_fild01",190,197;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fay" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fay01" ) ) setarray @map$, "Ayothaya Field 1", "ayo_fild01",173,134;
+			else if ( compare( .@str$, .@tmp$ +"fay02" ) ) setarray @map$, "Ayothaya Field 2", "ayo_fild02",212,150;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fco" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fco01" ) ) setarray @map$, "Comodo Field 1", "cmd_fild01",180,178;
+			else if ( compare( .@str$, .@tmp$ +"fco02" ) ) setarray @map$, "Comodo Field 2", "cmd_fild02",231,160;
+			else if ( compare( .@str$, .@tmp$ +"fco03" ) ) setarray @map$, "Comodo Field 3", "cmd_fild03",191,172;
+			else if ( compare( .@str$, .@tmp$ +"fco04" ) ) setarray @map$, "Comodo Field 4", "cmd_fild04",228,194;
+			else if ( compare( .@str$, .@tmp$ +"fco05" ) ) setarray @map$, "Comodo Field 5", "cmd_fild05",224,203;
+			else if ( compare( .@str$, .@tmp$ +"fco06" ) ) setarray @map$, "Comodo Field 6", "cmd_fild06",190,223;
+			else if ( compare( .@str$, .@tmp$ +"fco07" ) ) setarray @map$, "Comodo Field 7", "cmd_fild07",234,177;
+			else if ( compare( .@str$, .@tmp$ +"fco08" ) ) setarray @map$, "Comodo Field 8", "cmd_fild08",194,175;
+			else if ( compare( .@str$, .@tmp$ +"fco09" ) ) setarray @map$, "Comodo Field 9", "cmd_fild09",172,172;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fei" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fei01" ) ) setarray @map$, "Einbroch Field 1", "ein_fild01",142,225;
+			else if ( compare( .@str$, .@tmp$ +"fei02" ) ) setarray @map$, "Einbroch Field 2", "ein_fild02",182,141;
+			else if ( compare( .@str$, .@tmp$ +"fei03" ) ) setarray @map$, "Einbroch Field 3", "ein_fild03",187,228;
+			else if ( compare( .@str$, .@tmp$ +"fei04" ) ) setarray @map$, "Einbroch Field 4", "ein_fild04",185,173;
+			else if ( compare( .@str$, .@tmp$ +"fei05" ) ) setarray @map$, "Einbroch Field 5", "ein_fild05",216,173;
+			else if ( compare( .@str$, .@tmp$ +"fei06" ) ) setarray @map$, "Einbroch Field 6", "ein_fild06",195,148;
+			else if ( compare( .@str$, .@tmp$ +"fei07" ) ) setarray @map$, "Einbroch Field 7", "ein_fild07",272,220;
+			else if ( compare( .@str$, .@tmp$ +"fei08" ) ) setarray @map$, "Einbroch Field 8", "ein_fild08",173,214;
+			else if ( compare( .@str$, .@tmp$ +"fei09" ) ) setarray @map$, "Einbroch Field 9", "ein_fild09",207,174;
+			else if ( compare( .@str$, .@tmp$ +"fei10" ) ) setarray @map$, "Einbroch Field 10", "ein_fild10",196,200;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fge" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fge01" ) ) setarray @map$, "Geffen Field 0", "gef_fild00",46,199;
+			else if ( compare( .@str$, .@tmp$ +"fge02" ) ) setarray @map$, "Geffen Field 1", "gef_fild01",213,204;
+			else if ( compare( .@str$, .@tmp$ +"fge03" ) ) setarray @map$, "Geffen Field 2", "gef_fild02",195,212;
+			else if ( compare( .@str$, .@tmp$ +"fge04" ) ) setarray @map$, "Geffen Field 3", "gef_fild03",257,192;
+			else if ( compare( .@str$, .@tmp$ +"fge05" ) ) setarray @map$, "Geffen Field 4", "gef_fild04",188,171;
+			else if ( compare( .@str$, .@tmp$ +"fge06" ) ) setarray @map$, "Geffen Field 5", "gef_fild05",166,263;
+			else if ( compare( .@str$, .@tmp$ +"fge07" ) ) setarray @map$, "Geffen Field 6", "gef_fild06",248,158;
+			else if ( compare( .@str$, .@tmp$ +"fge08" ) ) setarray @map$, "Geffen Field 7", "gef_fild07",195,191;
+			else if ( compare( .@str$, .@tmp$ +"fge09" ) ) setarray @map$, "Geffen Field 8", "gef_fild08",186,183;
+			else if ( compare( .@str$, .@tmp$ +"fge10" ) ) setarray @map$, "Geffen Field 9", "gef_fild09",221,117;
+			else if ( compare( .@str$, .@tmp$ +"fge11" ) ) setarray @map$, "Geffen Field 10", "gef_fild10",178,218;
+			else if ( compare( .@str$, .@tmp$ +"fge12" ) ) setarray @map$, "Geffen Field 11", "gef_fild11",136,328;
+			else if ( compare( .@str$, .@tmp$ +"fge13" ) ) setarray @map$, "Geffen Field 12", "gef_fild12",240,181;
+			else if ( compare( .@str$, .@tmp$ +"fge14" ) ) setarray @map$, "Geffen Field 13", "gef_fild13",235,235;
+			else if ( compare( .@str$, .@tmp$ +"fge15" ) ) setarray @map$, "Geffen Field 14", "gef_fild14",211,185;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fgo" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fgo01" ) ) setarray @map$, "Gonryun Field 1", "gon_fild01",220,227;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fhu" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fhu01" ) ) setarray @map$, "Hugel Field 1", "hu_fild01",268,101;
+			else if ( compare( .@str$, .@tmp$ +"fhu02" ) ) setarray @map$, "Hugel Field 2", "hu_fild02",222,193;
+			else if ( compare( .@str$, .@tmp$ +"fhu03" ) ) setarray @map$, "Hugel Field 3", "hu_fild03",232,185;
+			else if ( compare( .@str$, .@tmp$ +"fhu04" ) ) setarray @map$, "Hugel Field 4", "hu_fild04",252,189;
+			else if ( compare( .@str$, .@tmp$ +"fhu05" ) ) setarray @map$, "Hugel Field 5", "hu_fild05",196,106;
+			else if ( compare( .@str$, .@tmp$ +"fhu06" ) ) setarray @map$, "Hugel Field 6", "hu_fild06",216,220;
+			else if ( compare( .@str$, .@tmp$ +"fhu07" ) ) setarray @map$, "Hugel Field 7", "hu_fild07",227,197;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fli" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fli01" ) ) setarray @map$, "Lighthalzen Field 1", "lhz_fild01",240,179;
+			else if ( compare( .@str$, .@tmp$ +"fli02" ) ) setarray @map$, "Lighthalzen Field 2", "lhz_fild02",185,235;
+			else if ( compare( .@str$, .@tmp$ +"fli03" ) ) setarray @map$, "Lighthalzen Field 3", "lhz_fild03",240,226;
+		}
+		else if ( compare( .@str$, .@tmp$ +"flo" ) ) {
+			if ( compare( .@str$, .@tmp$ +"flo01" ) ) setarray @map$, "Louyang Field 1", "lou_fild01",229,187;
+		}
+		else if ( compare( .@str$, .@tmp$ +"flu" ) ) {
+			if ( compare( .@str$, .@tmp$ +"flu01" ) ) setarray @map$, "Lutie Field 1", "xmas_fild01",115,145;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fma" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fma01" ) ) setarray @map$, "Manuk Field 1", "man_fild01",36,238;
+			else if ( compare( .@str$, .@tmp$ +"fma02" ) ) setarray @map$, "Manuk Field 2", "man_fild02",133,55;
+			else if ( compare( .@str$, .@tmp$ +"fma03" ) ) setarray @map$, "Manuk Field 3", "man_fild03",79,363;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fmj" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fmj01" ) ) setarray @map$, "Mjolnir Field 1", "mjolnir_01",204,120;
+			else if ( compare( .@str$, .@tmp$ +"fmj02" ) ) setarray @map$, "Mjolnir Field 2", "mjolnir_02",175,193;
+			else if ( compare( .@str$, .@tmp$ +"fmj03" ) ) setarray @map$, "Mjolnir Field 3", "mjolnir_03",208,213;
+			else if ( compare( .@str$, .@tmp$ +"fmj04" ) ) setarray @map$, "Mjolnir Field 4", "mjolnir_04",179,180;
+			else if ( compare( .@str$, .@tmp$ +"fmj05" ) ) setarray @map$, "Mjolnir Field 5", "mjolnir_05",181,240;
+			else if ( compare( .@str$, .@tmp$ +"fmj06" ) ) setarray @map$, "Mjolnir Field 6", "mjolnir_06",195,270;
+			else if ( compare( .@str$, .@tmp$ +"fmj07" ) ) setarray @map$, "Mjolnir Field 7", "mjolnir_07",235,202;
+			else if ( compare( .@str$, .@tmp$ +"fmj08" ) ) setarray @map$, "Mjolnir Field 8", "mjolnir_08",188,215;
+			else if ( compare( .@str$, .@tmp$ +"fmj09" ) ) setarray @map$, "Mjolnir Field 9", "mjolnir_09",205,144;
+			else if ( compare( .@str$, .@tmp$ +"fmj10" ) ) setarray @map$, "Mjolnir Field 10", "mjolnir_10",245,223;
+			else if ( compare( .@str$, .@tmp$ +"fmj11" ) ) setarray @map$, "Mjolnir Field 11", "mjolnir_11",180,206;
+			else if ( compare( .@str$, .@tmp$ +"fmj12" ) ) setarray @map$, "Mjolnir Field 12", "mjolnir_12",196,208;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fni" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fni01" ) ) setarray @map$, "Niflheim Field 1", "nif_fild01",215,229;
+			else if ( compare( .@str$, .@tmp$ +"fni02" ) ) setarray @map$, "Niflheim Field 2", "nif_fild02",167,234;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fod" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fod01" ) ) setarray @map$, "Odin Temple 1", "odin_tem01",298,167;
+			else if ( compare( .@str$, .@tmp$ +"fod02" ) ) setarray @map$, "Odin Temple 2", "odin_tem02",224,149;
+			else if ( compare( .@str$, .@tmp$ +"fod03" ) ) setarray @map$, "Odin Temple 3", "odin_tem03",266,280;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fpa" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fpa01" ) ) setarray @map$, "Payon Forest 1", "pay_fild01",158,206;
+			else if ( compare( .@str$, .@tmp$ +"fpa02" ) ) setarray @map$, "Payon Forest 2", "pay_fild02",151,219;
+			else if ( compare( .@str$, .@tmp$ +"fpa03" ) ) setarray @map$, "Payon Forest 3", "pay_fild03",205,148;
+			else if ( compare( .@str$, .@tmp$ +"fpa04" ) ) setarray @map$, "Payon Forest 4", "pay_fild04",186,247;
+			else if ( compare( .@str$, .@tmp$ +"fpa05" ) ) setarray @map$, "Payon Forest 5", "pay_fild05",134,204;
+			else if ( compare( .@str$, .@tmp$ +"fpa06" ) ) setarray @map$, "Payon Forest 6", "pay_fild06",193,235;
+			else if ( compare( .@str$, .@tmp$ +"fpa07" ) ) setarray @map$, "Payon Forest 7", "pay_fild07",200,177;
+			else if ( compare( .@str$, .@tmp$ +"fpa08" ) ) setarray @map$, "Payon Forest 8", "pay_fild08",137,189;
+			else if ( compare( .@str$, .@tmp$ +"fpa09" ) ) setarray @map$, "Payon Forest 9", "pay_fild09",201,224;
+			else if ( compare( .@str$, .@tmp$ +"fpa10" ) ) setarray @map$, "Payon Forest 10", "pay_fild10",160,205;
+			else if ( compare( .@str$, .@tmp$ +"fpa11" ) ) setarray @map$, "Payon Forest 11", "pay_fild11",194,150;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fpr" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fpr01" ) ) setarray @map$, "Prontera Field 0", "prt_fild00",184,235;
+			else if ( compare( .@str$, .@tmp$ +"fpr02" ) ) setarray @map$, "Prontera Field 1", "prt_fild01",190,206;
+			else if ( compare( .@str$, .@tmp$ +"fpr03" ) ) setarray @map$, "Prontera Field 2", "prt_fild02",240,206;
+			else if ( compare( .@str$, .@tmp$ +"fpr04" ) ) setarray @map$, "Prontera Field 3", "prt_fild03",190,143;
+			else if ( compare( .@str$, .@tmp$ +"fpr05" ) ) setarray @map$, "Prontera Field 4", "prt_fild04",307,252;
+			else if ( compare( .@str$, .@tmp$ +"fpr06" ) ) setarray @map$, "Prontera Field 5", "prt_fild05",239,213;
+			else if ( compare( .@str$, .@tmp$ +"fpr07" ) ) setarray @map$, "Prontera Field 6", "prt_fild06",185,188;
+			else if ( compare( .@str$, .@tmp$ +"fpr08" ) ) setarray @map$, "Prontera Field 7", "prt_fild07",193,194;
+			else if ( compare( .@str$, .@tmp$ +"fpr09" ) ) setarray @map$, "Prontera Field 8", "prt_fild08",187,218;
+			else if ( compare( .@str$, .@tmp$ +"fpr10" ) ) setarray @map$, "Prontera Field 9", "prt_fild09",210,183;
+			else if ( compare( .@str$, .@tmp$ +"fpr11" ) ) setarray @map$, "Prontera Field 10", "prt_fild10",195,149;
+			else if ( compare( .@str$, .@tmp$ +"fpr12" ) ) setarray @map$, "Prontera Field 11", "prt_fild11",198,164;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fra" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fra01" ) ) setarray @map$, "Rachel Field 1", "ra_fild01",192,162;
+			else if ( compare( .@str$, .@tmp$ +"fra02" ) ) setarray @map$, "Rachel Field 2", "ra_fild02",235,166;
+			else if ( compare( .@str$, .@tmp$ +"fra03" ) ) setarray @map$, "Rachel Fi ld 3", "ra_fild03",202,206;
+			else if ( compare( .@str$, .@tmp$ +"fra04" ) ) setarray @map$, "Rachel Field 4", "ra_fild04",202,208;
+			else if ( compare( .@str$, .@tmp$ +"fra05" ) ) setarray @map$, "Rachel Field 5", "ra_fild05",225,202;
+			else if ( compare( .@str$, .@tmp$ +"fra06" ) ) setarray @map$, "Rachel Field 6", "ra_fild06",202,214;
+			else if ( compare( .@str$, .@tmp$ +"fra07" ) ) setarray @map$, "Rachel Field 7", "ra_fild07",263,196;
+			else if ( compare( .@str$, .@tmp$ +"fra08" ) ) setarray @map$, "Rachel Field 8", "ra_fild08",217,201;
+			else if ( compare( .@str$, .@tmp$ +"fra09" ) ) setarray @map$, "Rachel Field 9", "ra_fild09",87,121;
+			else if ( compare( .@str$, .@tmp$ +"fra10" ) ) setarray @map$, "Rachel Field 10", "ra_fild10",277,181;
+			else if ( compare( .@str$, .@tmp$ +"fra11" ) ) setarray @map$, "Rachel Field 11", "ra_fild11",221,185;
+			else if ( compare( .@str$, .@tmp$ +"fra12" ) ) setarray @map$, "Rachel Field 12", "ra_fild12",175,200;
+			else if ( compare( .@str$, .@tmp$ +"fra13" ) ) setarray @map$, "Rachel Field 13", "ra_fild13",174,197;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fso" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fso01" ) ) setarray @map$, "Sograt Desert 1", "moc_fild01",219,205;
+			else if ( compare( .@str$, .@tmp$ +"fso02" ) ) setarray @map$, "Sograt Desert 2", "moc_fild02",177,206;
+			else if ( compare( .@str$, .@tmp$ +"fso03" ) ) setarray @map$, "Sograt Desert 3", "moc_fild03",194,182;
+			else if ( compare( .@str$, .@tmp$ +"fso04" ) ) setarray @map$, "Sograt Desert 4", "moc_fild04",184,217;
+			else if ( compare( .@str$, .@tmp$ +"fso05" ) ) setarray @map$, "Sograt Desert 5", "moc_fild05",203,213;
+			else if ( compare( .@str$, .@tmp$ +"fso06" ) ) setarray @map$, "Sograt Desert 6", "moc_fild06",213,208;
+			else if ( compare( .@str$, .@tmp$ +"fso07" ) ) setarray @map$, "Sograt Desert 7", "moc_fild07",224,170;
+			else if ( compare( .@str$, .@tmp$ +"fso08" ) ) setarray @map$, "Sograt Desert 8", "moc_fild08",229,177;
+			else if ( compare( .@str$, .@tmp$ +"fso09" ) ) setarray @map$, "Sograt Desert 9", "moc_fild09",195,198;
+			else if ( compare( .@str$, .@tmp$ +"fso10" ) ) setarray @map$, "Sograt Desert 10", "moc_fild10",209,168;
+			else if ( compare( .@str$, .@tmp$ +"fso11" ) ) setarray @map$, "Sograt Desert 11", "moc_fild11",198,216;
+			else if ( compare( .@str$, .@tmp$ +"fso12" ) ) setarray @map$, "Sograt Desert 12", "moc_fild12",156,187;
+			else if ( compare( .@str$, .@tmp$ +"fso13" ) ) setarray @map$, "Sograt Desert 13", "moc_fild13",185,263;
+			else if ( compare( .@str$, .@tmp$ +"fso14" ) ) setarray @map$, "Sograt Desert 14", "moc_fild14",209,219;
+			else if ( compare( .@str$, .@tmp$ +"fso15" ) ) setarray @map$, "Sograt Desert 15", "moc_fild15",223,188;
+			else if ( compare( .@str$, .@tmp$ +"fso16" ) ) setarray @map$, "Sograt Desert 16", "moc_fild16",206,228;
+			else if ( compare( .@str$, .@tmp$ +"fso17" ) ) setarray @map$, "Sograt Desert 17", "moc_fild17",208,238;
+			else if ( compare( .@str$, .@tmp$ +"fso18" ) ) setarray @map$, "Sograt Desert 18", "moc_fild18",209,223;
+			else if ( compare( .@str$, .@tmp$ +"fso19" ) ) setarray @map$, "Sograt Desert 19", "moc_fild19",85,97;
+			else if ( compare( .@str$, .@tmp$ +"fso20" ) ) setarray @map$, "Sograt Desert 20", "moc_fild20",42,340;
+			else if ( compare( .@str$, .@tmp$ +"fso21" ) ) setarray @map$, "Sograt Desert 21", "moc_fild21",44,194;
+			else if ( compare( .@str$, .@tmp$ +"fso22" ) ) setarray @map$, "Sograt Desert 22", "moc_fild22",42,195;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fsp" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fsp01" ) ) setarray @map$, "Splendide Field 1", "spl_fild01",29,335;
+			else if ( compare( .@str$, .@tmp$ +"fsp02" ) ) setarray @map$, "Splendide Field 2", "spl_fild02",290,373;
+			else if ( compare( .@str$, .@tmp$ +"fsp03" ) ) setarray @map$, "Splendide Field 3", "spl_fild03",105,369;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fum" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fum01" ) ) setarray @map$, "Umbala Field 1", "um_fild01",217,206;
+			else if ( compare( .@str$, .@tmp$ +"fum02" ) ) setarray @map$, "Umbala Field 2", "um_fild02",223,221;
+			else if ( compare( .@str$, .@tmp$ +"fum03" ) ) setarray @map$, "Umbala Field 3", "um_fild03",237,215;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fve" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fve01" ) ) setarray @map$, "Veins Field 1", "ve_fild01",186,175;
+			else if ( compare( .@str$, .@tmp$ +"fve02" ) ) setarray @map$, "Veins Field 2", "ve_fild02",196,370;
+			else if ( compare( .@str$, .@tmp$ +"fve03" ) ) setarray @map$, "Veins Field 3", "ve_fild03",222,45;
+			else if ( compare( .@str$, .@tmp$ +"fve04" ) ) setarray @map$, "Veins Field 4", "ve_fild04",51,250;
+			else if ( compare( .@str$, .@tmp$ +"fve05" ) ) setarray @map$, "Veins Field 5", "ve_fild05",202,324;
+			else if ( compare( .@str$, .@tmp$ +"fve06" ) ) setarray @map$, "Veins Field 6", "ve_fild06",150,223;
+			else if ( compare( .@str$, .@tmp$ +"fve07" ) ) setarray @map$, "Veins Field 7", "ve_fild07",149,307;
+		}
+		else if ( compare( .@str$, .@tmp$ +"fyu" ) ) {
+			if ( compare( .@str$, .@tmp$ +"fyu01" ) ) setarray @map$, "Yuno Field 1", "yuno_fild01",189,224;
+			else if ( compare( .@str$, .@tmp$ +"fyu02" ) ) setarray @map$, "Yuno Field 2", "yuno_fild02",192,207;
+			else if ( compare( .@str$, .@tmp$ +"fyu03" ) ) setarray @map$, "Yuno Field 3", "yuno_fild03",221,157;
+			else if ( compare( .@str$, .@tmp$ +"fyu04" ) ) setarray @map$, "Yuno Field 4", "yuno_fild04",226,199;
+			else if ( compare( .@str$, .@tmp$ +"fyu05" ) ) setarray @map$, "Yuno Field 5", "yuno_fild05",223,177;
+			else if ( compare( .@str$, .@tmp$ +"fyu06" ) ) setarray @map$, "Yuno Field 6", "yuno_fild06",187,232;
+			else if ( compare( .@str$, .@tmp$ +"fyu07" ) ) setarray @map$, "Yuno Field 7", "yuno_fild07",231,174;
+			else if ( compare( .@str$, .@tmp$ +"fyu08" ) ) setarray @map$, "Yuno Field 8", "yuno_fild08",196,203;
+			else if ( compare( .@str$, .@tmp$ +"fyu09" ) ) setarray @map$, "Yuno Field 9", "yuno_fild09",183,214;
+			else if ( compare( .@str$, .@tmp$ +"fyu10" ) ) setarray @map$, "Yuno Field 10", "yuno_fild10",200,124;
+			else if ( compare( .@str$, .@tmp$ +"fyu11" ) ) setarray @map$, "Yuno Field 11", "yuno_fild11",195,226;
+			else if ( compare( .@str$, .@tmp$ +"fyu12" ) ) setarray @map$, "Yuno Field 12", "yuno_fild12",210,304;
+		}
+	}
+	else if ( compare( .@str$ , .@tmp$ + "d" ) ) {
+		if ( compare( .@str$, .@tmp$ +"dab" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dab01" ) ) setarray @map$, "Cursed Abbey Dungeon - Level 1", "abbey01",51,14;
+			else if ( compare( .@str$, .@tmp$ +"dab02" ) ) setarray @map$, "Cursed Abbey Dungeon - Level 2", "abbey02",150,11;
+			else if ( compare( .@str$, .@tmp$ +"dab03" ) ) setarray @map$, "Cursed Abbey Dungeon - Level 3", "abbey03",120,10;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dai" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dai01" ) ) setarray @map$, "Abyss Lakes Underground Cave F1", "abyss_01",260,270;
+			else if ( compare( .@str$, .@tmp$ +"dai02" ) ) setarray @map$, "Abyss Lakes Underground Cave F2", "abyss_02",275,270;
+			else if ( compare( .@str$, .@tmp$ +"dai03" ) ) setarray @map$, "Abyss Lakes Underground Cave F3", "abyss_03",116,27;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dam" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dam01" ) ) setarray @map$, "Amatsu Dungeon - Level 1", "ama_dun01",228,11;
+			else if ( compare( .@str$, .@tmp$ +"dam02" ) ) setarray @map$, "Amatsu Dungeon - Level 2", "ama_dun02",34,41;
+			else if ( compare( .@str$, .@tmp$ +"dam03" ) ) setarray @map$, "Amatsu Dungeon - Level 3", "ama_dun03",119,14;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dan" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dan01" ) ) setarray @map$, "Anthell F1", "anthell01",35,262;
+			else if ( compare( .@str$, .@tmp$ +"dan02" ) ) setarray @map$, "Anthell F2", "anthell02",168,170;
+		}
+		else if ( compare( .@str$, .@tmp$ +"day" ) ) {
+			if ( compare( .@str$, .@tmp$ +"day01" ) ) setarray @map$, "Ayothaya - Ancient Shrine Maze", "ayo_dun01",275,19;
+			else if ( compare( .@str$, .@tmp$ +"day02" ) ) setarray @map$, "Ayothaya - Inside Ancient Shrine", "ayo_dun02",24,26;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dbe" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dbe01" ) ) setarray @map$, "Beach Dungeon - Karu, west cave", "beach_dun",266,67;
+			else if ( compare( .@str$, .@tmp$ +"dbe02" ) ) setarray @map$, "Beach Dungeon - Ruande, north cave", "beach_dun2",255,244;
+			else if ( compare( .@str$, .@tmp$ +"dbe03" ) ) setarray @map$, "Beach Dungeon - Mao, east cave", "beach_dun3",23,260;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dby" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dby01" ) ) setarray @map$, "Byalan Dungeon - Undersea Tunnel F1", "iz_dun00",168,168;
+			else if ( compare( .@str$, .@tmp$ +"dby02" ) ) setarray @map$, "Byalan Dungeon - Undersea Tunnel F2", "iz_dun01",253,252;
+			else if ( compare( .@str$, .@tmp$ +"dby03" ) ) setarray @map$, "Byalan Dungeon - Undersea Tunnel F3", "iz_dun02",236,204;
+			else if ( compare( .@str$, .@tmp$ +"dby04" ) ) setarray @map$, "Byalan Dungeon - Undersea Tunnel F4", "iz_dun03",32,63;
+			else if ( compare( .@str$, .@tmp$ +"dby05" ) ) setarray @map$, "Byalan Dungeon - Undersea Tunnel F5", "iz_dun04",26,27;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dcl" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dcl01" ) ) setarray @map$, "Clock Tower F1", "c_tower1",199,159;
+			else if ( compare( .@str$, .@tmp$ +"dcl02" ) ) setarray @map$, "Clock Tower F2", "c_tower2",148,283;
+			else if ( compare( .@str$, .@tmp$ +"dcl03" ) ) setarray @map$, "Clock Tower F3", "c_tower3",65,147;
+			else if ( compare( .@str$, .@tmp$ +"dcl04" ) ) setarray @map$, "Clock Tower F4", "c_tower4",56,155;
+			else if ( compare( .@str$, .@tmp$ +"dcl05" ) ) setarray @map$, "Clock Tower B1", "alde_dun01",297,25;
+			else if ( compare( .@str$, .@tmp$ +"dcl06" ) ) setarray @map$, "Clock Tower B2", "alde_dun02",127,169;
+			else if ( compare( .@str$, .@tmp$ +"dcl07" ) ) setarray @map$, "Clock Tower B3", "alde_dun03",277,178;
+			else if ( compare( .@str$, .@tmp$ +"dcl08" ) ) setarray @map$, "Clock Tower B4", "alde_dun04",268,74;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dco" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dco01" ) ) setarray @map$, "Coal Mines - Mjolnir Dead Pit F1", "mjo_dun01",52,17;
+			else if ( compare( .@str$, .@tmp$ +"dco02" ) ) setarray @map$, "Coal Mines - Mjolnir Dead Pit F2", "mjo_dun02",381,343;
+			else if ( compare( .@str$, .@tmp$ +"dco03" ) ) setarray @map$, "Coal Mines - Mjolnir Dead Pit F3", "mjo_dun03",302,262;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dcu" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dcu01" ) ) setarray @map$, "Prontera Culvert F1", "prt_sewb1",131,247;
+			else if ( compare( .@str$, .@tmp$ +"dcu02" ) ) setarray @map$, "Prontera Culvert F2", "prt_sewb2",19,19;
+			else if ( compare( .@str$, .@tmp$ +"dcu03" ) ) setarray @map$, "Prontera Culvert F3", "prt_sewb3",180,169;
+			else if ( compare( .@str$, .@tmp$ +"dcu04" ) ) setarray @map$, "Prontera Culvert F4", "prt_sewb4",100,92;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dei" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dei01" ) ) setarray @map$, "Einbroch Dungeon - Mine Dungeon F1", "ein_dun01",22,14;
+			else if ( compare( .@str$, .@tmp$ +"dei02" ) ) setarray @map$, "Einbroch Dungeon - Mine Dungeon F2", "ein_dun02",292,290;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dge" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dge01" ) ) setarray @map$, "Gefenia - Level 1", "gefenia01",40,103;
+			else if ( compare( .@str$, .@tmp$ +"dge02" ) ) setarray @map$, "Gefenia - Level 2", "gefenia02",203,34;
+			else if ( compare( .@str$, .@tmp$ +"dge03" ) ) setarray @map$, "Gefenia - Level 3", "gefenia03",266,168;
+			else if ( compare( .@str$, .@tmp$ +"dge04" ) ) setarray @map$, "Gefenia - Level 4", "gefenia04",130,272;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dgf" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dgf01" ) ) setarray @map$, "Geffen Dungeon F1", "gef_dun00",104,99;
+			else if ( compare( .@str$, .@tmp$ +"dgf02" ) ) setarray @map$, "Geffen Dungeon F2", "gef_dun01",115,236;
+			else if ( compare( .@str$, .@tmp$ +"dgf03" ) ) setarray @map$, "Geffen Dungeon F3", "gef_dun02",106,132;
+			else if ( compare( .@str$, .@tmp$ +"dgf04" ) ) setarray @map$, "Geffen Dungeon F4", "gef_dun03",203,200;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dgl" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dgl01" ) ) setarray @map$, "Glast Heim - Entrance", "glast_01",371,304;
+			else if ( compare( .@str$, .@tmp$ +"dgl02" ) ) setarray @map$, "Glast Heim - Castle F1", "gl_cas01",199,29;
+			else if ( compare( .@str$, .@tmp$ +"dgl03" ) ) setarray @map$, "Glast Heim - Castle F2", "gl_cas02",104,25;
+			else if ( compare( .@str$, .@tmp$ +"dgl04" ) ) setarray @map$, "Glast Heim - Chivalry F1", "gl_knt01",150,15;
+			else if ( compare( .@str$, .@tmp$ +"dgl05" ) ) setarray @map$, "Glast Heim - Chivalry F2", "gl_knt02",157,287;
+			else if ( compare( .@str$, .@tmp$ +"dgl06" ) ) setarray @map$, "Glast Heim - St.Abbey", "gl_church",156,7;
+			else if ( compare( .@str$, .@tmp$ +"dgl07" ) ) setarray @map$, "Glast Heim - Churchyard", "gl_chyard",147,15;
+			else if ( compare( .@str$, .@tmp$ +"dgl08" ) ) setarray @map$, "Glast Heim - Culvert F1", "gl_sew01",258,255;
+			else if ( compare( .@str$, .@tmp$ +"dgl09" ) ) setarray @map$, "Glast Heim - Culvert F2", "gl_sew02",108,291;
+			else if ( compare( .@str$, .@tmp$ +"dgl10" ) ) setarray @map$, "Glast Heim - Culvert F3", "gl_sew03",171,283;
+			else if ( compare( .@str$, .@tmp$ +"dgl11" ) ) setarray @map$, "Glast Heim - Culvert F4", "gl_sew04",68,277;
+			else if ( compare( .@str$, .@tmp$ +"dgl12" ) ) setarray @map$, "Glast Heim - Staircase Dungeon", "gl_step",12,7;
+			else if ( compare( .@str$, .@tmp$ +"dgl13" ) ) setarray @map$, "Glast Heim - Underground Cave 1", "gl_dun01",133,271;
+			else if ( compare( .@str$, .@tmp$ +"dgl14" ) ) setarray @map$, "Glast Heim - Underground Cave 2", "gl_dun02",224,274;
+			else if ( compare( .@str$, .@tmp$ +"dgl15" ) ) setarray @map$, "Glast Heim - Underground Prison 1", "gl_prison",14,70;
+			else if ( compare( .@str$, .@tmp$ +"dgl16" ) ) setarray @map$, "Glast Heim - Underground Prison 2", "gl_prison1",150,14;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dgo" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dgo01" ) ) setarray @map$, "Gonryun Dungeon - Level 1", "gon_dun01",153,53;
+			else if ( compare( .@str$, .@tmp$ +"dgo02" ) ) setarray @map$, "Gonryun Dungeon - Level 2", "gon_dun02",28,113;
+			else if ( compare( .@str$, .@tmp$ +"dgo03" ) ) setarray @map$, "Gonryun Dungeon - Level 3", "gon_dun03",68,16;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dhi" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dhi01" ) ) setarray @map$, "Hidden Dungeon - Labyrinth Forest F1", "prt_maze01",176,7;
+			else if ( compare( .@str$, .@tmp$ +"dhi02" ) ) setarray @map$, "Hidden Dungeon - Labyrinth Forest F2", "prt_maze02",106,45;
+			else if ( compare( .@str$, .@tmp$ +"dhi03" ) ) setarray @map$, "Hidden Dungeon - Labyrinth Forest F3", "prt_maze03",23,8;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dic" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dic01" ) ) setarray @map$, "Ice Cave F1", "ice_dun01",157,14;
+			else if ( compare( .@str$, .@tmp$ +"dic02" ) ) setarray @map$, "Ice Cave F2", "ice_dun02",151,155;
+			else if ( compare( .@str$, .@tmp$ +"dic03" ) ) setarray @map$, "Ice Cave F3", "ice_dun03",149,22;
+			else if ( compare( .@str$, .@tmp$ +"dic04" ) ) setarray @map$, "Ice Cave F4", "ice_dun04",33,158;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dju" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dju01" ) ) setarray @map$, "The Ruins of Juperos F1", "juperos_01",53,247;
+			else if ( compare( .@str$, .@tmp$ +"dju02" ) ) setarray @map$, "The Ruins of Juperos F2", "juperos_02",37,63;
+			else if ( compare( .@str$, .@tmp$ +"dju03" ) ) setarray @map$, "Center of Juperos", "jupe_core",150,285;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dki" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dki01" ) ) setarray @map$, "Kiel Dungeon - Robot Factory Level 1", "kh_dun01",28,226;
+			else if ( compare( .@str$, .@tmp$ +"dki02" ) ) setarray @map$, "Kiel Dungeon - Robot Factory Level 2", "kh_dun02",41,198;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dli" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dli01" ) ) setarray @map$, "Lighthalzen - Somatology Labotory F1", "lhz_dun01",150,288;
+			else if ( compare( .@str$, .@tmp$ +"dli02" ) ) setarray @map$, "Lighthalzen - Somatology Labotory F2", "lhz_dun02",150,18;
+			else if ( compare( .@str$, .@tmp$ +"dli03" ) ) setarray @map$, "Lighthalzen - Somatology Labotory F3", "lhz_dun03",140,133;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dlo" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dlo01" ) ) setarray @map$, "Louyang Dungeon - Level 1", "lou_dun01",218,196;
+			else if ( compare( .@str$, .@tmp$ +"dlo02" ) ) setarray @map$, "Louyang Dungeon - Level 2", "lou_dun02",282,20;
+			else if ( compare( .@str$, .@tmp$ +"dlo03" ) ) setarray @map$, "Louyang Dungeon - Level 3", "lou_dun03",165,38;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dma" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dma01" ) ) setarray @map$, "Magma Dungeon - Nogg Road F1", "mag_dun01",126,68;
+			else if ( compare( .@str$, .@tmp$ +"dma02" ) ) setarray @map$, "Magma Dungeon - Nogg Road F2", "mag_dun02",47,30;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dmo" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dmo01" ) ) setarray @map$, "Moscovia Dungeon - Level 1", "mosk_dun01",200,267;
+			else if ( compare( .@str$, .@tmp$ +"dmo02" ) ) setarray @map$, "Moscovia Dungeon - Level 2", "mosk_dun02",162,33;
+			else if ( compare( .@str$, .@tmp$ +"dmo03" ) ) setarray @map$, "Moscovia Dungeon - Level 3", "mosk_dun03",34,134;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dor" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dor01" ) ) setarray @map$, "Orc Dungeon F1", "orcsdun01",32,170;
+			else if ( compare( .@str$, .@tmp$ +"dor02" ) ) setarray @map$, "Orc Dungeon F2", "orcsdun02",21,185;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dpa" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dpa01" ) ) setarray @map$, "Payon Cave F1", "pay_dun00",21,183;
+			else if ( compare( .@str$, .@tmp$ +"dpa02" ) ) setarray @map$, "Payon Cave F2", "pay_dun01",19,33;
+			else if ( compare( .@str$, .@tmp$ +"dpa03" ) ) setarray @map$, "Payon Cave F3", "pay_dun02",19,63;
+			else if ( compare( .@str$, .@tmp$ +"dpa04" ) ) setarray @map$, "Payon Cave F4", "pay_dun03",155,159;
+			else if ( compare( .@str$, .@tmp$ +"dpa05" ) ) setarray @map$, "Payon Cave F5", "pay_dun04",201,204;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dpy" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dpy01" ) ) setarray @map$, "Inside Pyramids F1", "moc_pryd01",192,9;
+			else if ( compare( .@str$, .@tmp$ +"dpy02" ) ) setarray @map$, "Inside Pyramids F2", "moc_pryd02",10,192;
+			else if ( compare( .@str$, .@tmp$ +"dpy03" ) ) setarray @map$, "Inside Pyramids F3", "moc_pryd03",100,92;
+			else if ( compare( .@str$, .@tmp$ +"dpy04" ) ) setarray @map$, "Inside Pyramids F4", "moc_pryd04",181,11;
+			else if ( compare( .@str$, .@tmp$ +"dpy05" ) ) setarray @map$, "Inside Pyramids B1", "moc_pryd05",94,96;
+			else if ( compare( .@str$, .@tmp$ +"dpy06" ) ) setarray @map$, "Inside Pyramids B2", "moc_pryd06",192,8;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dra" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dra01" ) ) setarray @map$, "Rachel Sanctuary - Level 1", "ra_san01",140,19;
+			else if ( compare( .@str$, .@tmp$ +"dra02" ) ) setarray @map$, "Rachel Sanctuary - Level 2", "ra_san02",34,21;
+			else if ( compare( .@str$, .@tmp$ +"dra03" ) ) setarray @map$, "Rachel Sanctuary - Level 3", "ra_san03",10,149;
+			else if ( compare( .@str$, .@tmp$ +"dra04" ) ) setarray @map$, "Rachel Sanctuary - Level 4", "ra_san04",204,218;
+			else if ( compare( .@str$, .@tmp$ +"dra05" ) ) setarray @map$, "Rachel Sanctuary - Level 5", "ra_san05",150,9;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dsp" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dsp01" ) ) setarray @map$, "Sphinx F1", "in_sphinx1",288,9;
+			else if ( compare( .@str$, .@tmp$ +"dsp02" ) ) setarray @map$, "Sphinx F2", "in_sphinx2",149,81;
+			else if ( compare( .@str$, .@tmp$ +"dsp03" ) ) setarray @map$, "Sphinx F3", "in_sphinx3",210,54;
+			else if ( compare( .@str$, .@tmp$ +"dsp04" ) ) setarray @map$, "Sphinx F4", "in_sphinx4",10,222;
+			else if ( compare( .@str$, .@tmp$ +"dsp05" ) ) setarray @map$, "Sphinx F5", "in_sphinx5",100,99;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dsu" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dsu01" ) ) setarray @map$, "Sunken Ship F1", "treasure01",69,24;
+			else if ( compare( .@str$, .@tmp$ +"dsu02" ) ) setarray @map$, "Sunken Ship F2", "treasure02",102,27;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dta" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dta01" ) ) setarray @map$, "Thanatos Tower - Level 1", "tha_t01",150,39;
+			else if ( compare( .@str$, .@tmp$ +"dta02" ) ) setarray @map$, "Thanatos Tower - Level 2", "tha_t02",150,136;
+			else if ( compare( .@str$, .@tmp$ +"dta03" ) ) setarray @map$, "Thanatos Tower - Level 3", "tha_t03",220,158;
+			else if ( compare( .@str$, .@tmp$ +"dta04" ) ) setarray @map$, "Thanatos Tower - Level 4", "tha_t04",59,143;
+			else if ( compare( .@str$, .@tmp$ +"dta05" ) ) setarray @map$, "Thanatos Tower - Level 5", "tha_t05",62,11;
+			else if ( compare( .@str$, .@tmp$ +"dta06" ) ) setarray @map$, "Thanatos Tower - Level 6", "tha_t06",89,221;
+			else if ( compare( .@str$, .@tmp$ +"dta07" ) ) setarray @map$, "Thanatos Tower - Level 7", "tha_t07",35,166;
+			else if ( compare( .@str$, .@tmp$ +"dta08" ) ) setarray @map$, "Thanatos Tower - Level 8", "tha_t08",93,148;
+			else if ( compare( .@str$, .@tmp$ +"dta09" ) ) setarray @map$, "Thanatos Tower - Level 9", "tha_t09",29,107;
+			else if ( compare( .@str$, .@tmp$ +"dta10" ) ) setarray @map$, "Thanatos Tower - Level 10", "tha_t10",159,138;
+			else if ( compare( .@str$, .@tmp$ +"dta11" ) ) setarray @map$, "Thanatos Tower - Level 11", "tha_t11",19,20;
+			else if ( compare( .@str$, .@tmp$ +"dta12" ) ) setarray @map$, "Thanatos Tower - Level 12", "tha_t12",130,52;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dth" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dth01" ) ) setarray @map$, "Thor's Volcano Dungeon F1", "thor_v01",21,228;
+			else if ( compare( .@str$, .@tmp$ +"dth02" ) ) setarray @map$, "Thor's Volcano Dungeon F2", "thor_v02",75,205;
+			else if ( compare( .@str$, .@tmp$ +"dth03" ) ) setarray @map$, "Thor's Volcano Dungeon F3", "thor_v03",34,272;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dto" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dto01" ) ) setarray @map$, "Toy Factory - Level 1", "xmas_dun01",205,15;
+			else if ( compare( .@str$, .@tmp$ +"dto02" ) ) setarray @map$, "Toy Factory - Level 2", "xmas_dun02",129,133;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dtu" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dtu01" ) ) setarray @map$, "Turtle Dungeon - Entrance", "tur_dun01",154,49;
+			else if ( compare( .@str$, .@tmp$ +"dtu02" ) ) setarray @map$, "Turtle Dungeon - Level 1", "tur_dun02",148,261;
+			else if ( compare( .@str$, .@tmp$ +"dtu03" ) ) setarray @map$, "Turtle Dungeon - Level 2", "tur_dun03",132,189;
+			else if ( compare( .@str$, .@tmp$ +"dtu04" ) ) setarray @map$, "Turtle Dungeon - Level 3", "tur_dun04",100,192;
+		}
+		else if ( compare( .@str$, .@tmp$ +"dum" ) ) {
+			if ( compare( .@str$, .@tmp$ +"dum01" ) ) setarray @map$, "Umbala Dungeon - Level 1", "um_dun01",42,31;
+			else if ( compare( .@str$, .@tmp$ +"dum02" ) ) setarray @map$, "Umbala Dungeon - Level 2", "um_dun02",48,30;
+		}
+	}
+	else if ( compare( .@str$ , .@tmp$ + "w" ) ) {
+		if ( compare( .@str$, .@tmp$ +"wfi" ) ) {
+			if ( compare( .@str$, .@tmp$ +"wfi01" ) ) setarray @map$, "Neuschwanstein - Aldebaran Castle 1", "alde_gld",48,83;
+			else if ( compare( .@str$, .@tmp$ +"wfi02" ) ) setarray @map$, "Hohenschwangau - Aldebaran Castle 2", "alde_gld",95,249;
+			else if ( compare( .@str$, .@tmp$ +"wfi03" ) ) setarray @map$, "Nuenberg - Aldebaran Castle 3", "alde_gld",142,85;
+			else if ( compare( .@str$, .@tmp$ +"wfi04" ) ) setarray @map$, "Wuerzburg - Aldebaran Castle 4", "alde_gld",239,242;
+			else if ( compare( .@str$, .@tmp$ +"wfi05" ) ) setarray @map$, "Rothenburg - Aldebaran Castle 5", "alde_gld",264,90;
+			else if ( compare( .@str$, .@tmp$ +"wfi06" ) ) setarray @map$, "Repherion - Geffen Castle 1", "gef_fild13",214,75;
+			else if ( compare( .@str$, .@tmp$ +"wfi07" ) ) setarray @map$, "Eeyolbriggar - Geffen Castle 2", "gef_fild13",308,240;
+			else if ( compare( .@str$, .@tmp$ +"wfi08" ) ) setarray @map$, "Yesnelph - Geffen Castle 3", "gef_fild13",143,240;
+			else if ( compare( .@str$, .@tmp$ +"wfi09" ) ) setarray @map$, "Bergel - Geffen Castle 4", "gef_fild13",193,278;
+			else if ( compare( .@str$, .@tmp$ +"wfi10" ) ) setarray @map$, "Mersetzdeitz - Geffen Castle 5", "gef_fild13",305,87;
+			else if ( compare( .@str$, .@tmp$ +"wfi11" ) ) setarray @map$, "Bright Arbor - Payon Castle 1", "pay_gld",121,233;
+			else if ( compare( .@str$, .@tmp$ +"wfi12" ) ) setarray @map$, "Scarlet Palace - Payon Castle 2", "pay_gld",295,116;
+			else if ( compare( .@str$, .@tmp$ +"wfi13" ) ) setarray @map$, "Holy Shadow - Payon Castle 3", "pay_gld",317,293;
+			else if ( compare( .@str$, .@tmp$ +"wfi14" ) ) setarray @map$, "Sacred Altar - Payon Castle 4", "pay_gld",140,160;
+			else if ( compare( .@str$, .@tmp$ +"wfi15" ) ) setarray @map$, "Bamboo Grove Hill - Payon Castle 5", "pay_gld",204,266;
+			else if ( compare( .@str$, .@tmp$ +"wfi16" ) ) setarray @map$, "Kriemhild - Prontera Castle 1", "prt_gld",134,65;
+			else if ( compare( .@str$, .@tmp$ +"wfi17" ) ) setarray @map$, "Swanhild - Prontera Castle 2", "prt_gld",240,128;
+			else if ( compare( .@str$, .@tmp$ +"wfi18" ) ) setarray @map$, "Fadhgridh - Prontera Castle 3", "prt_gld",153,137;
+			else if ( compare( .@str$, .@tmp$ +"wfi19" ) ) setarray @map$, "Skoegul - Prontera Castle 4", "prt_gld",111,240;
+			else if ( compare( .@str$, .@tmp$ +"wfi20" ) ) setarray @map$, "Gondul - Prontera Castle 5", "prt_gld",208,240;
+		}
+		else if ( compare( .@str$, .@tmp$ +"wse" ) ) {
+			if ( compare( .@str$, .@tmp$ +"wse01" ) ) setarray @map$, "Himinn - Schwaltzvalt Castle 1", "sch_gld",293,100;
+			else if ( compare( .@str$, .@tmp$ +"wse02" ) ) setarray @map$, "Andlangr - Schwaltzvalt Castle 2", "sch_gld",288,252;
+			else if ( compare( .@str$, .@tmp$ +"wse03" ) ) setarray @map$, "Viblainn - Schwaltzvalt Castle 3", "sch_gld",97,196;
+			else if ( compare( .@str$, .@tmp$ +"wse04" ) ) setarray @map$, "Hljod - Schwaltzvalt Castle 4", "sch_gld",137,90;
+			else if ( compare( .@str$, .@tmp$ +"wse05" ) ) setarray @map$, "Skidbladnir - Schwaltzvalt Castle 5", "sch_gld",71,315;
+			else if ( compare( .@str$, .@tmp$ +"wse06" ) ) setarray @map$, "Mardol - Arunafeltz Castle 1", "aru_gld",158,272;
+			else if ( compare( .@str$, .@tmp$ +"wse07" ) ) setarray @map$, "Cyr - Arunafeltz Castle 2", "aru_gld",83,47;
+			else if ( compare( .@str$, .@tmp$ +"wse08" ) ) setarray @map$, "Horn - Arunafeltz Castle 3", "aru_gld",68,155;
+			else if ( compare( .@str$, .@tmp$ +"wse09" ) ) setarray @map$, "Gefn - Arunafeltz Castle 4", "aru_gld",299,345;
+			else if ( compare( .@str$, .@tmp$ +"wse10" ) ) setarray @map$, "Bandis - Arunafeltz Castle 5", "aru_gld",292,107;
+		}
+	}
+	else if ( compare( .@str$ , .@tmp$ + "o" ) ) {
+		copyarray .@abc$, getvariableofnpc( .filled$, "warpra" ), 10;
+		set .@abcsize, getarraysize(.@abc$);
+		while ( .@j < .@abcsize ) {
+			if ( compare( .@str$, .@tmp$ +"o"+ .@abc$[.@j] ) ) {
+				set .@i, 0;
+				while ( .@i < 32 ) {
+					if ( compare( .@str$, .@tmp$ +"o"+ .@abc$[.@j] +( (.@i < 9)?"0":"")+(.@i +1) ) ) {
+						set .@a, .@i * 4;
+						setarray @map$,
+							getvariableofnpc ( getd(".custommap"+ .@abc$[.@j] +"$["+ .@a +"]"), "warpra" ),
+							getvariableofnpc ( getd(".custommap"+ .@abc$[.@j] +"$["+( .@a +1 )+"]"), "warpra" ),
+							getvariableofnpc ( getd(".custommap"+ .@abc$[.@j] +"$["+( .@a +2 )+"]"), "warpra" ),
+							getvariableofnpc ( getd(".custommap"+ .@abc$[.@j] +"$["+( .@a +3 )+"]"), "warpra" );
+						break;
+					}
+					set .@i, .@i +1 ;
+				}
+				if ( @map$[3] != "" ) break;
+			}
+			set .@j, .@j +1 ;
+		}
+	}
+	if ( getarg(0) != "" && @map$[3] == "" )
+		dispbottom "An Error occur when trying to load #"+ getarg(0);
+	return;
+}
+malaya,219,206,4	duplicate(Warper)	Warper#a	900
+mid_camp,202,291,4	duplicate(Warper)	Warper#b	900
+splendide,193,182,5	duplicate(Warper)	Warper#c	900
+dicastes01,190,181,5	duplicate(Warper)	Warper#d	900
+mora,106,108,5	duplicate(Warper)	Warper#e	900
+dewata,197,183,5	duplicate(Warper)	Warper#f	900
+malangdo,177,165,5	duplicate(Warper)	Warper#g	900
+
+
+
+
+
+
+
+
+prontera,159,183,5	duplicate(Warper)	Warper#01	902
+rachel,126,114,5	duplicate(Warper)	Warper#02	900
+alberta,114,63,5	duplicate(Warper)	Warper#03	900
+aldebaran,145,118,4	duplicate(Warper)	Warper#04	900
+amatsu,190,115,5	duplicate(Warper)	Warper#05	900
+ayothaya,144,116,6	duplicate(Warper)	Warper#06	900
+comodo,191,153,4	duplicate(Warper)	Warper#07	900
+einbech,142,246,4	duplicate(Warper)	Warper#08	900
+einbroch,69,202,4	duplicate(Warper)	Warper#09	900
+hugel,101,148,4	duplicate(Warper)	Warper#10	900
+lighthalzen,160,100,4	duplicate(Warper)	Warper#11	900
+geffen,113,63,5	duplicate(Warper)	Warper#12	900
+izlude,134,120,4	duplicate(Warper)	Warper#13	900
+xmas,150,136,4	duplicate(Warper)	Warper#14	900
+morocc,153,97,5	duplicate(Warper)	Warper#15	900
+payon,175,104,5	duplicate(Warper)	Warper#16	900
+yuno,166,182,4	duplicate(Warper)	Warper#17	900
+moc_fild04,207,331,4	duplicate(Warper)	Warper#18	900
+izlu2dun,104,82,4	duplicate(Warper)	Warper#19	900
+mjolnir_02,85,363,4	duplicate(Warper)	Warper#20	900
+prt_fild05,273,215,4	duplicate(Warper)	Warper#21	900
+glast_01,370,308,4	duplicate(Warper)	Warper#22	900
+yuno_fild03,37,135,4	duplicate(Warper)	Warper#23	900
+gef_fild10,71,339,4	duplicate(Warper)	Warper#24	900
+pay_arche,39,135,4	duplicate(Warper)	Warper#25	900
+moc_ruins,64,166,4	duplicate(Warper)	Warper#26	900
+moc_fild19,106,97,4	duplicate(Warper)	Warper#27	900
+alb2trea,73,101,4	duplicate(Warper)	Warper#28	900
+tur_dun01,148,239,4	duplicate(Warper)	Warper#29	900
+gonryun,156,122,5	duplicate(Warper)	Warper#30	900
+louyang,210,101,6	duplicate(Warper)	Warper#31	900
+umbala,85,163,5	duplicate(Warper)	Warper#32	900
+moscovia,156,100,4	duplicate(Warper)	Warper#33	900
+thor_camp,241,72,4	duplicate(Warper)	Warper#34	900
+nameless_n,260,217,4	duplicate(Warper)	Warper#35	900
+veins,212,123,5	duplicate(Warper)	Warper#36	900
+moscovia,218,185,6	duplicate(Warper)	Warper#37	900
+jawaii,171,177,6	duplicate(Warper)	Warper#38	900
+//jupe_ele,41,55,5	duplicate(Warper)	Warper#39	900
+einbech,163,129,8	duplicate(Warper)	Warper#40	900
+manuk,270,128,6	duplicate(Warper)	Warper#41	900
+splendide,196,153,6	duplicate(Warper)	Warper#42	900
+//mid_camp,213,287,4	duplicate(Warper)	Warp NPC#43	900
+brasilis,201,222,4	duplicate(Warper)	Warp NPC#44	900
+//dicastes01,187,228,8	duplicate(Warper)	Warp NPC#45	900
+
+rentinb1,25,17,5	duplicate(Warper)	Warp NPC#47	900
+rentinb2,25,17,5	duplicate(Warper)	Warp NPC#48	900
+rentinb3,25,17,5	duplicate(Warper)	Warp NPC#49	900
+rentinb4,25,17,5	duplicate(Warper)	Warp NPC#50	900
+rentinb5,25,17,5	duplicate(Warper)	Warp NPC#51	900
+rentinb6,25,17,5	duplicate(Warper)	Warp NPC#52	900
+rentinb7,25,17,5	duplicate(Warper)	Warp NPC#53	900
+rentinb8,25,17,5	duplicate(Warper)	Warp NPC#54	900
+rentinb9,25,17,5	duplicate(Warper)	Warp NPC#55	900
+rentinb10,25,17,5	duplicate(Warper)	Warp NPC#56	900
+rentinb11,25,17,5	duplicate(Warper)	Warp NPC#57	900
+rentinb12,25,17,5	duplicate(Warper)	Warp NPC#58	900
+rentinb13,25,17,5	duplicate(Warper)	Warp NPC#59	900
+rentinb14,25,17,5	duplicate(Warper)	Warp NPC#60	900
+rentinb15,25,17,5	duplicate(Warper)	Warp NPC#61	900
+rentinb16,25,17,5	duplicate(Warper)	Warp NPC#62	900
+rentinb17,25,17,5	duplicate(Warper)	Warp NPC#63	900
+rentinb18,25,17,5	duplicate(Warper)	Warp NPC#64	900
+rentinb19,25,17,5	duplicate(Warper)	Warp NPC#65	900
+rentinb20,25,17,5	duplicate(Warper)	Warp NPC#66	900
+rentinb21,25,17,5	duplicate(Warper)	Warp NPC#67	900
+rentinb22,25,17,5	duplicate(Warper)	Warp NPC#68	900
+rentinb23,25,17,5	duplicate(Warper)	Warp NPC#69	900
+rentinb24,25,17,5	duplicate(Warper)	Warp NPC#70	900
+rentinb25,25,17,5	duplicate(Warper)	Warp NPC#71	900
+rentinb26,25,17,5	duplicate(Warper)	Warp NPC#72	900
+rentinb27,25,17,5	duplicate(Warper)	Warp NPC#73	900

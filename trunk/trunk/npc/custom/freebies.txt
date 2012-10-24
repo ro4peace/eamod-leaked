@@ -1,0 +1,36 @@
+prontera,156,187,3	script	* Admin *	871,{
+
+set .@n$, "[* Admin *]";
+setarray .@rwd[0],7179,1000,1530,1,2410,1,2629,2,5013,1,4145,2,14232,500; // Rewards: <item id>,<item amount>
+
+query_sql ("SELECT `last_ip` FROM `login` WHERE `account_id`=" + getcharid(3) + "", .@lip$);
+
+if ( getd("$" + .@lip$ + "_NG") > 0 || #NewbieGift > 0)
+{
+mes .@n$;
+mes "I'm sorry, the rewards are exclusively for new players.";
+close;
+}
+
+mes .@n$;
+mes "Welcome! Here are some freebies"; 
+mes "for newcomers:";
+
+for ( set .@i, 0; .@i < getarraysize(.@rwd); set .@i, .@i + 2 )
+mes .@rwd[.@i+1] + " x " + getitemname(.@rwd[.@i]);
+
+close2;
+set #NewbieGift, 1;
+setd "$" + .@lip$ + "_NG", getd("$" + .@lip$ + "_NG") + 1;
+
+for ( set .@i, 0; .@i < getarraysize(.@rwd); set .@i, .@i + 2 )
+getitem .@rwd[.@i], .@rwd[.@i+1];
+
+end;
+
+OnInit:
+
+waitingroom "DevRO Freebies!",0;
+end;
+
+}

@@ -1,0 +1,47 @@
+//============================
+
+//Last 5 Winner Ranker NPC
+
+//============================
+
+prontera,132,191,5	script	Event Winners	858,{
+
+	mes .name$;
+
+	mes "# ^ff00001.^000000 ^806D7EDice^000000: ";
+
+	mes "Name: ^B041FF" + (($DiceEventWinner$ == "")? "None":$DiceEventWinner$) + "^000000";
+
+	mes "----------------------------";
+
+	mes "# ^ff00002.^000000 ^806D7ELast Man Standing^000000: ";
+
+	mes "Name: ^B041FF" + (($LMSEventWinner$ == "")? "None":$LMSEventWinner$) + "^000000";
+
+	mes "----------------------------";
+
+	mes "# ^ff00003.^000000 ^806D7EDisguise^000000: ";
+
+	mes "Name: ^B041FF" + (($DisguiseEventWin$ == "")? "None":$DisguiseEventWin$) + "^000000";
+
+	mes "----------------------------";
+
+	mes "# ^ff00004.^000000 ^806D7EKing of Emperium^000000: ";
+
+	mes "Name: ^B041FF" + ((!$koegid)? "None":getguildname($koegid)) + "^000000";
+
+	mes "----------------------------";
+
+	close;
+
+
+
+	OnInit:
+
+		waitingroom "Automated Event Winners",0;   // Look on the configuration!
+
+		set .name$,"[ ^ff0000" + strnpcinfo(0) + "^000000 ]";
+
+		end;
+
+}

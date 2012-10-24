@@ -1,0 +1,1160 @@
+//Job changer
+
+//////////////////////////////////////////////////////////////////////////////////
+
+//			Jobchanger eA-Jobsystem + 3rd Classes		           //
+
+/////////////////////////////////////////////////////////////////////////////////
+
+//1.0 - Creators Job Master eAthena [Ori:LunatikBunnie] [Cur:Lance])
+
+//1.1 - Added 3rd Classes [Viktus]
+
+//1.2 - Added 2nd Platinum Skills [Viktus]
+
+//
+
+// Rebirth-Class Only can Become 3rd-class
+
+// Edited by Moned
+
+///////////////////////////////////////////////////////////////////////////////
+
+//=========================================================//
+
+//prontera.gat,159,184,4	script	Job Changer	702,{      //
+
+//=========================================================//
+
+
+	mes "^ff0000[Job Master]^000000";
+
+	mes "Please select one option.";
+
+	next;
+
+	switch(select("Normal Job Change:Baby Job Change:Close")) {
+
+		case 1:
+
+			callfunc "jobmaster";
+
+		case 2:
+
+			callfunc "Babyjobchanger";
+
+		case 3:
+
+			close;
+
+			}
+OnInit:
+while(1) {
+npctalk "Pls. write us a review on ratemyserver.net";
+sleep 300000;
+}
+
+		}
+
+		
+
+//========================================
+
+// Baby jobchanger
+
+//========================================
+
+function	script	Babyjobchanger	{
+
+set @npcname$,"^ff0000[ Baby Jobchanger ]^000000";
+
+if (class == 4023) goto L_Acceptable;
+
+if (Class == 4024) goto L_Acceptable;
+
+if (class == 4025) goto L_Acceptable;
+
+if (class == 4026) goto L_Acceptable;
+
+if (class == 4027) goto L_Acceptable;
+
+if (class == 4028) goto L_Acceptable;
+
+if (class == 4029) goto L_Acceptable;
+
+if (class == 4030) goto L_Acceptable;
+
+if (class == 4031) goto L_Acceptable;
+
+if (class == 4032) goto L_Acceptable;
+
+if (class == 4033) goto L_Acceptable;
+
+if (class == 4034) goto L_Acceptable;
+
+if (class == 4035) goto L_Acceptable;
+
+if (class == 4036) goto L_Acceptable;
+
+if (class == 4037) goto L_Acceptable;
+
+if (class == 4038) goto L_Acceptable;
+
+if (class == 4039) goto L_Acceptable;
+
+if (class == 4040) goto L_Acceptable;
+
+if (class == 4041) goto L_Acceptable;
+
+if (class == 4042) goto L_Acceptable;
+
+if (class == 4043) goto L_Acceptable;
+
+if (class == 4044) goto L_Acceptable;
+
+if (class == 4045) goto L_Acceptable;
+
+if (Class == 0) goto L_WantBabyNovice;
+
+mes @npcname$;
+
+mes "I'm sorry but I cannot assist you, you.. you... Big Olf!";
+
+close;
+
+L_WantBabyNovice:
+
+mes @npcname$;
+
+mes "Hello " +strcharinfo(0)+ ", would you like to become a baby novice?";
+
+next;
+
+menu "Yes",L_ConfirmJlvl,"No Thanks",L_Decline;
+
+close;
+
+
+
+L_ConfirmJlvl:
+
+jobchange 4023;
+
+ResetSkill;
+
+set SkillPoint, 0;
+
+mes @npcname$;
+
+mes "Okay! Congratulations " +strcharinfo(0)+ ", you are now a Baby Novice!";
+
+//get main gauche[4]
+
+close;
+
+
+
+L_SuperBaby:
+
+if (JobLevel < 10) goto L_LackJlevel;
+
+jobchange 4045;
+
+mes @npcname$;
+
+mes "Okay! Congratulations " +strcharinfo(0)+ ", you are now a Super Baby!";
+
+//get Main gauche[4]
+
+close;
+
+
+
+
+
+L_LackJlevel:
+
+mes @npcname$;
+
+mes "I'm sorry, but the value of your job level is insufficient sweetheart.";
+
+close;
+
+
+
+L_Acceptable:
+
+if (class == 4023) goto L_Job1;
+
+if (Class == 4024) goto L_Job2;
+
+if (Class == 4025) goto L_Job2;
+
+if (Class == 4026) goto L_Job2;
+
+if (Class == 4027) goto L_Job2;
+
+if (Class == 4028) goto L_Job2;
+
+if (Class == 4029) goto L_Job2;
+
+if (Class == 4030) goto L_Job3;
+
+if (Class == 4031) goto L_Job3;
+
+if (Class == 4032) goto L_Job3;
+
+if (Class == 4033) goto L_Job3;
+
+if (Class == 4034) goto L_Job3;
+
+if (Class == 4035) goto L_Job3;
+
+if (Class == 4036) goto L_Job3;
+
+if (Class == 4037) goto L_Job3;
+
+if (Class == 4038) goto L_Job3;
+
+if (Class == 4039) goto L_Job3;
+
+if (Class == 4040) goto L_Job3;
+
+if (Class == 4041) goto L_Job3;
+
+if (Class == 4042) goto L_Job3;
+
+if (Class == 4043) goto L_Job3;
+
+if (Class == 4044) goto L_Job3;
+
+if (Class == 4045) goto L_Job3;
+
+
+
+
+
+L_Job1:
+
+mes @npcname$;
+
+mes "Hello " +strcharinfo(0)+ ".";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to change into First Class Baby?";
+
+next;
+
+menu "Yes",L_FirstC,"Cancel",L_Cancel;
+
+close;
+
+L_FirstC:
+
+menu "Baby Swordsman",L_BabyS,"Baby Mage",L_BabyM,"Baby Archer",L_BabyArch,"Baby Acolyte",L_BabyAco,"Baby Merchant",L_BabyMerch,"Baby Thief",L_BabyThief,"Super Baby!",L_SuperBaby;
+
+close;
+
+L_BabyS:
+
+if (JobLevel < 10) goto L_LackJlevel;
+
+jobchange 4024;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Swordsman!";
+
+close;
+
+
+
+L_BabyM:
+
+if (JobLevel < 10) goto L_LackJlevel;
+
+jobchange 4025;
+
+mes #npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Mage!";
+
+close;
+
+
+
+L_BabyArch:
+
+if (JobLevel < 10) goto L_LackJlevel;
+
+jobchange 4026;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Archer!";
+
+close;
+
+
+
+L_BabyAco:
+
+if (JobLevel < 10) goto L_LackJlevel;
+
+jobchange 4027;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Acolyte!";
+
+close;
+
+
+
+L_BabyMerch:
+
+if (JobLevel < 10) goto L_LackJlevel;
+
+jobchange 4028;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Merchant!";
+
+close;
+
+
+
+L_BabyThief:
+
+if (JobLevel < 10) goto L_LackJlevel;
+
+jobchange 4029;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Thief!";
+
+close;
+
+
+
+L_Job2:
+
+mes @npcname$;
+
+mes "Hello " +strcharinfo(0)+ ".";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to change into Second Class Baby?";
+
+next;
+
+menu "Yes",L_SecondC,"Cancel",L_Cancel;
+
+close;
+
+L_SecondC:
+
+if (Class == 4024) goto L_BabyKnight;
+
+if (Class == 4025) goto L_BabyMagician;
+
+if (Class == 4026) goto L_BabyHunter;
+
+if (Class == 4027) goto L_BabyAcoChoice;
+
+if (Class == 4028) goto L_BabyMerchChoice;
+
+if (Class == 4029) goto L_BabySinStalk;
+
+//
+
+L_BabyKnight:
+
+if (JobLevel < 40) goto L_LackJlevel;
+
+mes @npcname$;
+
+mes "I see that you are a Baby Swordsman...";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to turn into a Baby Knight, or Crusader?";
+
+next;
+
+menu "Knight",L_BabyKn,"Crusader",L_Sader;
+
+close;
+
+L_BabyKn:
+
+jobchange 4030;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Knight!";
+
+close;
+
+
+
+L_Sader:
+
+jobchange 4037;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Crusader!";
+
+close;
+
+//
+
+L_BabyMagician:
+
+if (JobLevel < 40) goto L_LackJlevel;
+
+mes @npcname$;
+
+mes "I see that you are a Baby Mage...";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to turn into a Baby Wizard, or Sage?";
+
+next;
+
+menu "Wizard",L_Wiz,"Sage",L_Sage;
+
+close;
+
+L_Wiz:
+
+jobchange 4032;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Wizard!";
+
+close;
+
+
+
+L_Sage:
+
+jobchange 4039;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Sage!";
+
+close;
+
+//
+
+L_BabyHunter:
+
+if (JobLevel < 40) goto L_LackJlevel;
+
+mes @npcname$;
+
+mes "I see that you are a Baby Archer...";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to turn into a Baby Hunter, or Bard/Dancer?";
+
+next;
+
+menu "Hunter",L_Hun,"Bard/Dancer",L_BardDeceiph;
+
+close;
+
+L_Hun:
+
+jobchange 4034;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Hunter!";
+
+close;
+
+
+
+L_BardDeceiph:
+
+if (Sex == 1) goto L_Bard;
+
+jobchange 4043;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Dancer!";
+
+close;
+
+
+
+L_Bard:
+
+jobchange 4042;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Bard!";
+
+close;
+
+
+
+L_BabyAcoChoice:
+
+if (JobLevel < 40) goto L_LackJlevel;
+
+mes @npcname$;
+
+mes "I see that you are a Baby Acolyte...";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to turn into a Baby Priest, or Monk?";
+
+next;
+
+menu "Priest",L_Priest,"Monk",L_Monk;
+
+close;
+
+L_Priest:
+
+jobchange 4031;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Priest!";
+
+close;
+
+
+
+L_Monk:
+
+jobchange 4038;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Monk!";
+
+close;
+
+
+
+L_BabyMerchChoice:
+
+if (JobLevel < 40) goto L_LackJlevel;
+
+mes @npcname$;
+
+mes "I see that you are a Baby Merchant...";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to turn into a Baby Blacksmith, or Alchemist?";
+
+next;
+
+menu "Blacksmith",L_Hammerfall,"Alchemist",L_Alch;
+
+close;
+
+L_Hammerfall:
+
+jobchange 4033;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Blacksmith!";
+
+close;
+
+
+
+L_Alch:
+
+jobchange 4041;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Alchemist!";
+
+close;
+
+
+
+L_BabySinStalk:
+
+if (JobLevel < 40) goto L_LackJlevel;
+
+mes @npcname$;
+
+mes "I see that you are a Baby Thief...";
+
+next;
+
+mes @npcname$;
+
+mes "Would you like to turn into a Baby Assassin, or Rogue?";
+
+next;
+
+menu "Assassin",L_sin,"Rogue",L_rogue;
+
+close;
+
+L_sin:
+
+jobchange 4035;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Assassin!";
+
+close;
+
+
+
+L_rogue:
+
+jobchange 4040;
+
+mes @npcname$;
+
+mes "Excellent " +strcharinfo(0)+ ", you are now a Baby Rogue!";
+
+close;
+
+
+
+L_Job3:
+
+mes @npcname$;
+
+mes "I'm sorry, but you are too advanced for me to help you any longer!";
+
+close;
+
+
+
+L_Decline:
+
+mes @npcname$;
+
+mes "Have a good day!";
+
+close;
+
+
+
+L_Cancel:
+
+mes @npcname$;
+
+mes "I see...  Bye for now.";
+
+close;
+
+
+}
+
+
+
+//============================================//
+
+// Jobchanger//
+
+//============================================//
+
+function	script	jobmaster	{
+
+	//== DO NOT EDIT THE FOLLOWING:
+
+	deletearray @ejc[0],getarraysize(@ejc);
+
+	//== The following can be edited:
+
+	set @npcname$,"[^ff0000Job Master^000000]";
+
+	set @ejc[0],40;	// Super Novice Job Change Base Level.
+
+	set @ejc[1],10;	// Novice to First Class Minimum Job Level.
+
+	set @ejc[2],40;	// First to Second Class Minimum Job Level.
+
+	set @ejc[3],50;	// Rebirth Job Level.
+
+	set @ejc[4],99;	// Rebirth Base Level.
+
+	set @ejc[5],1;	// Delete Extra Skill Points: 0 - No, 1 - Yes.
+
+	set @ejc[6],1;	// Check for basic skills: 0 - No, 1 - Yes.
+
+	set @ejc[7],1;	// Restrict Job Tree: 0 - No, 1 - Yes.
+
+	set @ejc[8],1;	// Enable Ninja and Gunslinger: 0 - No, 1 - Yes.
+
+	set @ejc[9],1;	// Get Platinum Skills:	0 - No, 1 - Yes.
+
+	set @ejc[10],0;	// Enable New Platinum Skills: 0 - No, 1 - Yes.
+
+	set @ejc[11],0;	// Enable Choice for Sage/Professor Elemental Charge:	0 - Give All, 1 - Choose One.
+
+	set @ejc[12],0;	// Enable Baby Classes:	0 - No, 1 - Yes.
+
+	set @ejc[13],0;	// Enable Rebirth Class Skipping:	0 - No, 1 - First High, 2 - Second Advanced.
+
+	set @ejc[14],1;	// Reset Status during Rebirth: 0 - No, 1 - Yes. Note: To be used with @ejc[13].
+
+	next;
+
+	if((Class >= Job_Lord_Knight && Class <= Job_Paladin2) || (Class >= 4047 && Class <= 4049) || (Class >= 4030 && Class <= 4045) || Class >= 22 && Class <= 26){
+
+		mes @npcname$;
+
+		mes "I am sorry, but you can no longer advance in classes.";
+
+		close;
+
+	}else if(!@ejc[12] && Upper == 2){
+
+		mes @npcname$;
+
+		mes "I am sorry, I can not change the job classes of Babies.";
+
+		close;
+
+	}else if(@ejc[6] && getskilllv(1) < 9){
+
+			mes @npcname$;
+
+			mes "It appears you do not have your ^FF0000Basic Skills^000000.";
+
+			next;
+
+			mes @npcname$;
+
+			mes "Please return when you have attained them.";
+
+			close;
+
+	}else if(@ejc[5] && SkillPoint){
+
+		mes @npcname$;
+
+		mes "Please be aware that when changing classes, all extra skill points that have not been used will be deleted.";
+
+		next;
+
+		mes "^880000You presently have [^FF0000"+SkillPoint+"^880000] unused skill point(s)."; mes " ";
+
+		mes "Proceed?^000000";
+
+		next;
+
+		menu "Yes",-, "No",-;
+
+			if(@menu == 2){ L_Finito:
+
+						mes @npcname$;
+
+						mes "Come again.";
+
+						close;
+
+					}
+
+	}
+
+	if(Class >= Job_Knight && Class <= Job_Crusader2){
+
+		if(BaseLevel < @ejc[4] || JobLevel < @ejc[3]){ callfunc "JBLevel",3,5; goto L_Finito; }
+
+		mes "^880000You may now be reborn into a ^FF0000Transcendent Class^880000,"; mes " ";
+
+		mes "Proceed?^000000";
+
+		next;
+
+		menu "Yes",-, "No",L_Finito;
+
+		set @ejc[99],1;
+
+		if(!@ejc[13]) callfunc "JChange",4001;
+
+		if(@ejc[13] == 1) goto L_FChoice;
+
+		}
+
+	if((Class >= Job_Swordman_High && Class <= Job_Thief_High) || (Class >= Job_Swordman && Class <= Job_Thief) || (Class >= Job_Baby_Swordman && Class <= Job_Baby_Thief) || Class == 4046 || @ejc[99]){
+
+		mes @npcname$;
+
+		if(!@ejc[99]) mes "Do you wish to change your ^FF0000Job^000000?";
+
+		if(@ejc[99]) mes "Do you wish to proceed with the Rebirth Process?";
+
+		next;
+
+		menu "Yes",-, "No",L_Finito;
+
+		if(!@ejc[99] && JobLevel < @ejc[2]){ callfunc "JBLevel",2,0; goto L_Finito; }
+
+		if((Upper == 1 && SJob) || (@ejc[99] && @ejc[7])){ if(!SJob){ set @ejc[100],4001+Class; }else if(SJob){ set @ejc[100],4001+SJob; } callfunc "JChange",@ejc[100]; }
+
+		mes @npcname$;
+
+		mes "Please choose which class you wish to change to:";
+
+		next;
+
+			switch(Class){
+
+				case Job_Knight: case Job_Crusader: case Job_Swordman: case Job_Swordman_High: case Job_Baby_Swordman:
+
+					if(Upper == 1 || @ejc[99]){ set .@cmenu,select("Lord Knight:Paladin"); setarray @ejc[80],4008,4015; }else if(Upper == 2){ set .@cmenu,select("Baby Knight:Baby Crusader"); setarray @ejc[80],4030,4037; }else if(!Upper){ set .@cmenu,select("Knight:Crusader"); setarray @ejc[80],7,14; }
+
+					break;
+
+				case Job_Wizard: case Job_Sage: case Job_Mage: case Job_Mage_High: case Job_Baby_Mage:
+
+					if(Upper == 1 || @ejc[99]){ set .@cmenu,select("High Wizard:Professor"); setarray @ejc[80],4010,4017; }else if(Upper == 2){ set .@cmenu,select("Baby Wizard:Baby Sage"); setarray @ejc[80],4032,4039; }else if(!Upper){ set .@cmenu,select("Wizard:Sage"); setarray @ejc[80],9,16; }
+
+					break;
+
+				case Job_Hunter: case Job_Dancer: case Job_Bard: case Job_Archer: case Job_Archer_High: case Job_Baby_Archer:
+
+					if(Sex == 0){ if(Upper == 1 || @ejc[99]){ set .@cmenu,select("Sniper:Clown"); setarray @ejc[80],4012,4021; }else if(Upper == 2){ set .@cmenu,select("Baby Hunter:Baby Dancer"); setarray @ejc[80],4034,4043; }else if(!Upper){ set .@cmenu,select("Hunter:Dancer"); setarray @ejc[80],11,20; }}
+
+					if(Sex == 1){ if(Upper == 1 || @ejc[99]){ set .@cmenu,select("Sniper:Gypsy"); setarray @ejc[80],4012,4020; }else if(Upper == 2){ set .@cmenu,select("Baby Hunter:Baby Bard"); setarray @ejc[80],4034,4042; }else if(!Upper){ set .@cmenu,select("Hunter:Bard"); setarray @ejc[80],11,19; }}
+
+					break;
+
+				case Job_Priest: case Job_Monk: case Job_Acolyte: case Job_Acolyte_High: case Job_Baby_Acolyte:
+
+					if(Upper == 1 || @ejc[99]){ set .@cmenu,select("High Priest:Champion"); setarray @ejc[80],4009,4016; }else if(Upper == 2){ set .@cmenu,select("Baby Priest:Baby Monk"); setarray @ejc[80],4031,4038; }else if(!Upper){ set .@cmenu,select("Priest:Monk"); setarray @ejc[80],8,15; }
+
+					break;
+
+				case Job_Blacksmith: case Job_Alchem: case Job_Merchant: case Job_Merchant_High: case Job_Baby_Merchant:
+
+					if(Upper == 1 || @ejc[99]){ set .@cmenu,select("Whitesmith:Creator"); setarray @ejc[80],4011,4019; }else if(Upper == 2){ set .@cmenu,select("Baby Merchant:Baby Alchemist"); setarray @ejc[80],4033,4041; }else if(!Upper){ set .@cmenu,select("Blacksmith:Alchemist"); setarray @ejc[80],10,18; }
+
+					break;
+
+				case Job_Assassin: case Job_Rogue: case Job_Thief: case Job_Thief_High: case Job_Baby_Thief:
+
+					if(Upper == 1 || @ejc[99]){ set .@cmenu,select("Assassin Cross:Stalker"); setarray @ejc[80],4013,4018; }else if(Upper == 2){ set .@cmenu,select("Baby Assassin:Baby Rogue"); setarray @ejc[80],4035,4040; }else if(!Upper){ set .@cmenu,select("Assassin:Rogue"); setarray @ejc[80],12,17; }
+
+					break;
+
+				case Job_Taekwon:
+
+					set .@cmenu,select("Star Gladiator:Soul Linker"); setarray @ejc[80],4047,4049;
+
+					break;
+
+			}
+
+		switch(.@cmenu){
+
+			case 1: callfunc "JChange",@ejc[80]; goto L_Finito;
+
+			case 2: callfunc "JChange",@ejc[81]; goto L_Finito;
+
+			}
+
+	}
+
+	if(!BaseClass){
+
+	L_FChoice:
+
+		mes @npcname$;
+
+		mes "Do you wish to change your ^FF0000Job^000000?";
+
+		next;
+
+		menu "Yes",-, "No",L_Finito;
+
+		if(JobLevel < @ejc[1]){ callfunc "JBLevel",1,0; goto L_Finito; }
+
+		if((Upper == 1 && FJob) || @ejc[99]) callfunc "JChange",4001+FJob;
+
+		if(Class == Job_Novice && !@ejc[8]) set .@cmenu,select("Swordman:Mage:Archer:Acolyte:Merchant:Thief:Super Novce:Taekwon");
+
+		if(Class == Job_Novice && @ejc[8]) set .@cmenu,select("Swordman:Mage:Archer:Acolyte:Merchant:Thief:Super Novce:Taekwon:Ninja:Gunslinger");
+
+		if(Class == Job_Baby) set .@cmenu,select("Baby Swordman:Baby Mage:Baby Archer:Baby Acolyte:Baby Merchant:Baby Thief:Super Baby");
+
+		if(Upper == 1 || @ejc[99]) set .@cmenu,select("Swordman High:Mage High:Archer High:Acolyte High:Merchant High:Thief High");
+
+			switch(.@cmenu){
+
+				case 1: if(!Class){ callfunc "JChange",1; }else if(Upper == 1){ callfunc "JChange",4002; }else{ callfunc "JChange",4024; }
+
+				case 2: if(!Class){ callfunc "JChange",2; }else if(Upper == 1){ callfunc "JChange",4003; }else{ callfunc "JChange",4025; }
+
+				case 3: if(!Class){ callfunc "JChange",3; }else if(Upper == 1){ callfunc "JChange",4004; }else{ callfunc "JChange",4026; }
+
+				case 4: if(!Class){ callfunc "JChange",4; }else if(Upper == 1){ callfunc "JChange",4005; }else{ callfunc "JChange",4027; }
+
+				case 5: if(!Class){ callfunc "JChange",5; }else if(Upper == 1){ callfunc "JChange",4006; }else{ callfunc "JChange",4028; }
+
+				case 6: if(!Class){ callfunc "JChange",6; }else if(Upper == 1){ callfunc "JChange",4007; }else{ callfunc "JChange",4029; }
+
+				case 7: if(BaseLevel < @ejc[0]){ callfunc "JBLevel",1,1; goto L_Finito; }
+
+					if(!Class){ callfunc "JChange",23; }else{ callfunc "JChange",4045; }
+
+				case 8: callfunc "JChange",4046;
+
+				case 9: callfunc "JChange",25;
+
+				case 10: callfunc "JChange",24;
+
+				default: mes "ERROR"; close;
+
+				}
+
+		}
+
+	close;
+
+}
+
+function	script	JBLevel	{
+
+
+
+	set @ejc[60],@ejc[getarg(0)]-JobLevel;
+
+	if(getarg(1)){ set @ejc[61],@ejc[getarg(1)-1]-BaseLevel; }
+
+	if(@ejc[60] < 0) set @ejc[60],0;
+
+	if(@ejc[61] < 0) set @ejc[61],0;
+
+	mes @npcname$;
+
+	mes "You are currently missing the following levels to advance:";
+
+	mes "^FF0000"+@ejc[60]+"^000000 x Job Levels,";
+
+	if(getarg(1)) mes "^FF0000"+@ejc[61]+"^000000 x Base Levels.";
+
+	next;
+
+	return;
+
+}
+
+function	script	JChange	{
+
+
+
+	mes @npcname$;
+
+	if(!@ejc[99]) mes "Last chance to cancel job change.";
+
+	if(@ejc[99]) mes "Last chance to cancel rebirth.";
+
+	next;
+
+	menu "Proceed",-, "Cancel",-;
+
+	if(@menu == 2) close;
+
+	if(@ejc[7] || @ejc[13] == 1){
+
+		if(Class == Job_Novice) set FJob,getarg(0);
+
+		if(Class >= Job_Swordman && Class <= Job_Thief) set SJob,getarg(0);
+
+		}
+
+	if(@ejc[5]) set SkillPoint,0;
+
+	if(@ejc[99]) atcommand "@option 0 0 0";
+
+	jobchange getarg(0);
+
+	if(@ejc[14] && Class == Job_Novice_High) resetlvl(1);
+
+	if(FJob && Upper && (Class >= Job_Swordman_High && Class <= Job_Thief_High)) set FJob,0;
+
+	if(SJob && Upper && (Class >= Job_Lord_Knight && Class <= Job_Paladin2)) set SJob,0;
+
+	if(@ejc[9]) callfunc "PSkills";
+
+	close;
+
+}
+
+function	script	PSkills	{
+
+
+
+	skill 142,1,0; if(BaseJob == 0) skill 143,1,0;
+
+	if(BaseClass == 1){ setarray .@psk[0],144,145,146; }else if(BaseClass == 2){ setarray .@psk[0],157; }else if(BaseClass == 3){ setarray .@psk[0],147,148; }else if(BaseClass == 4){ setarray .@psk[0],156; }else if(BaseClass == 5){ setarray .@psk[0],153,154,155; }else if(BaseClass == 6){ setarray .@psk[0],149,150,151,152; }
+
+	for(set .@ps,0; .@ps < getarraysize(.@psk); set .@ps,.@ps+1){
+
+		skill .@psk[.@ps],1,0;
+
+	}
+
+	deletearray .@psk[0],getarraysize(.@psk);
+
+	if(@ejc[10]){
+
+		if(BaseJob == 16 && @ejc[11] && (!getskilllv(1008) && !getskilllv(1017) && !getskilllv(1018) && !getskilllv(1019))){
+
+			mes @npcname$;
+
+			mes "Please choose which ^FF0000Platinum Skill^000000 you wish to obtain:";
+
+			next;
+
+			menu "Elemental Charge Water",-, "Elemental Charge Earth",-, "Elemental Charge Fire",-, "Elemental Charge Wind",-;
+
+			if(@menu == 1) set .@psk[1],1008;
+
+			if(@menu == 2) set .@psk[1],1017;
+
+			if(@menu == 3) set .@psk[1],1018;
+
+			if(@menu == 4) set .@psk[1],1019;
+
+		}else if(!@ejc[10]){ setarray .@psk[1],1008,1017,1018,1019; }
+
+	switch(BaseJob){
+
+		case 7: setarray .@psk[0],1001; break;
+
+		case 8: setarray .@psk[0],1014; break;
+
+		case 9: setarray .@psk[0],1006; break;
+
+		case 10: setarray .@psk[0],1012,1013; break;
+
+		case 11: setarray .@psk[0],1009; break;
+
+		case 12: setarray .@psk[0],1003,1004; break;
+
+		case 14: setarray .@psk[0],1002; break;
+
+		case 15: setarray .@psk[0],1015,1016; break;
+
+		case 16: setarray .@psk[0],1007; break;
+
+		case 17: setarray .@psk[0],1005; break;
+
+		case 19: setarray .@psk[0],1010; break;
+
+		case 20: setarray .@psk[0],1011; break;
+
+	}
+
+	for(set .@ps,0; .@ps < getarraysize(.@psk[0]); set .@ps,.@ps+1){
+
+		skill .@psk[.@ps],1,0;
+
+		}
+
+	}
+
+	mes @npcname$;
+
+	mes "Platinum skills obtained.";
+
+	return;
+
+}
+
+
+
+
+
+rentinb1,13,9,5	duplicate(Job Master)	Job Master#30	712
+
+rentinb2,13,9,5	duplicate(Job Master)	Job Master#31	712
+
+rentinb3,13,9,5	duplicate(Job Master)	Job Master#32	712
+
+rentinb4,13,9,5	duplicate(Job Master)	Job Master#33	712
+
+rentinb5,13,9,5	duplicate(Job Master)	Job Master#34	712
+
+rentinb6,13,9,5	duplicate(Job Master)	Job Master#35	712
+
+rentinb7,13,9,5	duplicate(Job Master)	Job Master#36	712
+
+rentinb8,13,9,5	duplicate(Job Master)	Job Master#37	712
+
+rentinb9,13,9,5	duplicate(Job Master)	Job Master#38	712
+
+rentinb10,13,9,5	duplicate(Job Master)	Job Master#39	712
+
+rentinb11,13,9,5	duplicate(Job Master)	Job Master#40	712
+
+rentinb12,13,9,5	duplicate(Job Master)	Job Master#41	712
+
+rentinb13,13,9,5	duplicate(Job Master)	Job Master#42	712
+
+rentinb14,13,9,5	duplicate(Job Master)	Job Master#43	712
+
+rentinb15,13,9,5	duplicate(Job Master)	Job Master#44	712
+
+rentinb16,13,9,5	duplicate(Job Master)	Job Master#45	712
+
+rentinb17,13,9,5	duplicate(Job Master)	Job Master#46	712
+
+rentinb18,13,9,5	duplicate(Job Master)	Job Master#47	712
+
+rentinb19,13,9,5	duplicate(Job Master)	Job Master#48	712
+
+rentinb20,13,9,5	duplicate(Job Master)	Job Master#49	712
+
+rentinb21,13,9,5	duplicate(Job Master)	Job Master#50	712
+
+rentinb22,13,9,5	duplicate(Job Master)	Job Master#51	712
+
+rentinb23,13,9,5	duplicate(Job Master)	Job Master#52	712
+
+rentinb24,13,9,5	duplicate(Job Master)	Job Master#53	712
+
+rentinb25,13,9,5	duplicate(Job Master)	Job Master#54	712
+
+rentinb26,13,9,5	duplicate(Job Master)	Job Master#55	712
+
+rentinb27,13,9,5	duplicate(Job Master)	Job Master#56	712

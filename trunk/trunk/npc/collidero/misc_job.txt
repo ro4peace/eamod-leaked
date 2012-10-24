@@ -1,0 +1,594 @@
+//================================================//
+
+prontera,150,183,5	script	Identify & Reset & Platinum Skill	726,{
+
+	mes .name$;
+
+	mes "Please!, Select one job from the menu list.";
+
+	next;
+
+	switch(select("Skill/Status Reset:Identify:Platinum Skills:Cancel")) {
+
+		case 1:
+
+			mes .name$;
+
+			mes "Please select the service you want:";
+
+			next;
+
+			switch(select("^FF3355Reset Skills:Reset Stats:Reset Both^000000:Quit")) {
+
+				case 1:
+
+					mes .name$;
+
+					if ( BaseLevel < 40 ) {
+
+						callfunc "rsk";
+
+					}
+
+					if( BaseLevel >= 40 && BaseLevel <= 80 ) {
+
+						set .@tzeny, BaseLevel*5000;
+
+						mes "You will require " + .@tzeny + "Zeny inorder to Reset.";
+
+						next;
+
+							if (select("Reset Now:Later")==2) close;
+
+								if ( Zeny < .@tzeny ) {
+
+									mes "Sorry, You do not have enough Zeny.";
+
+									close;
+
+								}
+
+							if (select("^ff0000Proceed^000000:Cancel")==2) close;						
+
+							set Zeny, Zeny - .@tzeny;
+
+							callfunc "rsk";
+
+							close;
+
+					}
+
+					mes "You will require ^00ff00 10,000 Zeny^000000 inorder to Reset.";
+
+					next;
+
+					if (Zeny < 10000) {
+
+						mes .name$;
+
+						mes "Sorry, you don't have enough Zeny.";
+
+						close;
+
+					}
+
+					if (select("^ff0000Proceed^000000:Cancel")==2) close;	
+
+					mes .name$;
+
+					mes "Alright, here we go now.. Remember, changes won't take effect until you log back on!";
+
+					set Zeny,Zeny-10000;
+
+					ResetSkill;
+
+					close;
+
+				case 2:
+
+					mes .name$;
+
+					if ( BaseLevel < 40 ) {
+
+						callfunc "rst";
+
+					}
+
+					if( BaseLevel >= 40 && BaseLevel <= 80 ) {
+
+						set .@tzeny, BaseLevel*5000;
+
+						mes "You will require " + .@tzeny + "Zeny inorder to Reset.";
+
+						next;
+
+							if (select("Reset Now:Later")==2) close;
+
+								if ( Zeny < .@tzeny ) {
+
+									mes "Sorry, You do not have enough Zeny.";
+
+									close;
+
+								}
+
+							if (select("^ff0000Proceed^000000:Cancel")==2) close;	
+
+							set Zeny, Zeny - .@tzeny;
+
+							callfunc "rst";
+
+							close;
+
+					}
+
+					mes "You will require ^00ff00 10,000 Zeny^000000 inorder to Reset.";
+
+					next;
+
+					if (Zeny < 10000) {
+
+						mes .name$;
+
+						mes "Sorry, you don't have enough Zeny.";
+
+						close;
+
+					}
+
+					if (select("^ff0000Proceed^000000:Cancel")==2) close;	
+
+					mes .name$;
+
+					mes "Alright, here we go now.. Remember, changes won't take effect until you log back on!";
+
+					set Zeny,Zeny-10000;
+
+					ResetStatus;
+
+					close;
+
+				case 3:
+
+					mes .name$;
+
+					if ( BaseLevel < 40 ) {
+
+						callfunc "rstb";
+
+					}
+
+					if( BaseLevel >= 40 && BaseLevel <= 80 ) {
+
+						set .@tzeny, BaseLevel*5000;
+
+						mes "You will require " + .@tzeny + "Zeny inorder to Reset.";
+
+						next;
+
+							if (select("Reset Now:Later")==2) close;
+
+								if ( Zeny < .@tzeny ) {
+
+									mes "Sorry, You do not have enough Zeny.";
+
+									close;
+
+								}
+
+							if (select("^ff0000Proceed^000000:Cancel")==2) close;	
+
+							set Zeny, Zeny - .@tzeny;
+
+							callfunc "rstb";
+
+							close;
+
+					}
+
+					mes "You will require ^00ff00 18,000 Zeny^000000 inorder to Reset.";
+
+					next;
+
+					if (Zeny < 18000) {
+
+						mes .name$;
+
+						mes "Sorry, you don't have enough Zeny.";
+
+						close;
+
+					}
+
+					if (select("^ff0000Proceed^000000:Cancel")==2) close;	
+
+					mes .name$;
+
+					mes "Alright, here we go now.. Remember, changes won't take effect until you log back on!";
+
+					set Zeny,Zeny-18000;
+
+					ResetSkill;
+
+					ResetStatus;
+
+					close;
+
+				case 4:
+
+					close;
+
+			}
+
+		case 2:
+
+			mes .name$;
+
+			set @price, 40;
+
+			getinventorylist;
+
+			set @identify, 0;
+
+			for(set @i, 0; @i < @inventorylist_count; set @i, @i + 1) {
+
+				if (@inventorylist_identify[@i] == 0) set @identify, @identify + 1;
+
+			}
+
+			if (@identify == 0) {
+
+				mes "You don't have any unidentified Items.";
+
+				close;
+
+			}
+
+			mes "You've got ^FF3333["+@identify+"]^000000 unidentified items in your inventory. I'll identify them for ^FF3333["+(@identify * @price)+"]^000000 Zeny.";
+
+			next;
+
+			getinventorylist;
+
+			set @identified, 0;
+
+			for(set @i, 0; @i < @inventorylist_count; set @i, @i + 1) {
+
+				if (@inventorylist_identify[@i] == 0) {
+
+					if (Zeny < @price) {
+
+						mes .name$;
+
+						mes "You do not have enough Zeny.";
+
+						close;
+
+					}
+
+					set Zeny, Zeny - @price;
+
+					delitem2 @inventorylist_id[@i],1,0,0,0,0,0,0,0;
+
+					getitem @inventorylist_id[@i],1;
+
+					set @identified, @identified + 1;
+
+				}
+
+			}
+
+
+		case 3:
+
+			callfunc "psnpc";
+
+			close;
+
+		case 4:
+
+			close;
+
+	}
+
+
+
+}
+
+
+
+function	script	rsk	{
+
+
+
+	mes "Alright, here we go now.. Remember, changes won't take effect until you log back on!";
+
+	ResetSkill;
+
+	close;
+
+}
+
+
+
+function	script	rst	{
+
+	mes "Alright, here we go now.. Remember, changes won't take effect until you log back on!";
+
+	ResetStatus;
+
+	close;
+
+}
+
+
+
+function	script	rstb	{
+
+	mes "Alright, here we go now.. Remember, changes won't take effect until you log back on!";
+
+	ResetSkill;
+
+	ResetStatus;
+
+	close;
+
+}
+
+
+
+function	script	psnpc	{
+
+	mes getvariableofnpc(.name$,"Misc Job");
+
+	mes "I can give you the special skills available to your job.";
+
+	mes "Would you like these skills now?";
+
+	next;
+
+	if (select("Yes Please:No") == 2) {
+
+		mes getvariableofnpc(.name$,"Misc Job");
+
+		mes "Have a nice day... >.>";
+
+		close;
+
+	}
+
+	skill 142,1,0; // First Aid
+
+	if (BaseClass == Job_Novice) {
+
+		skill 143,1,0; // Play Dead
+
+	} else if (BaseClass == Job_Swordman) {
+
+		skill 144,1,0; // Moving HP-Recovery
+
+		skill 145,1,0; // Fatal Blow
+
+		skill 146,1,0; // Auto Berserk
+
+	} else if (BaseClass == Job_Mage) {
+
+		skill 157,1,0; // Energy Coat
+
+	} else if (BaseClass == Job_Archer) {
+
+		skill 147,1,0; // Arrow Crafting
+
+		skill 148,1,0; // Arrow Repel
+
+	} else if (BaseClass == Job_Merchant) {
+
+		skill 153,1,0; // Cart Revolution
+
+		skill 154,1,0; // Change Cart
+
+		skill 155,1,0; // Crazy Uproar
+
+	} else if (BaseClass == Job_Thief) {
+
+		skill 149,1,0; // Sand Attack
+
+		skill 150,1,0; // Back Slide
+
+		skill 151,1,0; // Find Stone
+
+		skill 152,1,0; // Stone Fling
+
+	} else if (BaseClass == Job_Acolyte) {
+
+		skill 156,1,0; // Holy Light
+
+	}
+
+	if (Class == Job_Knight || Class == Job_Lord_Knight) {
+
+		skill 1001,1,0; // Charge Attack
+
+	} else if (Class == Job_Crusader || Class == Job_Paladin) {
+
+		skill 1002,1,0; // Shrink
+
+	} else if (Class == Job_Wizard || Class == Job_High_Wizard) {
+
+		skill 1006,1,0; // Sight Blaster
+
+	} else if (Class == Job_Sage || Class == Job_Professor) {
+
+		skill 1007,1,0; // Create Elemental Converter
+
+		skill 1008,1,0; // Elemental Change Water
+
+		skill 1017,1,0; // Elemental Change Earth
+
+		skill 1018,1,0; // Elemental Change Fire
+
+		skill 1019,1,0; // Elemental Change Wind
+
+	} else if (Class == Job_Hunter || Class == Job_Sniper) {
+
+		skill 1009,1,0; // Phantasmic Arrow
+
+	} else if (Class == Job_Bard || Class == Job_Clown) {
+
+		skill 1010,1,0; // Pang Voice
+
+	} else if (Class == Job_Dancer || Class == Job_Gypsy) {
+
+		skill 1011,1,0; // Wink of Charm
+
+	} else if (Class == Job_Blacksmith || Class == Job_Whitesmith) {
+
+		skill 1012,1,0; // Unfair Trick
+
+		skill 1013,1,0; // Greed
+
+	} else if (Class == Job_Alchemist || Class == Job_Creator) {
+
+		skill 238,1,0; // Bioethics
+
+	} else if (Class == Job_Assassin || Class == Job_Assassin_Cross) {
+
+		skill 1003,1,0; // Sonic Acceleration
+
+		skill 1004,1,0; // Throw Venom Knife
+
+	} else if (Class == Job_Rogue || Class == Job_Stalker) {
+
+		skill 1005,1,0; // Close Confine
+
+	} else if (Class == Job_Priest || Class == Job_High_Priest) {
+
+		skill 1014,1,0; // Redemptio
+
+	} else if (Class == Job_Monk || Class == Job_Champion) {
+
+		skill 1015,1,0; // Ki Translation
+
+		skill 1016,1,0; // Ki Explosion
+
+	}
+
+	mes getvariableofnpc(.name$,"Misc Job");
+
+	mes "There you go!";
+
+	close;
+
+}
+
+
+malaya,205,210,5	duplicate(Misc Job)	Misc Job#a	726
+mid_camp,217,289,5	duplicate(Misc Job)	Misc Job#b	726
+splendide,203,182,4	duplicate(Misc Job)	Misc Job#c	726
+brasilis,190,222,5	duplicate(Misc Job)	Misc Job#d	726
+dicastes01,192,179,5	duplicate(Misc Job)	Misc Job#e	726
+mora,112,108,4	duplicate(Misc Job)	Misc Job#f	726
+dewata,204,183,4	duplicate(Misc Job)	Misc Job#g	726
+malangdo,177,156,5	duplicate(Misc Job)	Misc Job#h	726
+
+
+
+
+moscovia,218,197,5	duplicate(Misc Job)	Misc Job#2	726
+
+rachel,124,117,5	duplicate(Misc Job)	Misc Job#3	726
+
+hugel,101,152,4	duplicate(Misc Job)	Misc Job#4	726
+
+lighthalzen,151,101,5	duplicate(Misc Job)	Misc Job#21	726
+
+einbroch,71,206,4	duplicate(Misc Job)	Misc Job#5	726
+
+ayothaya,155,121,4	duplicate(Misc Job)	Misc Job#6	726
+
+morocc,162,97,4	duplicate(Misc Job)	Misc Job#7	726
+
+louyang,224,101,4	duplicate(Misc Job)	Misc Job#8	726
+
+umbala,94,162,4	duplicate(Misc Job)	Misc Job#9	726
+
+gonryun,157,126,5	duplicate(Misc Job)	Misc Job#10	726
+
+amatsu,190,109,5	duplicate(Misc Job)	Misc Job#11	726
+
+yuno,167,187,4	duplicate(Misc Job)	Misc Job#12	726
+
+comodo,185,152,5	duplicate(Misc Job)	Misc Job#13	726
+
+xmas,141,139,5	duplicate(Misc Job)	Misc Job#14	726
+
+aldebaran,134,118,5	duplicate(Misc Job)	Misc Job#15	726
+
+izlude,122,120,5	duplicate(Misc Job)	Misc Job#16	726
+
+alberta,122,59,4	duplicate(Misc Job)	Misc Job#17	726
+
+payon,175,108,5	duplicate(Misc Job)	Misc Job#18	726
+
+geffen,128,66,4	duplicate(Misc Job)	Misc Job#19	726
+
+//prontera,154,187,5	duplicate(Misc Job)	Misc Job#20	726
+
+veins,225,127,4	duplicate(Misc Job)	Misc Job#22	726
+
+rentinb1,27,17,5	duplicate(Misc Job)	Misc Job#25	726
+
+rentinb2,27,17,5	duplicate(Misc Job)	Misc Job#26	726
+
+rentinb3,27,17,5	duplicate(Misc Job)	Misc Job#27	726
+
+rentinb4,27,17,5	duplicate(Misc Job)	Misc Job#28	726
+
+rentinb5,27,17,5	duplicate(Misc Job)	Misc Job#29	726
+
+rentinb6,27,17,5	duplicate(Misc Job)	Misc Job#30	726
+
+rentinb7,27,17,5	duplicate(Misc Job)	Misc Job#31	726
+
+rentinb8,27,17,5	duplicate(Misc Job)	Misc Job#32	726
+
+rentinb9,27,17,5	duplicate(Misc Job)	Misc Job#33	726
+
+rentinb10,27,17,5	duplicate(Misc Job)	Misc Job#34	726
+
+rentinb11,27,17,5	duplicate(Misc Job)	Misc Job#35	726
+
+rentinb12,27,17,5	duplicate(Misc Job)	Misc Job#36	726
+
+rentinb13,27,17,5	duplicate(Misc Job)	Misc Job#37	726
+
+rentinb14,27,17,5	duplicate(Misc Job)	Misc Job#38	726
+
+rentinb15,27,17,5	duplicate(Misc Job)	Misc Job#39	726
+
+rentinb16,27,17,5	duplicate(Misc Job)	Misc Job#40	726
+
+rentinb17,27,17,5	duplicate(Misc Job)	Misc Job#41	726
+
+rentinb18,27,17,5	duplicate(Misc Job)	Misc Job#42	726
+
+rentinb19,27,17,5	duplicate(Misc Job)	Misc Job#43	726
+
+rentinb20,27,17,5	duplicate(Misc Job)	Misc Job#44	726
+
+rentinb21,27,17,5	duplicate(Misc Job)	Misc Job#45	726
+
+rentinb22,27,17,5	duplicate(Misc Job)	Misc Job#46	726
+
+rentinb23,27,17,5	duplicate(Misc Job)	Misc Job#47	726
+
+rentinb24,27,17,5	duplicate(Misc Job)	Misc Job#48	726
+
+rentinb25,27,17,5	duplicate(Misc Job)	Misc Job#49	726
+
+rentinb26,27,17,5	duplicate(Misc Job)	Misc Job#50	726
+
+rentinb27,27,17,5	duplicate(Misc Job)	Misc Job#51	726
+
+
+

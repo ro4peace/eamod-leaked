@@ -1,0 +1,82 @@
+// ===== eAthena Script =======================================
+// = Cash Points Exchanger NPC
+// ===== By: ==================================================
+// = Cruxiaer
+// ===== Current Version: =====================================
+// = 1.00
+// ===== Compatible With: =====================================
+// = eAthena 1.x
+// ===== Description: =========================================
+// = Exchange items for Cash Points
+// ===== How to use: ==========================================
+// Edit the menu and item then set how much points can be
+// exchanged for the selected item:
+// @exitem = item code to be exchanged
+// @point = point given for each item exchanged
+// ===== Changelog: =========================================== 
+// 1.00 - First release
+// =============================================================
+6@tower,145,115,1	script	Cash Points Exchanger::CashPNPC	720,{
+mes "[Cash Point NPC]";
+mes "Good day, how may I help you ?";
+menu "Exchange Proof of Donation into Cash Points",CS_Ex1,"See more information",Info,"Nothing",Exit1;
+
+CS_Ex1:
+	next;
+		mes "[Cash Point NPC]";
+		mes "I will change your Proof of Donation for Cash Points.";
+		menu "None:Proof of Donation",CS_Ex2;
+
+CS_Ex2:
+	if (@menu==1) goto Exit1;
+	if (@menu==2) { set @exitem,7179;
+		set @point,1; }
+	set @amount,(countitem(@exitem));
+	goto CS_Ex3;
+
+CS_Ex3:
+	next;
+		mes "[Cash Point NPC]";
+		mes "You have ^336699" + @amount + "^000000 of that item, how many do you wish to exchange?";
+		input @input;
+			if (@input<1) goto Exit2;
+			if ((countitem(@exitem) < @input)) goto Exit3;
+		set #CASHPOINTS,#CASHPOINTS+@input*@point;
+		delitem @exitem,@input;
+		goto Exit1;
+
+Info:
+	next;
+		mes "[Cash Point NPC]";
+		mes "There is only a limited list of Proof of Donation which can be exchanged into Cash Points. If you give me the Proof of Donation, I will exchange them for Cash Points.";
+	next;
+		mes "[Cash Point NPC]";
+		mes "1 Proof of Donation = 1 point";
+	goto CS_Ex1;
+		
+Exit1:
+	next;
+	mes "[Cash Point NPC]";
+	mes "Your current Cash Points balance: ^336699" + #CASHPOINTS;
+	mes "^000000Please come again if you wish to exchange cards for more Cash Points, thank you!";
+	close;
+
+Exit2:
+	next;
+	mes "[Cash Point NPC]";
+	mes "The item code you input was not valid, please try again.";
+	goto CS_Ex1;
+	
+Exit3:
+	next;
+	mes "[Cash Point NPC]";
+	mes "I'm afraid you do not have that many.";
+	goto CS_Ex1;
+
+OnInit:
+
+waitingroom "Cash Point Exchanger Here",0;
+end;
+
+}
+prontera.gat,144,174,4	duplicate(Cash Points Exchanger::CashPNPC)	Cash Points Exchanger::CashPNPC#1	720

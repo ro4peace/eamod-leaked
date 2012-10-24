@@ -1,0 +1,345 @@
+//===== eAthena Script ======================================= 
+
+//= Card Removal NPC
+
+//===== By: ================================================== 
+
+//= TyrNemesis^
+
+//===== Current Version: ===================================== 
+
+//= 1.2
+
+//===== Compatible With: ===================================== 
+
+//= eAthena SVN
+
+//===== Description: ========================================= 
+
+//= Removes cards from equipped items.
+
+//===== Additional Comments: ================================= 
+
+//= 1.0 First version. [TyrNemesis^]
+
+//= 1.2 Optimized and fixed getequipname menu. [Kisuka]
+
+//============================================================ 
+
+
+
+prontera,162,183,5	script	Card Remover#eAcustom::Card Remover	845,{
+
+	mes "[Card Remover]";
+
+	mes "Good day, young one. I have the power to remove cards that you have compounded onto your equipment. Does this idea please you?";
+
+	next;
+
+	switch(select("Yes, it does.:What do you charge?:No thanks.")) {
+
+		case 1:
+
+			mes "[Card Remover]";
+
+			mes "Very well. Which item shall I examine for you?";
+
+			next;
+
+
+
+			setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
+
+			set .@menu$,"";
+
+			for( set .@i,1; .@i <= 10; set .@i,.@i+1 )
+
+			{
+
+				if( getequipisequiped(.@i) )
+
+					set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+
+
+
+				set .@menu$, .@menu$ + ":";
+
+			}
+
+			set .@part,select(.@menu$);
+
+			if(!getequipisequiped(.@part)) {
+
+				mes "[Card Remover]";
+
+				mes "Young one... Your not wearing anything there that I can remove cards from.";
+
+				close;
+
+			}
+
+			if(getequipcardcnt(.@part) == 0) {
+
+				mes "[Card Remover]";
+
+				mes "Young one... There are no cards compounded on this item. I can do nothing with it, I'm afraid.";
+
+				close;
+
+			}
+
+			set .@cardcount,getequipcardcnt(.@part);
+
+			
+
+			if (!checkweight(1202,(.@cardcount+1))) { 
+
+				mes "^3355FFJust a minute!";
+
+				mes "I can't offer any of my";
+
+				mes "services to you because";
+
+				mes "you're carrying too much";
+
+				mes "stuff. Put your extra items in";
+
+				mes "Kafra Storage and come again~";
+
+				close;
+
+			}
+
+			mes "[Card Remover]";
+
+			mes "This item has " + .@cardcount + " cards compounded on it. To perform my magic, I will need " + (200000+(.@cardcount * 25000)) + " zeny, a ^0000FFStar Crumb^000000, and a ^0000FFYellow Gemstone^000000.";
+
+			next;
+
+			if(select("Very well. Do it.:Nevermind.") == 2) {
+
+				mes "[Card Remover]";
+
+				mes "Very well. Return at once if you seek my services.";
+
+				close;
+
+			}
+
+			if((zeny < (200000+(.@cardcount * 25000))) || (countitem(1000) < 1) || (countitem(715) < 1)) {
+
+				mes "[Card Remover]";
+
+				mes "You do not have all the items I require to work my magic, child. Come again when you do.";
+
+				close;
+
+			}
+
+			mes "[Card Remover]";
+
+			mes "Before I begin, I must warn you--I may fail. If I do, I may destroy the cards, the item, or both. I do not give refunds. That being said, which is more important to you: The cards, or the item?";
+
+			next;
+
+			switch(select("I changed my mind about this.:The item.:The cards.")) {
+
+				case 1:
+
+					mes "[Card Remover]";
+
+					mes "Very well. Return at once if you seek my services.";
+
+					close;
+
+				case 2:
+
+					set .@failtype,1;
+
+					break;
+
+				case 3:
+
+					set .@failtype,2;
+
+			}
+
+			mes "[Card Remover]";
+
+			mes "Very well. I shall begin.";
+
+			set zeny,zeny - (200000+(.@cardcount * 25000));
+
+			delitem 1000,1;
+
+			delitem 715,1;
+
+			
+
+			// Replace the constants in the next 3 lines with failure chance values defined in refine_db.txt
+
+			// First value = Total failure chance (item and cards destroyed)
+
+			// Second value = Partial failure chance (one or the other is destroyed, player decides which one is safe)
+
+			// Third value = Harmless failure chance (all that's lost is your investment)
+
+
+
+			set .@failchance,rand(100);
+
+		/*	
+
+			if(.@failchance < 2) {
+
+				next;
+
+				failedremovecards .@part,0;
+
+				mes "[Card Remover]";
+
+				mes "The process was a total failure. I am afraid the item and the cards were destroyed.";
+
+				close;
+
+			}
+
+
+
+			if(.@failchance < 8) {
+
+				if (.@failtype == 1) {
+
+					next;
+
+					failedremovecards .@part,1;					
+
+					mes "[Card Remover]";
+
+					mes "While I have managed to remove the cards from the item, they were destroyed in the process. The item, however, is okay.";
+
+					close;
+
+				}
+
+
+
+				if (.@failtype == 2) {
+
+					next;
+
+					failedremovecards .@part,2;
+
+					mes "[Card Remover]";
+
+					mes "Most unfortunate. I succeeded at removing the cards, but the item itself was destroyed in the process.";
+
+					close;	
+
+				}
+
+			}
+
+		*/
+
+
+
+			if(.@failchance < 10) {
+
+				next;
+
+				failedremovecards .@part,3;				
+
+				mes "[Card Remover]";
+
+				mes "I have failed to remove the cards. Luckily, however, both the item and the cards are still okay.";
+
+				close;	
+
+			}
+
+			next;
+
+			successremovecards .@part;
+
+			mes "[Card Remover]";
+
+			mes "The process was a success. Here are your cards and your item. Farewell.";
+
+			close;			
+
+		case 2:
+
+			mes "[Card Remover]";
+
+			mes "I charge a flat fee of 200000 zeny, plus 25000 zeny for each card I remove from the item. In addition, I need a star crumb and a yellow gemstone to work my magic.";
+
+			close;
+
+		case 3:
+
+			mes "[Card Remover]";
+
+			mes "Very well. Return at once if you seek my services.";
+
+			close;
+
+	}
+
+}
+
+
+
+rentinb1,35,9,3	duplicate(Card Remover)	Card Remover#1	118
+
+rentinb2,35,9,3	duplicate(Card Remover)	Card Remover#2	118
+
+rentinb3,35,9,3	duplicate(Card Remover)	Card Remover#3	118
+
+rentinb4,35,9,3	duplicate(Card Remover)	Card Remover#4	118
+
+rentinb5,35,9,3	duplicate(Card Remover)	Card Remover#5	118
+
+rentinb6,35,9,3	duplicate(Card Remover)	Card Remover#6	118
+
+rentinb7,35,9,3	duplicate(Card Remover)	Card Remover#7	118
+
+rentinb8,35,9,3	duplicate(Card Remover)	Card Remover#8	118
+
+rentinb9,35,9,3	duplicate(Card Remover)	Card Remover#9	118
+
+rentinb10,35,9,3	duplicate(Card Remover)	Card Remover#10	118
+
+rentinb11,35,9,3	duplicate(Card Remover)	Card Remover#11	118
+
+rentinb12,35,9,3	duplicate(Card Remover)	Card Remover#12	118
+
+rentinb13,35,9,3	duplicate(Card Remover)	Card Remover#13	118
+
+rentinb14,35,9,3	duplicate(Card Remover)	Card Remover#14	118
+
+rentinb15,35,9,3	duplicate(Card Remover)	Card Remover#15	118
+
+rentinb16,35,9,3	duplicate(Card Remover)	Card Remover#16	118
+
+rentinb17,35,9,3	duplicate(Card Remover)	Card Remover#17	118
+
+rentinb18,35,9,3	duplicate(Card Remover)	Card Remover#18	118
+
+rentinb19,35,9,3	duplicate(Card Remover)	Card Remover#19	118
+
+rentinb20,35,9,3	duplicate(Card Remover)	Card Remover#20	118
+
+rentinb21,35,9,3	duplicate(Card Remover)	Card Remover#21	118
+
+rentinb22,35,9,3	duplicate(Card Remover)	Card Remover#22	118
+
+rentinb23,35,9,3	duplicate(Card Remover)	Card Remover#23	118
+
+rentinb24,35,9,3	duplicate(Card Remover)	Card Remover#24	118
+
+rentinb25,35,9,3	duplicate(Card Remover)	Card Remover#25	118
+
+rentinb26,35,9,3	duplicate(Card Remover)	Card Remover#26	118
+
+rentinb27,35,9,3	duplicate(Card Remover)	Card Remover#27	118

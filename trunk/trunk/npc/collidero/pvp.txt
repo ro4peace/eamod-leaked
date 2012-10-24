@@ -1,0 +1,23 @@
+prontera,162,190,4	script	PvP Warper	483,{
+
+mes    "[PvP Warper]";
+mes    "Do you want to go to PVP";
+mes    "There are ["+getmapusers("pvp_y_1-2")+"/10000] players inside.";
+
+menu    "Yes",yes,"No.",no;
+
+yes:
+    announce ""+strcharinfo(0)+" has entered the PvP arena!",bc_blue;
+    warp "pvp_y_1-2",0,0;
+end;
+
+no:
+    close;
+
+OnInit:
+
+waitingroom "DevainneRO PVP",0;
+end;
+}
+
+pvp_y_1-2	mapflag	noteleport

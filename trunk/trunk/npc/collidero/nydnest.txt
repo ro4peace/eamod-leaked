@@ -1,0 +1,235 @@
+1@nyd,196,329,0	script	Nydnest1	45,1,2,{
+warp "2@nyd",18,92;
+close;
+}
+
+2@nyd,200,179,0	script	Nydnest2	45,1,2,{
+warp "2@nyd",199,253;
+close;
+} 
+
+2@nyd	mapflag	nomemo
+2@nyd	mapflag	nosave
+
+
+
+1@nyd	mapflag	nomemo
+1@nyd	mapflag	nosave
+
+
+-	shop	quest_gears	-1,501:50
+script	Headgears Quest	435,{
+	set @i,0;
+	mes "[Headgears Quest]";
+	mes "Which item do you wish to obtain?";
+	mes "Select only one.";
+	callshop "quest_gears",1;
+	npcshopattach "quest_gears";
+	end;
+
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1),"Zeny"); set .e,.e+2) {}
+		npcshopadditem "quest_gears",getarg(.e+2),getarg(.e)*compare(getarg(.e+1),"SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Quest_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Quest_Setup; }
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Quest_Setup; }
+	mes "[Headgears Quest]";
+	mes "I require the following:";
+	for(set @i,0; !compare(getarg(@i+1),"Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000In exchange, I will give you:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Exchange:" + (((((getiteminfo(@bought_nameid,5) & 1) || (getiteminfo(@bought_nameid,5) & 256) || (getiteminfo(@bought_nameid,5) & 512)) && @equip==0))? "Preview Item":"") + ":No thanks")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1),"Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "You have " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", while I require " + getarg(@i+1) + ".";
+				mes "Please obtain ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " more " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "You do not have enough Zeny.";
+				mes "Please obtain ^FF0000" + (getarg(@i)-Zeny) + " more Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1),"Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			if (compare(getarg(@i,0),"announce")) announce strcharinfo(0) + " has just obtained " + getitemname(@bought_nameid) + "!",bc_all;
+			close;
+		case 2:
+			set @bottomview, getlook(3);
+			set @topview, getlook(4);
+			set @midview, getlook(5);
+			addtimer 1000, strnpcinfo(3)+"::On_Leave";
+			set @equip,getiteminfo(@bought_nameid, 5);
+			set @view, getiteminfo(@bought_nameid, 11);
+			if(@equip != -1 && @view > 0) {
+				if(@equip & 1) atcommand "@changelook 3 " + @view;
+				if(@equip & 256) atcommand "@changelook 1 " + @view;
+				if(@equip & 512) atcommand "@changelook 2 " + @view;
+			}
+			next;
+			goto OnBuyItem;
+		case 3:
+			close;
+	}
+On_Leave:
+	atcommand "@changelook 1 " + @topview;
+	atcommand "@changelook 2 " + @midview;
+	atcommand "@changelook 3 " + @bottomview;
+	set @equip,0;
+	set @view,0;
+	set @topview,0;
+	set @midview,0;
+	set @bottomview,0;
+	end;
+OnInit:
+	npcshopitem "quest_gears",0,0;
+	set .BuildQuest,1;
+	set .i,1;
+Quest_Setup:
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+                case 1: callsub OnBuyItem,7227,1000,2256,1,7799,50,7798,50,6004,8,10000000,"SZeny",5374,1; //bapho horn
+                case 2: callsub OnBuyItem,7227,1000,2256,1,7799,50,7798,50,6004,8,10000000,"SZeny",5518,1; //large bapho horn
+                case 3: callsub OnBuyItem,7227,1000,732,5,5389,10,7095,20,1022,1000,10000000,"SZeny",20136,1; //vesper mask
+                case 4: callsub OnBuyItem,7227,1000,7156,50,7157,100,5096,10,1021,1000,10000000,"SZeny",20043,1; //hokage hat
+                case 5: callsub OnBuyItem,7227,1000,7036,50,995,200,4105,5,1468,10,10000000,"SZeny",20023,1; //garm hat
+                case 6: callsub OnBuyItem,7227,200,7206,200,7212,200,7268,200,7277,200,10000000,"SZeny",20253,1; //hanging doll
+                case 7: callsub OnBuyItem,7227,400,2280,10,7150,200,7299,500,10000000,"SZeny",20270,1; //sakkat bamboo
+                case 8: callsub OnBuyItem,7859,50,6021,1000,7567,1000,10000000,"SZeny",20280,1; //frey hat
+                case 9: callsub OnBuyItem,7859,100,2202,1,976,10,983,10,10000000,"SZeny",20296,1; //dark gold mini glasses
+                case 10: callsub OnBuyItem,7227,1000,7859,100,930,2000,2202,1,10000000,"SZeny",20252,1; //danzo mask
+                case 11: callsub OnBuyItem,7859,200,5113,30,958,1000,7036,5,7226,200,922,100,1044,100,5000000,"SZeny",5521,1; // angry mouth si badong wala ipin ito meron
+                case 12: callsub OnBuyItem,7227,300,5041,1,2244,10,2250,10,2209,10,500000,"SZeny",5140,1; //charming ribbon
+                case 13: callsub OnBuyItem,5361,5,2241,1,100000000,"SZeny",5155,1; //father's white moustache
+                case 14: callsub OnBuyItem,5058,1,7510,10,7227,500,1000000,"SZeny",5311,1; // large hibiscus
+                case 15: callsub OnBuyItem,20178,1,7227,100,976,5,1000000,"SZeny",20185,1; // traveler hat;
+		case 16: callsub OnBuyItem,5032,1,7859,50,975,5,722,200,100000,"SZeny",5478,1; //classic hat
+		case 17: callsub OnBuyItem,5458,1,7227,100,7192,500,7111,200,100000,"SZeny",5285,1; // pinwheel hairpin
+		case 18: callsub OnBuyItem,5503,1,7151,200,1054,200,748,200,1000000,"SZeny",5211,1; //dress hat
+		case 19: callsub OnBuyItem,5091,1,963,500,971,100,1000000,"SZeny",5187,1; //twin ribbon 
+		case 20: callsub OnBuyItem,5141,10,7227,500,2210,10,7263,500,1000000,"SZeny",5387,1; //neko mimi kafra
+		case 21: callsub OnBuyItem,2262,20,7066,200,941,500,7159,300,1000000,"SZeny",5204,1; // rudolph's nose				
+	}
+}
+
+
+
+
+
+jupe_ele	mapflag	nowarp
+jupe_ele	mapflag	nowarpto
+jupe_ele	mapflag	noteleport
+jupe_ele	mapflag	nosave	SavePoint
+jupe_ele	mapflag	noskill
+jupe_ele	mapflag	nomemo
+jupe_ele	mapflag	pvp	off
+
+// donation
+
+
+prontera,1,1,4,7179	sshop	cash9	111,2138:15,2115:10,2131:5,2130:15
+prontera,1,1,4,7179	sshop	cash8	111,13894:5,13891:5,13892:5,13893:5,14232:10,7776:5,12903:5,12904:5,12908:5,14161:5,14162:5,14163:5,14287:10,12264:10,12103:10
+prontera,1,1,4,7179	sshop	cash7	111,5489:30,5451:50,5471:150,5468:40,5357:200,5495:100,5800:25,5421:50,5498:150,5423:20,5470:50,5377:20,5372:20,5361:20,5463:20,5373:20,5213:20,5232:20,5228:20,5389:50,20304:70,5013:50,5376:30,5288:50,5401:50
+prontera,1,1,4,7179	sshop	cash6	111,4403:50,4145:30,4399:25,4441:40,4376:30,4357:15,4128:40,4427:20
+prontera,1,1,4,7179	sshop	cash5	111,2744:25,2737:30,2630:30,2629:40,2712:40,2701:5,2702:20
+prontera,1,1,4,7179	sshop	cash4	111,2376:50,2377:50,2378:50,2379:50,2380:50,2381:50,2382:35,2375:30,2374:25,2351:20,2349:20,2347:20,2345:20,2383:35,2387:20
+prontera,1,1,4,7179	sshop	cash3	111,2435:30,2436:30,2437:15,2433:10,2423:40,2410:50,2440:20
+prontera,1,1,4,7179	sshop	cash2	111,2538:30,2539:30,2540:15,2537:20,2542:38,2536:15,2554:40
+prontera,1,1,4,7179	sshop	cash1	111,13036:15,1425:30,1924:30,1743:45,13110:50,13176:70,1530:60,13412:25,13413:25,13034:15,13035:15,1640:45,1266:25,1228:10,1544:20
+
+
+prontera,141,174,6	script	Donation NPC	790,{
+	mes "[PoDs NPC]";
+	mes "Welcome.";
+	mes "What can I do for you today ?";
+	next;
+	switch( select("Weapons","Garments","Shoes","Armors","Accessories","Cards","Headgears","Usables","Shields","Close") )
+	{
+		case 10:
+			mes "[PoDs NPC]";
+			mes "As you wish.";
+			mes "See you later.";
+			close;
+		case 1:  
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^0000FFPoDs^000000 for my Weapons.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash1",0;
+			end;
+	
+		case 2: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Garments.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash2",0;
+			end;
+		case 3: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Shoes.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash3",0;
+			end;
+		case 4: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Armors.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash4",0;
+			end;
+		case 5: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Accesories.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash5",0;
+			end;
+		case 6: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Cards.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash6",0;
+			end;
+		case 7: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Headgears.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash7",0;
+			end;
+		case 8: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Usables.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash8",0;
+			end;
+		case 9: 
+			mes "[PoDs NPC]";
+			mes "So you want to exchange ^FF0000PoDs^000000 for my Shields.";
+			mes "Close this window to open shop.";
+			close2;
+			callshop "cash9",0;
+			end;
+	}
+OnInit:
+	waitingroom "Donation Shop",0;   // Look on the configuration!
+end;
+}
+
+
+
+
+
+

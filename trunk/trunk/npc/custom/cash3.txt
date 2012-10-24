@@ -1,0 +1,71 @@
+CS_Ex2:
+	set @var,30;
+	if (@menu==1) goto Exit1;
+	if (@menu==2) { set @exitem,909;
+		set @point,1; }
+	if (@menu==3) { set @exitem,911;
+		set @point,3; }
+	if (@menu==4) { set @exitem,912;
+		set @point,5; }
+	if (@menu==5) { set @exitem,931;
+		set @point,6; }
+	if (@menu==6) { set @exitem,7002;
+		set @point,8; }
+	if (@menu==7) { set @exitem,1095;
+		set @point,10; }
+	if (@menu==8) { set @exitem,1054;
+		set @point,10; }
+	if (@menu==9) { set @exitem,7539;
+		set @point,20000; }
+	set @amount,(countitem(@exitem));
+
+CS_Ex3:
+	next;
+		mes "[Cash Point NPC]";
+		mes "You have ^336699" + @amount + "^000000 of that item. How many set do you wish to exchange?";
+		input @input;
+			if (@input<1) goto Exit2;
+			if ((countitem(@exitem) < @input)) goto Exit3;
+		set @input,@input/@var;
+		set @exchanged,@input*@point;
+		set #CASHPOINTS,#CASHPOINTS+@exchanged;
+		logmes "Item code: " + @exitem + ", Amount exchanged: " + @input + ", CP exchanged: " + @exchanged + ", Final CP: " + #CASHPOINTS;
+		set @input,@input*@var;
+		delitem @exitem,@input;
+	goto Exit1;
+
+Info:
+	next;
+		mes "[Cash Point NPC]";
+		mes "There is only a limited list of items which can be exchanged into Cash Points. If you give me the items below, I will exchange them for Cash Points.";
+	next;
+		mes "[Cash Point NPC]";
+		mes "30 Jellopys = 1 CP";
+		mes "30 Scells = 3 CP";
+		mes "30 Zargons = 5 CP";
+		mes "30 Orcish Vouchers = 6 CP";
+		mes "30 Ogre Tooths = 8 CP";
+		mes "30 Clock Hands = 10 CP";
+		mes "30 Ancient Lips = 10 CP";
+		mes "30 Poring Coins = 20,000 CP";
+	goto CS_Ex1;
+		
+Exit1:
+	next;
+		mes "[Cash Point NPC]";
+		mes "Your current Cash Point balance: ^336699" + #CASHPOINTS;
+		mes "^000000Please come again if you wish to exchange items for more Cash Points, thank you!";
+	close;
+
+Exit2:
+	next;
+		mes "[Cash Point NPC]";
+		mes "Your input was not valid, please try again.";
+	goto CS_Ex1;
+	
+Exit3:
+	next;
+		mes "[Cash Point NPC]";
+		mes "I'm afraid you do not have that many.";
+	goto CS_Ex1;
+}

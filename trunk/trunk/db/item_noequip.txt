@@ -1,0 +1,419 @@
+// The equipment/items/cards restriction file 
+// here you define which items may not be used at PvP / GvG 
+// format: <item id>,<mode>
+// mode
+// 1- restricted in PVP
+// 2- restricted in GVG
+// 3- restricted in both PvP and GvG
+// Restricted zones - they're configured by 'restricted <number>' mapflag
+// 4   - restricted in zone 1
+// 8   - restricted in zone 2
+// 16  - restricted in zone 3
+// 32  - restricted in zone 4
+// 64 -  restricted in zone 5
+// 128 - restricted in zone 6
+// 256 - restricted in zone 7
+
+//Examples:
+//1201,1 you can't use KNIFE(ID 1201) on PvP and GvG
+//608,2 //you can't use Yggdrasil Seed(ID 608) on both PvP & GvG & WoE Castles
+//6607,2 //berry
+
+//4174,3 Forbid Deviling Card in every PVP or GVG map, and during woes.
+//501,4 you can't use Red Potion on map marked as 'restricted zone 1'
+//502,8 you can't use Orange Potion on map marked as 'restricted zone 2'
+//503,16 you can't use Yellow Potion on map marked as 'restricted zone 3'
+// you can even mix modes
+//519,41 (32+8+1) you can't use Milk on PVP, and maps marked as 'restricted zone 2' and 'restricted zone 4'
+
+
+//Zone 1 - Aldebaran Turbo Track
+601,4 //Fly Wing
+506,4 //Green Potion
+525,4 //Panacea
+
+
+//Zone 3 - Izlude Battle Arena
+601,16 //Fly Wing
+//4105,16 //marc card
+//4141,16 //evil druid card
+//4044,16 //smokie card
+
+//zone 7 - prt cas
+//607,2 //berry
+//608,256 //seeds
+
+//=============MINI BOSS================
+601,8 //Fly Wing
+4054,8 //angeling card*
+4241,8 //arc angeling card
+4425,8 //archer guardian card
+4426,8 //byorgue card
+4169,8 //dark illusion card*
+4174,8 //deviling card**
+4179,8 //dragon fly card
+4451,8 //entweihen crothen card* 
+4423,8 //galion card
+//4354,8 //gemini card**
+4047,8 //ghostring card***
+4384,8 //hydrolancer card*
+4431,8 //kasa card*
+4197,8 //mastering card**
+//4198,8 //maya purple card***
+4203,8 //mutant dragon card*
+4440,8 //necromancer card**
+4392,8 //observation card***
+4238,8 //owl baron card
+4237,8 //owl duke card
+//4429,8 //salamander card***
+4393,8 //shelter card*
+4394,8 //solace card
+4427,8 //sword guardian**
+4254,8 //ogretooth card***
+4306,8 //toad card
+4183,8 //vagabond wolf card
+//===========MVP BOSS==================
+4236,8 //amon ra card*
+4359,8 //sinx card***
+4425,8 //atroce card
+4372,8 //bacsojin card**
+4147,8 //baphomet card
+4145,8 //beelzebub card***
+4168,8 //dark lord card**
+4386,8 //detale card***
+4142,8 //doppelganger card**
+4134,8 //dracula card
+4137,8 //drake card*
+4123,8 //eddga card**
+4330,8 //evil snake lord card**
+4324,8 //garm card***
+4408,8 //gloom under night card
+4363,8 //high priest card*
+4365,8 //hw card***
+4430,8 //ifrit card*
+4263,8 //incantation samurai card***
+4403,8 //kiel d-01 card***
+4318,8 //stormy knight card***
+4419,8 //ktullanux card
+4376,8 //lady tanee card***
+4357,8 //lk card***
+4276,8 //lord of death card**
+4146,8 //maya card*
+4132,8 //mistress card***
+4131,8 //moonlight flower card*
+4143,8 //orc hero card***
+4135,8 //orc lord card*
+4144,8 //osiris card
+4148,8 //pharaoh card
+4121,8 //phreeoni card*
+4342,8 //rsx 0806 card
+4367,8 //sniper schecil card*
+4302,8 //tao gunka card***
+4305,8 //turtle general card***
+4407,8 //valkyrie randgris card**
+4374,8 //vesper card***
+4361,8 //ws card***
+4352,8 //general ygnizem cenia card**
+//607,2 //berry
+//608,8 //seeds
+
+
+
+
+////no pots pvp
+
+545,32 
+547,32 
+546,32 
+//607,2 
+//608,32 
+599,32 
+598,32 
+11501,32 
+11500,32 
+569,32 
+502,32 
+501,32
+504,32 
+503,32 
+11516,32 
+521,32 
+512,32 
+531,32 
+12321,32 
+12084,32 
+12052,32 
+14558,32 
+12097,32 
+12047,32 
+14555,32 
+12081,32 
+577,32 
+513,32 
+532,32 
+553,32 
+12073,32 
+12099,32 
+510,32 
+12043,32 
+14553,32 
+580,32 
+529,32 
+530,32 
+515,32 
+534,32 
+548,32 
+14525,32
+12086,32 
+558,32 
+12062,32 
+14564,32 
+12053,32 
+14559,32 
+11515,32 
+12100,32 
+12206,32 
+12064,32 
+//12624,32 
+12080,32 
+12204,32 
+684,32 
+581,32 
+574,32 
+579,32 
+12041,32 
+14551,32 
+12066,32 
+14566,32 
+12070,32 
+14580,32 
+12068,32 
+14568,32 
+12056,32 
+14560,32 
+12063,32 
+14565,32 
+12083,32 
+514,32 
+533,32 
+12046,32 
+14554,32 
+12245,32 
+511,32
+12065,32 
+14579,32 
+12094,32 
+12044,32 
+520,32 
+518,32 
+12061,32 
+14563,32 
+12048,32 
+14556,32 
+593,32 
+12095,32 
+12205,32 
+536,32 
+12085,32 
+12088,32 
+663,32 
+568,32 
+570,32 
+571,32 
+572,32 
+12096,32 
+12059,32 
+12045,32 
+14575,32 
+522,32 
+12050,32 
+14576,32 
+517,32 
+519,32 
+12067,32 
+14567,32 
+554,32 
+528,32 
+595,32 
+12049,32 
+12238,32 
+12239,32 
+582,32 
+14526,32 
+525,32 
+12091,32 
+537,32 
+539,32 
+14523,32 
+679,32 
+678,32 
+516,32 
+576,32 
+535,32 
+12124,32 
+544,32 
+507,32 
+12076,32 
+587,32 
+564,32 
+550,32 
+12078,32 
+526,32 
+12319,32 
+12320,32 
+12054,32 
+12042,32 
+14552,32 
+12122,32 
+12071,32 
+567,32 
+12057,32 
+14561,32 
+12092,32 
+594,32 
+12298,32 
+12089,32
+12077,32 
+12060,32
+14578,32 
+12051,32 
+14557,32 
+12090,32 
+12203,32 
+12075,32 
+12202,32 
+12207,32 
+578,32 
+12098,32 
+12082,32 
+551,32 
+12275,32 
+12269,32 
+12270,32 
+12074,32 
+12058,32 
+14562,32 
+555,32 
+12079,32 
+538,32 
+561,32 
+509,32 
+12072,32 
+549,32 
+508,32 
+14536,32 
+12375,32 
+12350,32 
+12729,32 
+662,32 
+12262,32 
+14542,32 
+14544,32 
+12303,32 
+12031,32 
+12034,32
+12030,32 
+12033,32 
+12028,32 
+13709,32 
+12354,32
+12111,32 
+12328,32 
+12327,32 
+14519,32 
+14517,32 
+14518,32 
+14520,32 
+12744,32 
+12235,32
+12257,32 
+14531,32 
+12293,32 
+12704,32 
+14530,32 
+12110,32 
+12332,32 
+12331,32 
+14538,32 
+12188,32
+12135,32 
+12338,32 
+12335,32 
+12336,32 
+12337,32 
+12709,32 
+12710,32 
+12733,32 
+12247,32 
+12196,32 
+14540,32 
+12280,32 
+12267,32 
+12253,32 
+12716,32 
+12728,32 
+12237,32 
+12198,32
+14607,32 
+12216,32 
+12215,32 
+12219,32 
+12220,32 
+12217,32 
+12218,32 
+14608,32 
+12343,32 
+12342,32 
+14535,32 
+14600,32 
+14349,32 
+14350,32 
+12185,32 
+12184,32 
+12190,32 
+12290,32 
+12376,32 
+12291,32 
+12377,32 
+12725,32 
+14604,32 
+14605,32 
+12732,32 
+14597,32 
+14314,32
+12344,32 
+12195,32 
+14528,32 
+12353,32 
+12395,32 
+14602,32 
+606,32 
+605,32 
+12029,32 
+12032,32 
+12236,32 
+12020,32 
+12114,32 
+12115,32 
+12116,32 
+12117,32 
+696,32 
+698,32 
+700,32 
+688,32 
+686,32 
+690,32 
+12001,32 
+692,32 
+694,32 
+689,32 
+697,32 
+687,32 
+691,32 
+699,32 
+12000,32 
+12002,32 
+693,32 
+695,32 
+12706,32 
+12708,32

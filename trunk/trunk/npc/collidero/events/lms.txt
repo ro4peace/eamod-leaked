@@ -1,0 +1,399 @@
+-	script	LMS#disable	-1,{
+
+
+
+OnInit:
+
+	disablenpc "Mr. Banker";
+
+	end;
+
+}
+
+
+
+-	script	LMS	-1,{
+
+OnClock0600:
+
+OnClock1800:
+
+goto Onstartlmsevent;
+
+
+
+Onstartlmsevent:
+
+	atcommand "@skilloff";
+
+	disablenpc "Mr. Banker";
+
+	announce "[ Last Man Standing ]: The Last Man Standing event will be starting shortly.",bc_blue;
+
+	set $@LMSEventStarta, 1;
+
+	set $@LMSEventStart, 1;
+
+	sleep2 500;
+
+	donpcevent "EventWarp::OnEventFind";
+
+	sleep2 2000;
+
+	announce "[ Last Man Standing ]: Those who want to play, please proceed to the Prontera Map ( @go 0 ) and enter the [ Event Warp Portal ].",bc_blue;
+
+	donpcevent "EventWarp::OnEventFind";
+
+	initnpctimer;
+
+	end;
+
+
+
+OnTimer30000:
+
+	announce "[ Last Man Standing ]: Last 30 seconds.",bc_blue;
+
+	sleep2 5000;
+
+	announce "[ Last Man Standing ]: If you want to join please Register in Prontera Map ( @go 0 ) and enter the [ Event Warp Portal ].",bc_blue;
+
+	end;
+
+
+
+OnTimer50000:
+
+	announce "[ Last Man Standing ]: Last 10 seconds.",bc_blue;
+
+	end;
+
+
+
+OnTimer55000:
+
+	announce "[ Last Man Standing ]: 5.",bc_blue;
+
+	end;
+
+
+
+OnTimer56000:
+
+	announce "[ Last Man Standing ]: 4.",bc_blue;
+
+	end;
+
+
+
+OnTimer57000:
+
+	announce "[ Last Man Standing ]: 3.",bc_blue;
+
+	end;
+
+
+
+OnTimer58000:
+
+	announce "[ Last Man Standing ]: 2.",bc_blue;
+
+	end;
+
+
+
+OnTimer59000:
+
+	announce "[ Last Man Standing ]: 1.",bc_blue;
+
+	end;
+
+
+
+OnTimer60000:
+
+	announce "[ Last Man Standing ]: Time's up.",bc_blue;
+
+	end;
+
+
+
+OnTimer61000:
+
+	set $@LMSEventStarta, 0;
+
+	donpcevent "EventWarp::OnEventFind";
+
+	if(getmapusers("quiz_01") <= 1) {
+
+		announce "[ Last Man Standing ]: Event Failed to Start, Atleast Two player's are needed to start the event.",bc_blue;
+
+		mapwarp "quiz_01","prontera",135,164;
+
+		set $@LMSEventStart, 0;
+
+		donpcevent "EventWarp::OnEventFind";
+
+		stopnpctimer;
+
+		end;
+
+	}
+
+	donpcevent "Mr. Banker::OnEnable";
+
+	stopnpctimer;
+
+	end;
+
+	
+
+OnLMSEventStop:
+
+	announce "[ Last Man Standing ]: The Last Man Standing event is being Terminated, Accept my Appoligies!",bc_blue;
+
+	set $@LMSEventStart, 0;
+
+	set $@LMSEventStarta, 0;
+
+	donpcevent "EventWarp::OnEventFind";
+
+	stopnpctimer;
+
+	end;
+
+}
+
+
+
+//--------------------------
+
+
+
+//--------------------------
+
+quiz_01,139,287,4	script	Mr. Banker	56,{
+
+
+
+	mes "[Banker]";
+
+	mes "Congrats. You've won.";
+
+	set $@LMSEventStart, 0;
+
+	close2;
+
+	donpcevent "EventWarp::OnEventFind";
+
+	set $LMSEventWinner$, strcharinfo(0);
+
+	announce "[ Last Man Standing ]: We have a winner! well done "+ strcharinfo(0) +".",bc_blue;
+
+	getitem $get_item_id,$get_item_amount;
+
+	warp "prontera",135,164;
+
+	hideonnpc "Dice#evnt1";
+
+	end;
+
+	
+
+OnEnable:
+
+	pvpoff "quiz_01";
+
+	mapannounce "quiz_01","[ Last Man Standing ]:The Last Man Standing Event will start shortly",bc_blue;
+
+	sleep2 5000;
+
+	mapannounce "quiz_01","[ Last Man Standing ]:But before we start this is just a few reminders..",bc_blue;
+
+	sleep2 5000;
+
+	mapannounce "quiz_01","[ Last Man Standing ]:Using Cloaking , Hiding is strictly not allowed..",bc_blue;
+
+	sleep2 5000;
+
+	mapannounce "quiz_01","[ Last Man Standing ]: Only the Last Man Standing will win this event!!",bc_blue;
+
+	sleep2 5000;
+
+	mapannounce "quiz_01","[ Last Man Standing ]: What are we waiting for?..Let's Get Ready to Rumble!!...",bc_blue;
+
+	sleep2 5000;
+
+	//setmapflag "quiz_01",mf_noskill;
+
+	atcommand "@skillon";
+
+	goto L_Start;
+
+	end;
+
+	
+
+L_Start:
+
+	if(getmapusers("quiz_01") == 1) goto L_Champ;
+
+	if(getmapusers("quiz_01") == 0) goto L_None;
+
+	if(getmapusers("quiz_01") > 1) {
+
+		mapannounce "quiz_01","[ Last Man Standing ]: Get ready at the count of 5 we will start!....",bc_blue;
+
+		sleep2 5000;
+
+		mapannounce "quiz_01","[ Last Man Standing ]: 5.",bc_blue;
+
+		sleep2 1000;
+
+		mapannounce "quiz_01","[ Last Man Standing ]: 4.",bc_blue;
+
+		sleep2 1000;
+
+		mapannounce "quiz_01","[ Last Man Standing ]: 3.",bc_blue;
+
+		sleep2 1000;
+
+		mapannounce "quiz_01","[ Last Man Standing ]: 2.",bc_blue;
+
+		sleep2 1000;
+
+		mapannounce "quiz_01","[ Last Man Standing ]: 1.",bc_blue;
+
+		sleep2 1000;
+
+		pvpon "quiz_01";
+
+		goto timer;
+
+		end;
+
+	}
+
+	
+
+timer:
+
+	initnpctimer;
+
+	end;
+
+
+
+OnTimer1000:
+
+	end;
+
+
+
+OnTimer1100:
+
+	if(getmapusers("quiz_01") == 1) goto L_Champ;
+
+	if(getmapusers("quiz_01") > 2) goto timer;
+
+	if(getmapusers("quiz_01") == 2) goto champ;
+
+	stopnpctimer;
+
+	end;
+
+
+
+champ:
+
+	mapannounce "quiz_01","[ Last Man Standing ]: Last 2 Brave warriors are still alive!",bc_blue;
+
+	sleep2 10000;
+
+	if(getmapusers("quiz_01") == 1) goto L_Champ;
+
+	if(getmapusers("quiz_01") > 1) goto timer;
+
+	end;
+
+
+
+L_Champ:
+
+	atcommand "@skilloff";
+
+	removemapflag "quiz_01",mf_noskill;
+
+	mapannounce "quiz_01","[ Last Man Standing ]: Please talk to me to get your prize..",bc_blue;
+
+	pvpoff "quiz_01";
+
+	enablenpc "Mr. Banker";
+
+	end;
+
+
+
+L_None:
+
+	disablenpc "Banker";
+
+	pvpoff "quiz_01";
+
+	end;
+
+}
+
+//----- Die = warp prt -----
+
+-	script	Killa_warp	-1,{
+
+
+
+OnPCDieEvent:
+
+	if( strcharinfo(3) == "quiz_01" )
+
+	{
+
+		mapannounce "quiz_01",""+strcharinfo(0)+" died, and out of the game!.",bc_blue;
+
+		sleep2 500;
+
+		atcommand "@alive " + strcharinfo(0);
+
+		sleep2 500;
+
+		warp "prontera",135,164;
+
+		end;
+
+	}
+
+	end;
+
+}
+
+
+
+
+
+// == Mapflags
+
+quiz_01	mapflag	nowarp
+
+quiz_01	mapflag	gvg	off
+
+quiz_01	mapflag	nowarpto
+
+quiz_01	mapflag	noteleport
+
+quiz_01	mapflag	nosave
+
+quiz_01	mapflag	nomemo
+
+quiz_01	mapflag	nobranch
+
+quiz_01	mapflag	pvp_noparty
+
+quiz_01	mapflag	restricted	1

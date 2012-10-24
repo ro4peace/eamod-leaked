@@ -1,0 +1,448 @@
+prontera,164,174,4	script	Branch Room	461,{
+
+
+
+// Couple of settings:
+
+// NPC name in message boxes: //^0000FF == Blue, Rest is name, then ^000000 makes it black again.
+
+set .@name$, "[^0000FFBranch Room Manager^000000]";
+
+// Used mapnames of reserved maps.
+
+setarray .@room$[0], "06guild_02","06guild_03","06guild_04","06guild_05","06guild_06","06guild_07";
+
+// Free room:
+
+set .@froom$, "06guild_08";
+
+// Want the room cleaned from monsters upon entering an empty room? 0 = no, 1 = yes.
+
+set .@clearroom, 1;
+
+
+
+//------------------------------------
+
+// Main NPC
+
+//------------------------------------
+
+
+
+	mes .@name$;
+
+	mes "Welcome, would you like to...";
+
+	next;
+
+	switch(select("Reserve a room","Use free room","Leave")) {
+
+		case 1: // Reserve a room.
+
+			// Partycheck
+
+			if(!getcharid(1)) {
+
+				mes .@name$;
+
+				mes "You must be in a party to be able to reserve a room.";
+
+				close;
+
+			}
+
+			// Check if his party already reserved a room.
+
+			for(set .@i, 0; .@i < 7; set .@i, .@i + 1)
+
+				if(getmapusers(.@room$[.@i]) && $roomid[.@i] == getcharid(1)) {
+
+					mes .@name$;
+
+					mes "Your party already reserved a room.";
+
+					mes "You will be teleported now.";
+
+					close2;
+
+					warp .@room$[.@i],94,160;
+
+					end;
+
+				}
+
+			// Checking for a free room.
+
+			for(set .@i, 0; .@i < 7; set .@i, .@i + 1)
+
+				if(!getmapusers(.@room$[.@i])) {
+
+					mes .@name$;
+
+					if(Zeny<100000) {
+
+						mes "You need 100,000z to reserve a room, which you currently don't have.";
+
+						goto L_Free1;
+
+					}
+
+					mes "Room "+.@room$[.@i]+" is still available.";
+
+					mes "It costs 100,000z to reserve a room.";
+
+					mes "Do you want to rent it for your party?";
+
+					next;
+
+					if(select("Yes","No")==2) goto L_End;
+
+					set $roomid[.@i], getcharid(1);
+
+					set Zeny, Zeny - 100000;
+
+					mes .@name$;
+
+					mes "Have fun!";
+
+					close2;
+
+					if(.@clearroom) killmonsterall .@room$[.@i];
+
+					warp .@room$[.@i], 94, 160;
+
+					end;
+
+				}
+
+			// All rooms are full.
+
+			mes .@name$;
+
+			mes "All reserved rooms are currently occupied.";
+
+			goto L_Free1;
+
+		case 2: // Use a free room.
+
+			goto L_Free2;
+
+		default:
+
+	}
+
+
+
+L_End:
+
+	// The end.
+
+	mes .@name$;
+
+	mes "Come again.";
+
+	close;
+
+
+
+L_Free1:
+
+	mes "Do you perhaps want to use the free room?";
+
+	next;
+
+	if(select("Yes","No")==2) goto L_End;
+
+
+
+L_Free2:
+
+	// Free room.
+
+	if(.@clearroom && !(getmapusers(.@froom$))) killmonsterall .@froom$;
+
+
+
+	mes .@name$;
+
+	mes "Please keep in mind, we are not responsible if you get a kill stolen while using the free room.";
+
+	close2;
+
+	warp .@froom$,0,0;
+
+	end;
+
+
+
+}
+
+
+
+
+
+06guild_02,49,49,5	script	Branch Room Warper::BRWarper	833,{
+
+	mes "[^0000FFBranch Room Warper^000000]";
+
+	mes "Do you want to go back?";
+
+	next;
+
+	select("Yes","No");
+
+	mes "[^0000FFBranch Room Manager^000000]";
+
+	mes "Goodbye.";
+
+	if(@menu == 2) close;
+
+	close2;
+
+	warp "prontera",142,171;
+
+	end;
+
+
+
+}
+
+06guild_03,49,49,5	duplicate(BRWarper)	Branch Room Warper#2	833
+
+06guild_04,49,49,5	duplicate(BRWarper)	Branch Room Warper#3	833
+
+06guild_05,49,49,5	duplicate(BRWarper)	Branch Room Warper#4	833
+
+06guild_06,49,49,5	duplicate(BRWarper)	Branch Room Warper#5	833
+
+06guild_07,49,49,5	duplicate(BRWarper)	Branch Room Warper#6	833
+
+06guild_08,49,49,5	duplicate(BRWarper)	Branch Room Warper#7	833
+
+
+
+06guild_02	mapflag	nomemo
+
+06guild_02	mapflag	nopenalty
+
+06guild_02	mapflag	noreturn
+
+06guild_02	mapflag	nosave	SavePoint
+
+06guild_02	mapflag	noteleport
+
+06guild_02	mapflag	nocommand	10
+
+06guild_02	mapflag	gvg	off
+
+06guild_02	mapflag	pvp	off
+
+
+
+06guild_03	mapflag	nomemo
+
+06guild_03	mapflag	nopenalty
+
+06guild_03	mapflag	noreturn
+
+06guild_03	mapflag	nosave	SavePoint
+
+06guild_03	mapflag	noteleport
+
+06guild_03	mapflag	nocommand	10
+
+06guild_03	mapflag	gvg	off
+
+06guild_03	mapflag	pvp	off
+
+
+
+06guild_04	mapflag	nomemo
+
+06guild_04	mapflag	nopenalty
+
+06guild_04	mapflag	noreturn
+
+06guild_04	mapflag	nosave	SavePoint
+
+06guild_04	mapflag	noteleport
+
+06guild_04	mapflag	nocommand	10
+
+06guild_04	mapflag	gvg	off
+
+06guild_04	mapflag	pvp	off
+
+
+
+06guild_05	mapflag	nomemo
+
+06guild_05	mapflag	nopenalty
+
+06guild_05	mapflag	noreturn
+
+06guild_05	mapflag	nosave	SavePoint
+
+06guild_05	mapflag	noteleport
+
+06guild_05	mapflag	nocommand	10
+
+06guild_05	mapflag	gvg	off
+
+06guild_05	mapflag	pvp	off
+
+
+
+06guild_06	mapflag	nomemo
+
+06guild_06	mapflag	nopenalty
+
+06guild_06	mapflag	noreturn
+
+06guild_06	mapflag	nosave	SavePoint
+
+06guild_06	mapflag	noteleport
+
+06guild_06	mapflag	nocommand	10
+
+06guild_06	mapflag	gvg	off
+
+06guild_06	mapflag	pvp	off
+
+
+
+06guild_07	mapflag	nomemo
+
+06guild_07	mapflag	nopenalty
+
+06guild_07	mapflag	noreturn
+
+06guild_07	mapflag	nosave	SavePoint
+
+06guild_07	mapflag	noteleport
+
+06guild_07	mapflag	nocommand	10
+
+06guild_07	mapflag	gvg	off
+
+06guild_07	mapflag	pvp	off
+
+
+
+06guild_08	mapflag	nomemo
+
+06guild_08	mapflag	nopenalty
+
+06guild_08	mapflag	noreturn
+
+06guild_08	mapflag	nosave	SavePoint
+
+06guild_08	mapflag	noteleport
+
+06guild_08	mapflag	nocommand	10
+
+06guild_08	mapflag	gvg	off
+
+06guild_08	mapflag	pvp
+
+
+
+//prontera,164,170,4	duplicate(Branch Room)	Branch Room#2	461
+
+geffen,128,61,4	duplicate(Branch Room)	Branch Room#3	461
+
+payon,192,105,4	duplicate(Branch Room)	Branch Room#4	461
+
+alberta,106,65,5	duplicate(Branch Room)	Branch Room#5	461
+
+izlude,120,102,5	duplicate(Branch Room)	Branch Room#6	461
+
+alberta,136,110,7	duplicate(Branch Room)	Branch Room#7	461
+
+xmas,159,126,2	duplicate(Branch Room)	Branch Room#8	461
+
+comodo,182,156,5	duplicate(Branch Room)	Branch Room#9	461
+
+yuno,146,182,5	duplicate(Branch Room)	Branch Room#10	461
+
+amatsu,208,115,4	duplicate(Branch Room)	Branch Room#11	461
+
+gonryun,165,122,4	duplicate(Branch Room)	Branch Room#12	461
+
+umbala,104,153,4	duplicate(Branch Room)	Branch Room#13	461
+
+louyang,227,99,4	duplicate(Branch Room)	Branch Room#14	461
+
+morocc,170,102,4	duplicate(Branch Room)	Branch Room#15	461
+
+ayothaya,142,104,5	duplicate(Branch Room)	Branch Room#16	461
+
+einbroch,50,203,5	duplicate(Branch Room)	Branch Room#17	461
+
+lighthalzen,149,103,5	duplicate(Branch Room)	Branch Room#18	461
+
+hugel,101,142,4	duplicate(Branch Room)	Branch Room#19	461
+
+rachel,136,117,4	duplicate(Branch Room)	Branch Room#20	461
+
+veins,221,132,4	duplicate(Branch Room)	Branch Room#21	461
+
+moscovia,228,200,4	duplicate(Branch Room)	Branch Room#22	461
+
+
+
+rentinb1,11,9,5	duplicate(Branch Room)	Branch Room#30	461
+
+rentinb2,11,9,5	duplicate(Branch Room)	Branch Room#31	461
+
+rentinb3,11,9,5	duplicate(Branch Room)	Branch Room#32	461
+
+rentinb4,11,9,5	duplicate(Branch Room)	Branch Room#33	461
+
+rentinb5,11,9,5	duplicate(Branch Room)	Branch Room#34	461
+
+rentinb6,11,9,5	duplicate(Branch Room)	Branch Room#35	461
+
+rentinb7,11,9,5	duplicate(Branch Room)	Branch Room#36	461
+
+rentinb8,11,9,5	duplicate(Branch Room)	Branch Room#37	461
+
+rentinb9,11,9,5	duplicate(Branch Room)	Branch Room#38	461
+
+rentinb10,11,9,5	duplicate(Branch Room)	Branch Room#39	461
+
+rentinb11,11,9,5	duplicate(Branch Room)	Branch Room#40	461
+
+rentinb12,11,9,5	duplicate(Branch Room)	Branch Room#41	461
+
+rentinb13,11,9,5	duplicate(Branch Room)	Branch Room#42	461
+
+rentinb14,11,9,5	duplicate(Branch Room)	Branch Room#43	461
+
+rentinb15,11,9,5	duplicate(Branch Room)	Branch Room#44	461
+
+rentinb16,11,9,5	duplicate(Branch Room)	Branch Room#45	461
+
+rentinb17,11,9,5	duplicate(Branch Room)	Branch Room#46	461
+
+rentinb18,11,9,5	duplicate(Branch Room)	Branch Room#47	461
+
+rentinb19,11,9,5	duplicate(Branch Room)	Branch Room#48	461
+
+rentinb20,11,9,5	duplicate(Branch Room)	Branch Room#49	461
+
+rentinb21,11,9,5	duplicate(Branch Room)	Branch Room#50	461
+
+rentinb22,11,9,5	duplicate(Branch Room)	Branch Room#51	461
+
+rentinb23,11,9,5	duplicate(Branch Room)	Branch Room#52	461
+
+rentinb24,11,9,5	duplicate(Branch Room)	Branch Room#53	461
+
+rentinb25,11,9,5	duplicate(Branch Room)	Branch Room#54	461
+
+rentinb26,11,9,5	duplicate(Branch Room)	Branch Room#55	461
+
+rentinb27,11,9,5	duplicate(Branch Room)	Branch Room#56	461
+

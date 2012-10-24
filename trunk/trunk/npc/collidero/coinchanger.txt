@@ -1,0 +1,212 @@
+//===== eAthena Script ======================================================================
+
+//= Hybrid Coin Exchanger
+
+//===== By: =================================================================================
+
+//= OneeChan
+
+//===== Current Version: ====================================================================
+
+//= 1.2
+
+//===== Compatible With: ====================================================================
+
+//= Any eAthena Version
+
+//===== Description: ========================================================================
+
+//= Change Coin into Zeny
+
+//= Hybrid NPC can exchange MC and GC in one NPC
+
+//= Weight Check is added
+
+//= Fixed Check Weight
+
+//= Added Max Zeny
+
+//===== Additional Comments: ================================================================
+
+//= Add Comments!
+
+//===========================================================================================
+
+//Hybrid Coin Exchanger
+
+
+
+prontera,173,179,4	script	Coin Exchanger	872,{
+
+	set .@name$,"[Coin Expert]";
+
+	
+
+	mes	.@name$;
+
+	mes	"Hi! What Can i Do For You?";
+
+	menu	"Change my Coin/Zeny",go,"Nothing",ex;
+
+ex:
+
+	next;
+
+	mes	.@name$;
+
+	mes	"Okay Bye!";
+
+	close;
+
+go:
+
+	next;
+
+	mes	.@name$;
+
+	mes	"What Do you want To Be Changed?";
+
+	menu	"Gold Coin",gc,"Mithril Coin",mc;
+
+gc:
+
+	next;
+
+	mes	.@name$;
+
+	mes	"To Zeny or To Coin?";
+
+	menu	"Zeny To Coin",zg,"Coin To Zeny",gz;
+
+mc:
+
+	next;
+
+	mes	.@name$;
+
+	mes	"To Zeny or To Coin?";
+
+	menu	"Zeny To Coin",zm,"Coin To Zeny",mz;
+
+zg:
+
+	next;
+
+	mes	.@name$;
+
+	mes	"Please Input The Number of Coins You Need";
+
+	
+
+	input .@t;
+
+	if (checkweight(671,.@t)) {
+
+	if( Zeny < 100000000*.@t ){ close; }
+
+	set Zeny,Zeny-100000000*.@t;
+
+   	getitem 671,.@t;
+
+	} else {
+
+	mes "You don't have enough space in your inventory.";
+
+	}
+
+	close;
+
+
+
+gz:
+
+	next;
+
+	mes	.@name$;
+
+	mes 	"Please Input The Number of Coins You Need To Be Changed";
+
+
+
+	input .@t;
+
+	readparam(Zeny);
+
+	if( .@t < 0 )||( countitem(671) < .@t ) ||  (readparam(Zeny)>= 2000000000) goto Max_Zeny; //2B max Zeny
+
+	set Zeny,Zeny+100000000*.@t;
+
+	delitem 671,.@t;
+
+	close;
+
+zm:
+
+	next;
+
+	mes	.@name$;
+
+	mes	"Please Input The Number of Coins You Need";
+
+	
+
+	input .@t;
+
+	if (checkweight(674,.@t)) {
+
+	if( Zeny < 10000000*.@t ){ close; }
+
+	set Zeny,Zeny-10000000*.@t;
+
+	getitem 674,.@t;
+
+	} else {
+
+	mes "You don't have enough space in your inventory.";
+
+	}
+
+	close;
+
+mz:
+
+	next;
+
+	mes	.@name$;
+
+	mes 	"Please Input The Number of Coins You Need To Be Changed";
+
+	
+
+	input .@t;
+
+	readparam(Zeny);
+
+	if( .@t < 0 )||( countitem(674) < .@t ) ||  (readparam(Zeny)>= 2000000000) goto Max_Zeny; //2B max Zeny
+
+	set Zeny,Zeny+10000000*.@t;
+
+	delitem 674,.@t;
+
+	close;
+
+
+
+Max_Zeny:
+
+	mes	.@name$;
+
+	mes	"Coin Cannot Change Due to Max Zeny you Have.";
+
+	close;
+
+}
+
+
+
+
+
+
+
+
+

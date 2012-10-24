@@ -1,0 +1,109 @@
+//Castle Ranking
+
+prontera,124,199,5	script	Castle Ranking	858,{
+
+	for (set .@x,0; .@x < 5; set .@x,.@x + 1) {
+		if (.@x) mes "- - - - - - - - - - - - - - -";
+		mes "# ^ff0000" + (.@x + 1) + "^000000: ^0000ff" + ( (.GuildName$[.@x])? .GuildName$[.@x]:"None" ) + "^000000";
+		mes " - Master: ^0000ff" + ( (.GuildMaster$[.@x])? .GuildMaster$[.@x]:"None" ) + "^000000";
+		mes " - Territories: ^ff0000" + .NumCastles[.@x] + "^000000";
+		mes " - Members: ^ff0000" + .NumMembers[.@x] + "^000000";
+	}
+	close;
+
+OnAgitEnd:
+OnAgitEnd2:
+OnInit:
+	waitingroom "Castle Ranking",0;
+	set .Cnt, query_sql("SELECT (SELECT count(c.castle_id) FROM guild_castle c WHERE c.guild_id = g.guild_id) castles, CONCAT(g.name, ' (LV. ',g.guild_lv,')') guild, count(g.char_id) members, g.master FROM guild g LEFT JOIN guild_member m ON g.guild_id = m.guild_id GROUP BY g.guild_id HAVING castles > 0 ORDER BY castles DESC, guild_lv DESC, members DESC", .NumCastles,.GuildName$,.NumMembers,.GuildMaster$);
+	end;
+}
+
+
+
+
+//============================
+
+//MvP Ranker NPC
+
+//============================
+
+prontera,126,197,5	script	MVP Ranking	858,{
+
+
+
+set .@npc$,"[ ^FF0000 MVP's Ranking ^000000 ]";
+
+	mes .@npc$;
+
+	query_sql "SELECT name, kills, points FROM mvp ORDER BY kills DESC LIMIT 10",.@name$,.@kills,.@points;
+
+	for(set .@i,0;.@i<=9;set .@i,.@i+1) {
+
+		mes "^0000FF"+(.@i+1)+".^000000 " +( (.@name$[.@i] == "")? "None":.@name$[.@i] )+ " - ^FF0000"+.@kills[.@i]+"^000000 Kill(s)";
+
+	}
+
+	mes " ";
+
+	set .@npc$,"";
+
+	set .@points,0;
+
+	query_sql "SELECT `points` FROM `mvp` WHERE `char_id`="+getcharid(0),.@points;
+
+	mes "^0000FF["+strcharinfo(0)+"'s]^000000 MvP kill(s) is ^FF0000"+.@points+"^000000 Boss Monster(s).";
+
+	close;
+
+
+
+	OnInit:
+
+		waitingroom "MVP's Ranking",0;   // Look on the configuration!
+
+	end;
+
+}
+
+
+
+//============================
+
+//Emp Breaking Ladder
+
+//============================
+
+
+
+prontera,128,195,5	script	Emperium Ranking	858,{
+
+
+
+query_sql "SELECT `char`.`char_id`,`char`.`name`, `global_reg_value`.`value` FROM global_reg_value LEFT JOIN `char` ON `global_reg_value`.`char_id`=`char`.`char_id` WHERE `global_reg_value`.`str`='brokeemp' ORDER BY CAST(`global_reg_value`.`value` AS UNSIGNED) DESC LIMIT 10", .@char_id, .@name$, .@count;
+
+
+
+	mes "^FF0000[ Emperium Ranking ]^000000";
+
+    for( set .@x,0; .@x<=9; set .@x,.@x+1 ) {
+
+        mes "^0000FF"+(.@x+1)+".^000000 " +( (.@name$[.@x] == "")? "None":.@name$[.@x] )+ " - ^FF0000"+.@count[.@x]+"^000000 Break(s)";
+
+    }
+
+	mes " ";
+
+	mes "^0000FF["+strcharinfo(0)+"'s]^000000 Emperium Break's is ^FF0000" + brokeemp + "^000000 Break(s)";
+
+	close;
+
+	
+
+OnInit:
+
+	waitingroom "Emperium's Ranking",0;   // Look on the configuration!
+
+	end;
+
+}
