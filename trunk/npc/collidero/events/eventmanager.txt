@@ -1,0 +1,146 @@
+celestian,132,158,0	script	Manager	111,{
+	
+	if (getgmlevel() < 90) end;
+	mes .name$;
+	mes "I am one of the secret manager to manage Events on this server. Which Event you like to Manage?";
+	next;
+	mes .name$;
+	mes "Select an event from the list.";
+	switch(select("Dice Event:Last Man Standing:Disguise:Ants in Pants:Jumper")) {
+		ManageAgain:
+		case 1:
+			switch(select((($@DiceEvent)? "^ff0000Stop Event^000000":"^4AA02CStart Event^000000")+":Check Price:Manage Price")) {
+				next;
+				mes .name$;
+				case 1:
+					mes "Click Confirm to start the Process, Finally.";
+					if ( select("Confirm:Close")==2) close;
+					if ( $@DiceEvent ) {
+						next;
+						mes .name$;
+						mes "^ff0000Event is being Stopped...";
+						donpcevent "Dice#disable::OnDEventStop";
+						sleep2 1000;
+						mes "Warping Players out of the map.";
+						mapwarp "quiz_01","celestian",155,115;
+						set $@DiceEvent, 0;
+						sleep2 500;
+						mes "Updating the waiting room";
+						sleep2 500;
+						donpcevent "EventWarp::OnEventFind";
+						mes "Event Finally Stopped.";
+						close;
+					}
+					mes "Event Started";
+					close2;
+					doevent "Dice#disable::OnDiceEventStart";
+					end;
+				case 2:
+					mes "The Event Price is: ";
+					mes " ";
+					mes "^ff0000Price: ^000000" + getitemname($get_item_id);
+					mes "^ff0000Amount: ^000000" + $get_item_amount;
+					close;
+				case 3:
+					mes "Sorry, The feature is not available yet.";
+					close;
+			}
+		case 2:
+			switch(select((($@LMSEventStart)? "^ff0000Stop Event^000000":"^4AA02CStart Event^000000")+":Check Price:Manage Price")) {
+				case 1:
+					mes "Click Confirm to start the Process, Finally.";
+					if ( select("Confirm:Close")==2) close;
+					if ( $@LMSEventStart ) {
+						next;
+						mes .name$;
+						mes "^ff0000Event is being Stopped...";
+						donpcevent "LMS::OnLMSEventStop";
+						sleep2 1000;
+						mes "Warping Players out of the map.";
+						mapwarp "quiz_01","celestian",74,91;
+						set $@LMSEventStart, 0;
+						sleep2 500;
+						mes "Updating the waiting room";
+						sleep2 500;
+						donpcevent "EventWarp::OnEventFind";
+						mes "Event Finally Stopped.";
+						close;
+					}
+					mes "Event Started";
+					close2;
+					doevent "LMS::Onstartlmsevent";
+					end;
+				case 2:
+					mes "The Event Price is: ";
+					mes " ";
+					mes "^ff0000Price: ^000000" + getitemname($get_item_id);
+					mes "^ff0000Amount: ^000000" + $get_item_amount;
+					close;
+				case 3:
+					mes "Sorry, The feature is not available yet.";
+					close;
+			}
+		case 3:
+			switch(select((($@disguiseactive)? "^ff0000Stop Event^000000":"^4AA02CStart Event^000000")+":Edit Rounds [ " + $roundmax + " ]:Check Price:Manage Price")) {
+				case 1:
+					mes "Click Confirm to start the Process, Finally.";
+					if ( select("Confirm:Close")==2) close;
+					if ( $@disguiseactive ) {
+						next;
+						mes .name$;
+						mes "^ff0000Event is being Stopped...";
+						doevent "Prophet::Ondeact";
+						doevent "DisguiseStarts::Ondeact";
+						sleep2 1000;
+						mes "Warping Players out of the map.";
+						mapwarp "quiz_01","celestian",74,91;
+						set $@disguiseactive, 0;
+						sleep2 500;
+						mes "Updating the waiting room";
+						sleep2 500;
+						donpcevent "EventWarp::OnEventFind";
+						mes "Event Finally Stopped.";
+						close;
+					}
+					mes "Event Started";
+					close2;
+					doevent "DisguiseStarts::Onautoact";
+					end;
+				case 2:
+					if ( $@disguiseactive ) {
+						mes "You are not allowed to Edit the Rounds, Event is under Progress.";
+						close;
+					}
+					mes "Do you want to Edit Total no. of rounds?";
+					next;
+					if ( select("Confirm:Close")==2) close;
+					input .@roundmax;
+					mes .name$;
+					mes "So, you want to change No. of Rounds to [ " + .@roundmax + " ]?";
+					next;
+					mes .name$;
+					if ( select("Confirm:Close")==2) close;
+					set $roundmax, .@roundmax;
+					mes "Maximum no. of rounds are now Changed to [ " + $roundmax + " ]";
+					close;
+				case 3:
+					mes "The Event Price is: ";
+					mes " ";
+					mes "^ff0000Price: ^000000" + getitemname($get_item_id);
+					mes "^ff0000Amount: ^000000" + ($get_item_amount - 3);
+					close;
+				case 4:
+					mes "Sorry, The feature is not available yet.";
+					close;
+			}
+		case 4:
+		case 5:
+			mes "Event is not Yet Implemented on Server. Talk to [GM] Daddy, For Further informations.";
+			close;
+	}
+	close;
+	
+OnInit:
+	set .name$,"[^0000ff " + strnpcinfo(0) + "^000000 ]";
+	end;
+}

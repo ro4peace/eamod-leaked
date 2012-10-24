@@ -1,0 +1,23 @@
+-	script	ads	-1,{
+
+OnInit:
+while(1) {
+announce "Welcome to DevainneRO",bc_all,0xFF9933;
+sleep 35000;
+
+announce "first invite 15 players Special Headgear Prize :)) contact GM Ploom ",bc_all,0xFF9933;
+sleep 35000;
+
+announce "please visit our official forum for information, updates and events",bc_all,0xFF9933;
+sleep 35000;
+
+announce "vote DevainneRO everyday to earn points",bc_all,0xFF9933;
+sleep 35000;
+
+announce "invite your friends to join DevainneRO Community",bc_all,0xFF9933;
+sleep 3600000;
+}
+}
+
+
+

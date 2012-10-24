@@ -1,0 +1,39 @@
+prontera,156,185,4	script	Healer#h1-1::Healer	403,{
+	  percentheal 100,100;
+skilleffect 34,0; sc_start SC_BLESSING,360000,10;
+skilleffect 29,0; sc_start SC_INCREASEAGI,360000,10;
+skilleffect 45,0;	sc_start SC_CONCENTRATE,360000,10;
+ repair(1);
+        set .@i, .@i +1;
+    OnInit:
+    initnpctimer;
+    end;
+
+}
+
+
+
+
+
+alberta,32,240,5	duplicate(Healer)	Healer#d2	408
+payon,177,226,5	duplicate(Healer)	Healer#d3	408
+morocc,152,97,5	duplicate(Healer)	Healer#d4	408
+geffen,122,59,5	duplicate(Healer)	Healer#d5	408
+aldebaran,135,120,5	duplicate(Healer)	Healer#d6	408
+splendide,92,177,5	duplicate(Healer)	Healer#d7	408
+malaya,279,270,4	duplicate(Healer)	Healer#d8	408
+izlude,125,148,5	duplicate(Healer)	Healer#d10	408
+xmas,143,136,5	duplicate(Healer)	Healer#d11	408
+comodo,191,151,5	duplicate(Healer)	Healer#d12	408
+yuno,149,187,5	duplicate(Healer)	Healer#d13	408
+amatsu,102,147,5	duplicate(Healer)	Healer#d14	408
+gonryun,157,122,5	duplicate(Healer)	Healer#d15	408
+umbala,89,159,5	duplicate(Healer)	Healer#d16	408
+louyang,226,104,5	duplicate(Healer)	Healer#d17	408
+ayothaya,144,117,5	duplicate(Healer)	Healer#d18	408
+einbroch,56,203,5	duplicate(Healer)	Healer#d19	408
+lighthalzen,153,100,5	duplicate(Healer)	Healer#d20	408
+hugel,90,141,5	duplicate(Healer)	Healer#d21	408
+rachel,111,140,5	duplicate(Healer)	Healer#d22	408
+veins,205,128,5	duplicate(Healer)	Healer#d23	408
+moscovia,208,190,5	duplicate(Healer)	Healer#d24	408

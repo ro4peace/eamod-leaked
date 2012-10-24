@@ -1,0 +1,114 @@
+-	script	hourlypoints	-1,{
+
+
+
+//--Start of the Script
+
+OnPCLoginEvent:
+
+attachnpctimer ""+strcharinfo(0)+"";
+
+initnpctimer;
+
+end;
+
+	
+
+OnTimer30000:
+
+//Check if Vending (normal or @at)
+
+if(checkvending() >= 1 || checkchatting() == 1) {
+
+	dispbottom "The hourly points event stopped because you were vending / chatting. Please relog if you wish to start again.";
+
+	stopnpctimer;
+
+	end;
+
+}
+
+//Check if Idle
+
+getmapxy( .@map$, .@x, .@y, 0 );
+
+if(@map$ == .@map$ && @x == .@x && @y == .@y) {
+
+	set @afk, @afk + 1;
+
+}
+
+//If move timer resets
+
+else {
+
+	set @afk, 0;
+
+}
+
+	set @map$, .@map$; set @x, .@x; set @y, .@y;
+
+//Idle Check for 15 Minutes
+
+if(@afk == 30) {
+
+	dispbottom "The hourly points event stopped because you were idle for 30 minutes. Please relog if you wish to start again.";
+
+	stopnpctimer;
+
+	end;
+
+}
+
+end;
+
+
+
+OnTimer60000:
+
+set @minute, @minute + 1;
+
+//Check for 1 Minute
+
+if(@minute == 60){
+
+	set @minute,0;
+
+	getitem 7859,1;
+
+	dispbottom "You received 1 DevainneRo Event Ticket for staying ingame for 1 hour.";
+
+	dispbottom "You have "+countitem(7859)+" DevainneRO Event Ticket";
+
+	set @consecutive_hour, @consecutive_hour + 1;
+
+	}
+
+//Check for 12 hours consecutive
+
+	if(@consecutive_hour == 12) {
+
+	set @consecutive_hour,0;
+
+	getitem 7859,3;
+
+	dispbottom "You received 3 DevainneRO Event Tickets for staying ingame for 12 consecutive hour.";
+
+	dispbottom "You have "+countitem(7859)+" DevainneRO Event Ticket";
+
+	}
+
+stopnpctimer;
+
+initnpctimer;
+
+end;
+
+
+
+}
+
+//--End of the Script
+
+
+

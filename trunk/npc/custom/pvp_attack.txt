@@ -1,0 +1,178 @@
+// UVP 2
+6@tower,165,136,3	script	Ultimate PvP Warper	483,{
+	if (.pvp_square$=="") donpcevent "Ultimate PVP warper::OnClock0000";
+ 
+	mes "[PvP Warper]";
+	mes "Which arena do you want to go to?";
+	switch(select("PVP Square ["+getmapusers(.pvp_square$)+"/100]:PVP Nightmare ["+getmapusers("guild_vs3")+"/100]:PVP LowLevel ["+getmapusers("guild_vs1")+"/100]:PVP NoPotion ["+getmapusers("pvp_y_8-2")+"/100]:Non Donator PVP ["+getmapusers("1@orcs")+"/100]:Baby PvP Room ["+getmapusers("pvp_y_1-2")+"/100]")) {
+	case 1:	// PVP Square
+		if (getmapusers(.pvp_square$) > 99) callsub S_full;
+		callsub S_payment;
+		warp .pvp_square$,0,0;
+		end;
+ 
+	case 2:	// PVP Nightmare
+		if (getmapusers("guild_vs3") > 99) callsub S_full;
+		callsub S_payment;
+		warp "guild_vs3",0,0;
+		end;
+ 
+	case 3:	// PVP LowLevel
+		if (getmapusers("guild_vs1") > 99) callsub S_full;
+		if (BaseLevel > 150) { // Edit 150 to any maximum Lvl of a player can enter this room
+			mes "only Base Level 1 - 150 may enter.";
+			close;
+		}
+		callsub S_payment;
+		warp "guild_vs1",0,0;
+		end;
+ 
+	case 4:	// PVP NoPotion
+		if (getmapusers("pvp_y_8-2") > 99) callsub S_full;
+		for( set .@i,0; .@i<getarraysize(.NoPotion_ids); set .@i,.@i+1 ) {
+			if (countitem(.NoPotion_ids[.@i])) {
+				mes "You can not bring potions in this pvp.";
+				close;
+			}
+		}
+		callsub S_payment;
+		warp "pvp_y_8-2",0,0;
+		end;
+ 
+	case 5:	// Non Donator PVP
+		if (getmapusers("1@orcs") > 99) callsub S_full;
+		for( set .@i,0; .@i<getarraysize(.NoDonator_ids); set .@i,.@i+1 ) {
+			if (countitem(.NoDonator_ids[.@i])) {
+				mes "You can not bring God items in this pvp.";
+				close;
+			}
+		}
+		callsub S_payment;
+		warp "1@orcs",0,0;
+		end;
+	Case 6: // Baby PvP Room
+		if (getmapusers("pvp_y_1-2") > 99) callsub S_full;
+		if (class < 4023 || class > 4045) goto L_NotBaby;
+		callsub S_payment;
+		warp "pvp_y_1-2",0,0;
+		end;
+L_NotBaby:
+		mes "Only baby can enter this room";
+		close;	
+ 
+	}
+ 
+S_full:
+	mes " ";
+	mes "I'm sorry, this arena is full.  Please try again later...";
+	close;
+S_payment:
+	if (Zeny < (200*BaseLevel + 800)) {
+		mes "You don't have enough zeny.";
+		mes "It costs "+(200*BaseLevel + 800)+" zeny for you to enter.";
+		close;
+	}
+	set Zeny, Zeny - (200*BaseLevel + 800);
+	return;
+ 
+OnInit:
+	OnTimer5000:
+	delwaitingroom;
+	switch(rand(1,6)) {
+Case 1:
+	waitingroom getmapusers(.pvp_square$)+" player"+( getmapusers(.pvp_square$) > 1 ? "s":"") +" are in the PvP Square", 0;
+	goto Timer;
+	end;
+	break;
+Case 2:
+	waitingroom getmapusers("guild_vs3")+" player"+( getmapusers("guild_vs3") > 1 ? "s":"") +" are in the PvP Nightmare", 0;
+	goto Timer;
+	end;
+	break;
+Case 3:
+	waitingroom getmapusers("guild_vs1")+" player"+( getmapusers("guild_vs1") > 1 ? "s":"") +" are in the PvP Lowlvl", 0;	
+	goto Timer;
+	end;
+	break;
+Case 4:
+	waitingroom getmapusers("pvp_y_8-2")+" player"+( getmapusers("pvp_y_8-2") > 1 ? "s":"") +" are in the PvP NoPotion", 0;
+	goto Timer;
+	end;
+	break;
+Case 5:	
+	waitingroom getmapusers("1@orcs")+" player"+( getmapusers("1@orcs") > 1 ? "s":"") +" are in the PvP NoDonator", 0;	
+	goto Timer;
+	end;
+	break;
+Case 6:
+	waitingroom getmapusers("pvp_y_1-2")+" player"+( getmapusers("pvp_y_1-2") > 1 ? "s":"") +" are in the Baby PvP", 0;	
+	goto Timer;
+	end;
+	break;
+Timer:
+	initnpctimer;
+}
+OnClock0000:
+	// set the "PVP Square" map, based on day of the weeek
+	switch(gettime(4)) {
+	case 0:	// Sunday
+	case 1:	// Monday
+		set .pvp_square$, "guild_vs2";
+		break;
+	case 2:	// Tuesday
+	case 3:	// Wednesday
+		set .pvp_square$, "guild_vs5";
+		break;
+	case 4:	// Thursday
+	case 5:	// Friday
+		set .pvp_square$, "guild_vs4";
+		break;
+	case 6:	// Saturday
+		set .pvp_square$, "guild_vs1-2";
+		break;
+	}
+ 
+	// items not allowed in PVP NoPotion
+	setarray .NoPotion_ids[0], 607, 608;
+ 
+	// items not allowed in Non Donator PVP
+	setarray .NoDonator_ids[0], 2410, 1530;
+	end;
+}
+ 
+moscovia.gat,226,198,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#1	483
+askydun.gat,96,113,3	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#2	483 // Kliwa
+alberta.gat,110,140,3	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#3	483 // Kliwa
+aldebaran.gat,147,115,1	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#4	483 // Kliwa
+amatsu.gat,207,86,3	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#5	483 // Kliwa
+ayothaya.gat,155,117,2	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#6	483 // Kliwa
+comodo.gat,206,80,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#7	483 // Kliwa
+einbech.gat,198,83,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#8	483 // Taas Kaliwa
+einbroch.gat,174,172,5	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#9	483 // Taas Kaliwa
+geffen.gat,125,71,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#10	483
+gonryun.gat,164,127,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#11	483
+hugel.gat,89,151,5	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#12	483
+izlude.gat,130,118,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#13	483
+lighthalzen.gat,166,101,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#14	483
+louyang.gat,214,120,5	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#15	483
+xmas.gat,154,136,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#16	483
+morocc.gat,160,97,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#17	483
+payon.gat,148,226,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#18	483
+rachel.gat,135,115,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#19 	483
+veins.gat,219,127,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#20	483
+yuno.gat,163,170,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#21	483
+umbala.gat,106,159,3	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#22	483
+prontera.gat,160,193,4	duplicate(Ultimate PvP Warper)	Ultimate PvP Warper#23	483
+ 
+// Mapflags
+guild_vs2	mapflag	pvp
+guild_vs5	mapflag	pvp
+guild_vs4	mapflag	pvp
+guild_vs1-2	mapflag	pvp
+ 
+guild_vs3	mapflag	pvp
+guild_vs1	mapflag	pvp
+pvp_y_8-2	mapflag	pvp
+1@orcs	mapflag	pvp
+ 
+guild_vs3	mapflag	pvp_nightmaredrop	random,equip,300

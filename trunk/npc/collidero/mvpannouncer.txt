@@ -1,0 +1,43 @@
+-	script	MvP Announce	-1,{
+OnNPCKillEvent:
+	if(getgmlevel() < 20) {
+	if(killedrid==1086||killedrid==1115||killedrid==1150||killedrid==1159||killedrid==1583||
+	killedrid==1112||killedrid==1492||killedrid==1046||killedrid==1418||killedrid==1252||
+	killedrid==1059||killedrid==1190||killedrid==1087||killedrid==1251||killedrid==1038||
+	killedrid==1658||killedrid==1871||killedrid==1272||killedrid==1147||killedrid==1039||
+	killedrid==1785||killedrid==1885||killedrid==1630||killedrid==1389||killedrid==1623||
+	killedrid==1511||killedrid==1688||killedrid==1768||killedrid==1734||killedrid==1719||
+	killedrid==1157||killedrid==1373||killedrid==1312||killedrid==1685||killedrid==1779||
+	killedrid==1650||killedrid==1648||killedrid==1647||killedrid==1649||killedrid==1646||
+	killedrid==1651||killedrid==1708||killedrid==1751||killedrid==1832||killedrid==2022||
+	killedrid==1917||killedrid==1874||killedrid==2068||killedrid==2087||killedrid==1871||
+	killedrid==1980||killedrid==2156||killedrid==2165||killedrid==1399||killedrid==1916||
+	killedrid==1502)
+	{
+		announce ""+strcharinfo(0)+" has defeated "+getmonsterinfo(killedrid,0)+"! Congratulations!",bc_all,0xFF0066;
+	}
+	end;
+}
+}
+//mini boss
+
+-	script	MiniBoss Announce	-1,{
+OnNPCKillEvent:
+	if(getgmlevel() < 20) {
+	if(killedrid==1096||killedrid==1388||killedrid==1641||killedrid==1873||killedrid==1839||
+	killedrid==1307||killedrid==1283||killedrid==1302||killedrid==1582||killedrid==1091||
+	killedrid==1093||killedrid==1205||killedrid==1681||killedrid==1120||killedrid==1929||
+	killedrid==1658||killedrid==1871||killedrid==1272||killedrid==1147||killedrid==1039||
+	killedrid==1259||killedrid==1990||killedrid==1626||killedrid==1643||killedrid==1645||
+	killedrid==1720||killedrid==1640||killedrid==2131||killedrid==1090||killedrid==1289||
+	killedrid==1262||killedrid==1203||killedrid==1956||killedrid==1644||killedrid==1991||
+	killedrid==1705||killedrid==1710||killedrid==1707||killedrid==1712||killedrid==1711||
+	killedrid==1706||killedrid==1704||killedrid==1709||killedrid==1960||killedrid==1961||
+	killedrid==1959||killedrid==1958||killedrid==1204||killedrid==1089||killedrid==1092||
+	killedrid==1765||killedrid==1642)
+	{
+		announce ""+strcharinfo(0)+" has killed "+getmonsterinfo(killedrid,0)+"!",bc_all,0xFF0066;
+	}
+	end;
+}
+}

@@ -1,0 +1,2 @@
+brasilis,308,336,0 warp cityjungle 1,1,bra_fild01,77,33
+bra_fild01,72,34,0 warp junglecity 1,1,brasilis,309,333

@@ -1,0 +1,175 @@
+// Custom Terra Box (item id 5000) Obtainable Items Database
+// Edit it as you wish, for your server.
+// Structure of Database:
+// GroupID,ItemID,Rate
+
+// Terra Hats Custom
+55,5000,100
+
+
+
+
+//====gift box===
+//#weapons
+//55,1228,10 //ck <- rare
+55,1202,100 //knife4
+//55,1225,1 //m.breaker
+55,1208,50 //m.gauche
+55,13027,50 //mes
+55,1224,50 //s.breaker
+55,1186,50 //death guidance
+//55,1179,20 //executioner 1
+55,1117,100 //katana
+55,1171,1 //zweihander 2
+55,1415,50 //brocca
+55,1422,50 //hunting spear
+55,1402,100 //javelin
+55,1405,100 //spear
+55,1471,1 //hell fire
+55,1483,1 //ivory lance
+55,1302,100 //axe
+55,1309,100 //orcish axe
+55,1311,1 // vecer axe
+55,1352,100 //battle axe
+55,1363,50 //bloody axe
+55,1387,50 //giant axe
+55,1354,100 //hammer 2
+55,1384,1 //veteran axe
+55,1503,50 //club
+55,1525,50 //long mace
+55,1505,50 //mace 4
+55,1541,50 //nemesis
+55,1509,50 //smasher
+55,12256,120 //dead tree cane
+55,1629,50 //gentlemen's staff
+55,1601,50 //rod
+55,1648,50 //staff of ord
+55,2000,1 //sod
+55,1636,1 //dark thorn staff
+55,1722,50 //balista
+55,1702,100 //bow
+55,1736,50 //double bound
+55,1732,1 //earthen bow
+55,1745,5 //falken blitz
+55,1708,100 //great bow
+55,1737,50 //ixion wings
+
+
+
+
+//#armor
+55,2285,50 //apple of archer
+55,2226,100 //cap
+55,2227,100 //cap1
+55,2249,50 //coronet
+55,5019,50 //corsair
+55,2250,50 //cute ribbon
+55,2231,50 //gemmed sallet
+55,2282,50 //halo
+55,5137,20 //alice doll <- rare
+55,2229,50 //helm
+55,5012,50 //phd hat
+55,2234,50 //tiara
+55,5410,1 //brown paper bag
+55,2306,100 //adventurer suit
+55,2310,50 //coat
+55,2302,100 //cotton shirt
+55,2326,50 //saints robe
+55,2333,50 //silver robe
+55,2367,50 //sniping suit
+55,2331,50 //tights
+
+
+
+
+//#misc/items
+55,512,100 //apple
+55,607,100 //yggdrasil berry
+55,610,100 //yggdrasil leaf
+55,608,100 //yggdrasil seed
+55,730,100 //1carat diamond
+55,731,100 //2carat diamond
+55,732,100 //3carat diamond
+55,1004,100 //chivalry emblem
+55,742,100 //chonchon doll
+55,915,100 //chrysalis
+55,1012,100 //frill
+55,749,100 //frozen rose
+55,910,100 //garlet
+55,956,100 //gill
+55,7481,50 //lvl 10 cookbook
+55,1010,100 //phracon
+55,7744,100 //leche flan
+55,7171,100 //leopard skin
+55,7455,100 //spicy sauce
+55,7824,100 //spirit liqour
+55,7112,100 //sharp paper
+55,963,100 //scale
+55,935,100 //shell
+55,7620,50 //enriched oridecon <-rare
+55,987,100 //anvil
+55,756,50 //r.ori
+55,985,100 //elunium
+55,7619,50 //enriched elu <-rare
+55,757,100 //r.elunium
+55,984,100 //oridecon
+55,989,100 //emperium anvil
+55,988,100 //golden anvil
+55,987,100 //oridecon anvil
+55,606,100 //aloe vera
+55,605,100 //anodyne
+55,7776,50 //gympass
+55,7905,20 //ggro badge
+55,7807,40 // ggro stone
+
+
+//telma
+
+55,14003,50
+55,13762,50
+55,522,50
+55,12031,50
+55,12030,50
+55,12029,50
+55,547,50
+55,504,50
+55,505,50
+55,678,50
+55,7135,50
+55,7136,50
+55,7137,50
+55,7138,50
+55,7139,50
+55,715,50
+55,716,50
+55,717,50
+55,12016,50
+55,1025,50
+55,7321,50
+55,662,50
+55,12072,50
+55,12077,50
+55,12082,50
+55,12087,50
+55,12092,50
+55,12097,50
+
+
+// Costume System
+55,19513,30
+55,19514,30
+55,19515,30
+55,19516,30
+55,19517,30
+55,19518,30
+55,19519,30
+55,19520,30
+55,19521,30
+55,19522,30
+55,19523,30
+55,19524,30
+55,19525,30
+55,19526,30
+55,19527,30
+55,19528,30
+55,19529,30

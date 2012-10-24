@@ -1,0 +1,351 @@
+quiz_00,27,116,4	script	Prophet	922,{
+
+end;
+
+	
+
+Ondeact:
+
+	set $@disguiseactive,0;
+
+	stopnpctimer;
+
+	end;
+
+	
+
+OnDisguiseStart:
+
+	if(( $round >= $roundmax) ) {
+
+		set $@disguiseactive,0;
+
+		donpcevent "EventWarp::OnEventFind";
+
+		set $@currentmob,0;
+
+		setnpcdisplay("Prophet",922);
+
+		npctalk $round + " rounds completed. The event is over...!";
+
+		mapannounce "quiz_00","[ Disguise ]: " + $round + " Rounds completed. The event is over...! The Event will start Again later.",bc_blue;
+
+		set $round,0;
+
+		sleep2 1000;
+
+		mapwarp "quiz_00","prontera",135,164;
+
+		end;
+
+	}
+
+	while(!strmobinfo(3,$@currentmob)) {
+
+		set $@currentmob,rand(1001,1915);
+
+	}
+
+	npctalk "Please remember that names are case sensitive and spelling counts. " + $round + " rounds completed of " + $roundmax + "... 5 seconds per transformations!";
+
+	sleep 5000;
+
+	npctalk "30 seconds remaining to guess what I am.......";
+
+	initnpctimer;
+
+	setnpcdisplay("Prophet",$@currentmob);
+
+	end;
+
+
+
+OnTimer15000:
+
+	npctalk "15 seconds left!";
+
+	end;
+
+
+
+OnTimer25000:
+
+	npctalk "5 seconds left!";
+
+	end;
+
+
+
+OnTimer30000:
+
+	npctalk "Time is up! The correct answer was " + strmobinfo(1,$@currentmob);
+
+	set $@currentmob,0;
+
+	set $round,$round+1;
+
+	stopnpctimer;
+
+	sleep 5000;
+
+	callsub OnDisguiseStart;
+
+	end;
+
+	
+
+Check:
+
+	if($@currentmob == 0) end;
+
+	if((strmobinfo(1,$@currentmob) == $@p1$) || (" " + strmobinfo(1,$@currentmob) == $@p2$)) {
+
+		getitem $get_item_id,$get_item_amount - 3;
+
+		specialeffect2 67;
+
+		set $@currentmob,0;
+
+		set $round,$round+1;
+
+		set $@vtemp,getnpctimer(0)/1000;
+
+		set $@vtemp2,$@vtemp % 1000;
+
+		npctalk strcharinfo(0) + " was correct! Total time taken: " + $@vtemp + "." + $@vtemp2 + " seconds";
+
+		set $DisguiseEventWin$, strcharinfo(0);
+
+		stopnpctimer;
+
+		sleep 5000;
+
+		callsub OnDisguiseStart;
+
+	}
+
+	end;
+
+	
+
+OnInit:
+
+	set $@disguiseactive,0;
+
+	defpattern 1, "([^:]+):(.*)", "Check";
+
+	activatepset 1;
+
+	end;
+
+}
+
+
+
+-	script	DisguiseStarts	-1,{
+
+
+
+OnClock0200:
+
+OnClock1400:
+
+OnClock2100:
+
+OnClock0900:
+
+Onautoact:	
+
+	set $@disguiseactivea,1;
+
+	set $@disguiseactive,1;
+
+	announce "[ Disguise ]: The Disguise event will be starting shortly.",bc_blue;
+
+	donpcevent "EventWarp::OnEventFind";
+
+	sleep2 2000;
+
+	announce "[ Disguise ]: Those who want to play, please proceed to the Prontera Map ( @go 0 ) and enter the [ Event Warp Portal ].",bc_blue;
+
+	sleep2 1000;
+
+	initnpctimer;
+
+	end;
+
+
+
+OnTimer30000:
+
+	announce "[ Disguise ]: Last 30 seconds.",bc_blue;
+
+	
+
+OnTimer35000:
+
+	announce "[ Disguise ]: If you want to join please enter the [ Event Warp Portal ] in Prontera Map ( @go 0 ).",bc_blue;
+
+	end;
+
+	
+
+OnTimer50000:
+
+	announce "[ Disguise ]: Last 10 seconds.",bc_blue;
+
+	end;
+
+	
+
+OnTimer55000:
+
+	announce "[ Disguise ]: 5.",bc_blue;
+
+	end;
+
+	
+
+OnTimer56000:
+
+	announce "[ Disguise ]: 4.",bc_blue;
+
+	end;
+
+	
+
+OnTimer57000:
+
+	announce "[ Disguise ]: 3.",bc_blue;
+
+	end;
+
+	
+
+OnTimer58000:
+
+	announce "[ Disguise ]: 2.",bc_blue;
+
+	end;
+
+	
+
+OnTimer59000:
+
+	announce "[ Disguise ]: 1.",bc_blue;
+
+	end;
+
+	
+
+OnTimer60000:
+
+	announce "[ Disguise ]: Time's up.",bc_blue;
+
+	end;
+
+	
+
+OnTimer61000:
+
+	set $@disguiseactivea, 0;
+
+	if(getmapusers("quiz_00") <= 1) {
+
+		set $@disguiseactive, 0;
+
+		announce "[ Disguise ]: Event Failed to Start, Atleast Two player's are needed to start the event.",bc_blue;
+
+		donpcevent "EventWarp::OnEventFind";
+
+		mapwarp "quiz_00","prontera",135,164;
+
+		stopnpctimer;
+
+		end;
+
+	}
+
+	donpcevent "Prophet::OnDisguiseStart";
+
+	end;
+
+	
+
+OnTimer62000:
+
+	donpcevent "EventWarp::OnEventFind";
+
+	stopnpctimer;
+
+	end;
+
+	
+
+Ondeact:
+
+	announce "[ Disguise ]: The Disguise event is being Terminated, Accept my Appoligies!",bc_blue;
+
+	set $@disguiseactivea,0;
+
+	set $@disguiseactive,0;
+
+	donpcevent "EventWarp::OnEventFind";
+
+	stopnpctimer;
+
+	end;
+
+}
+
+
+
+-	script	Disguisewall	-1,{
+
+	
+
+	OnInit:
+
+		setwall "quiz_00",27,121,2,2,0,"DisguiseWall1";
+
+		setwall "quiz_00",26,121,2,2,0,"DisguiseWall2";
+
+		setwall "quiz_00",25,121,2,2,0,"DisguiseWall3";
+
+		setwall "quiz_00",24,121,2,2,0,"DisguiseWall4";
+
+		setwall "quiz_00",23,121,2,2,0,"DisguiseWall5";
+
+		setwall "quiz_00",22,121,2,2,0,"DisguiseWall6";
+
+		setwall "quiz_00",22,120,2,2,0,"DisguiseWall7";
+
+		setwall "quiz_00",22,119,2,2,0,"DisguiseWall9";
+
+		setwall "quiz_00",22,118,2,2,0,"DisguiseWall10";
+
+		setwall "quiz_00",22,117,2,2,0,"DisguiseWall11";
+
+		setwall "quiz_00",22,116,2,2,0,"DisguiseWall12";
+
+		setwall "quiz_00",22,115,2,2,0,"DisguiseWall13";
+
+		setwall "quiz_00",22,114,2,2,0,"DisguiseWall14";
+
+		setwall "quiz_00",22,113,2,2,0,"DisguiseWall15";
+
+		setwall "quiz_00",22,112,2,2,0,"DisguiseWall16";
+
+		setwall "quiz_00",23,112,2,2,0,"DisguiseWall17";
+
+		setwall "quiz_00",24,112,2,2,0,"DisguiseWall18";
+
+		setwall "quiz_00",25,112,2,2,0,"DisguiseWall20";
+
+		setwall "quiz_00",26,112,2,2,0,"DisguiseWall21";
+
+		setwall "quiz_00",27,112,2,2,0,"DisguiseWall22";
+
+		end;
+
+}

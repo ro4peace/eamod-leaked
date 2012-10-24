@@ -1,0 +1,369 @@
+	script	Freebies	758,{
+
+set .@n$, "[Free Bies]";
+setarray .@rwd[0],7179,1000; // Rewards: <item id>,<item amount>
+
+query_sql ("SELECT `last_ip` FROM `login` WHERE `account_id`=" + getcharid(3) + "", .@lip$);
+
+if ( getd("$" + .@lip$ + "_NG") > 0 || #NewbieGift > 0)
+{
+mes .@n$;
+mes "I'm sorry, the rewards are exclusively for new players.";
+close;
+}
+
+mes .@n$;
+mes "Welcome! Here are some freebies"; 
+mes "for newcomers:";
+
+for ( set .@i, 0; .@i < getarraysize(.@rwd); set .@i, .@i + 2 )
+mes .@rwd[.@i+1] + " x " + getitemname(.@rwd[.@i]);
+
+close2;
+set #NewbieGift, 1;
+setd "$" + .@lip$ + "_NG", getd("$" + .@lip$ + "_NG") + 1;
+
+for ( set .@i, 0; .@i < getarraysize(.@rwd); set .@i, .@i + 2 )
+getitem .@rwd[.@i], .@rwd[.@i+1];
+
+end;
+
+OnInit:
+
+waitingroom "DevRO Freebies",0;
+end;
+
+}
+
+
+new_1-1,60,111,3	script	Job Changer	719,{
+    mes "Please Select Your Job";
+    next;
+    if( Class != 0 ) close;
+    menu "Lord Knight",L0,"Assasin Cross",L1,"Sniper",L2,"High Wizard",L3,"High Priest",L4,"Whitesmith",L5,"Paladin",L6,"Stalker",L7,"Clown",L8,"Gypsy",L9,"Professor",L10,"Champion",L11,"Creator",L12,"Gunslinger",L13,"Ninja",L14,"Soul Linker",L15,"Star Gladiator",L16,"Cancel",LEnd;
+
+
+    //--Lordknight
+    L0:
+        jobchange 4008;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Assasin Cross
+    L1:
+        jobchange 4013;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Sniper
+    L2:
+        jobchange 4012;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--High Wizard
+    L3:
+        jobchange 4010;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+    
+    //--High Priest    
+    L4:
+        jobchange 4009;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Whitesmith    
+    L5:
+        jobchange 4011;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Paladin
+    L6:
+        jobchange 4015;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Stalker
+    L7:
+        jobchange 4018;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Clown
+    L8:
+        jobchange 4020;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Gypsy
+    L9:
+        jobchange 4021;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Professor
+    L10:
+        jobchange 4017;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Champion
+    L11:
+        jobchange 4016;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+
+    //--Creator
+    L12:
+        jobchange 4019;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+	goto L_GivePlat;
+        close;
+    //--Gunslinger
+    L13:
+        jobchange 24;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+        close;
+    //--Ninja
+    L14:
+        jobchange 25;
+        set baselevel,99;
+        set joblevel,70;
+        set skillpoint,130;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+        close;
+    //--Soul Linker
+    L15:
+        jobchange 4049;
+        set baselevel,99;
+        set joblevel,50;
+        set skillpoint,111;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+        close;
+    //--Star Gladiator
+    L16:
+        jobchange 4047;
+        set baselevel,99;
+        set joblevel,50;
+        set skillpoint,111;
+        ResetSkill;
+        ResetStatus;
+        percentheal 100,100;
+	specialeffect2 381;
+        close;
+
+    LEnd:
+        close;
+
+
+L_GivePlat:
+	if (Class==4008) goto L_sLK;
+	if (Class==4015) goto L_sPaladin;
+	if (Class==4010) goto L_sHW;
+	if (Class==4017) goto L_sProf;
+	if (Class==4012) goto L_sSniper;
+	if (Class==4020) goto L_sClown;
+	if (Class==4021) goto L_sGypsy;
+	if (Class==4009) goto L_sHP;
+	if (Class==4016) goto L_sChamp;
+	if (Class==4011) goto L_sWS;
+	if (Class==4013) goto L_sSinx;
+	if (Class==4018) goto L_sStalk;
+        if (Class==4019) goto L_sBio;
+	close;
+L_sLK:
+	skill 142,1,0;
+	skill 144,1,0;
+	skill 145,1,0;
+	skill 146,1,0;
+	skill 1001,1,0;
+	close;
+L_sPaladin:
+	skill 142,1,0;
+	skill 144,1,0;
+	skill 145,1,0;
+	skill 146,1,0;
+	skill 1002,1,0;
+	close;
+L_sHW:
+	skill 142,1,0;
+	skill 157,1,0;
+	skill 1006,1,0;
+	close;
+L_sProf:
+	skill 142,1,0;
+	skill 157,1,0;
+	skill 1007,1,0;
+	skill 1008,1,0;
+	skill 1017,1,0;
+	skill 1018,1,0;
+	skill 1019,1,0;
+	close;
+L_sSniper:
+	skill 142,1,0;
+	skill 147,1,0;
+	skill 148,1,0;
+	skill 1009,1,0;
+	close;
+L_sClown:
+	skill 142,1,0;
+	skill 147,1,0;
+	skill 148,1,0;
+	skill 1010,1,0;
+	close;
+L_sHP:
+	skill 142,1,0;
+	skill 156,1,0;
+	skill 363,10,0;
+	skill 1014,1,0;
+	close;
+L_sChamp:
+	skill 142,1,0;
+	skill 156,1,0;
+	skill 1015,1,0;
+	skill 1016,10,0;
+	close;
+L_sWS:
+	skill 142,1,0;
+	skill 153,1,0;
+	skill 154,1,0;
+	skill 155,1,0;
+	skill 1012,1,0;
+	skill 1013,1,0;
+	close;
+L_sSinx:
+	skill 142,1,0;
+	skill 149,1,0;
+	skill 150,1,0;
+	skill 151,1,0;
+	skill 152,1,0;
+	skill 1003,1,0;
+	skill 1004,1,0;
+	close;
+L_sStalk:
+	skill 142,1,0;
+	skill 149,1,0;
+	skill 150,1,0;
+	skill 151,1,0;
+	skill 152,1,0;
+	skill 1005,1,0;
+	close;
+
+L_sBio:
+	skill 142,1,0;
+	skill 153,1,0;
+	skill 154,1,0;
+	skill 155,1,0;
+	skill 238,1,0;
+	close;
+
+OnInit:
+
+waitingroom "Job Changer Use @skillall",0;
+end;
+
+}

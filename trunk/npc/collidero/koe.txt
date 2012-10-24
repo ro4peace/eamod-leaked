@@ -1,0 +1,334 @@
+	script	King of Emperium	45,1,2,{
+
+	set .@name$,"[King]";
+
+	OnTouch:
+
+if(Class == 0) goto close;
+
+if(BaseLevel < 90) goto close; 
+
+	if ($koe_start) {
+
+		mes .@name$;
+
+		mes "The King of Emperium is under Progress. There are [ ^0000ff" + getmapusers("06guild_01") + "^000000 ] Player fighting for the Tournament. Would you like to join the Tournament? ";
+
+		next;
+
+		if (select("Enter:Exit")==2) close;
+
+			mes .@name$;
+
+			if ( getcharid(2) == 0 ) {
+
+				mes "You must have a guild to participate in the ^FF0000King of Emperium Tournament^000000.";
+
+				close;
+
+			}
+
+			if ( getmapusers("06guild_01") >= $@MaxKP ) {
+
+				mes "Hmm.. the map is full.. I'm afraid, u won't be able to get inside. Try after sometime. Sorry! for the Inconvenience.";
+
+				close;
+
+			}
+
+			switch( rand(1,2) ) {
+
+				case 1: warp "06guild_01",92,50; end;
+
+				case 2: warp "06guild_01",7,50; end;
+
+				default: warp "06guild_01",92,50; end;
+
+			}
+
+			end;
+
+		}
+
+	mes .@name$;
+
+	mes "The King of Emperium is over. Join us for the next ^FF0000King of Emperium Tournament^000000 later.";
+
+	close;
+
+	
+
+	OnInit:
+
+		set $@MaxKP, 40;
+
+		set $koe_start, 0;
+
+		disablenpc "KoE Exit";
+
+		hideonnpc "King of Emperium";
+
+		killmonsterall "06guild_01";
+
+		end;
+
+}
+
+
+
+// KoE Start Match and End match
+
+-	script	KoESetter	-1,{
+
+
+
+OnWhisperGlobal:
+
+	if ( getgmlevel() < 99 ) end;
+
+	else if ( compare ( @whispervar0$, "on" ) ) goto OnL_start;
+
+	else if ( compare ( @whispervar0$, "off" ) ) goto L_end;
+
+	else end;
+
+
+
+OnClock0500:	// 2 PM
+
+OnClock1100:
+
+OnClock1700:
+
+OnClock2300:
+
+OnL_start:
+
+	hideoffnpc "King of Emperium";
+
+	set $koe_start, 1;
+
+	disablenpc "KoE Exit";
+
+	announce "[King of Emperium]: The King of Emperium has begun!", 0;
+
+	monster "06guild_01",49,49,"EMPERIUM [ "+ getguildname($koegid) +" ]",2999,1,"KoESetter::OnEmpDead";
+
+	end;
+
+	
+
+OnClock0545:	// 2 PM
+
+OnClock1145:
+
+OnClock1745:
+
+OnClock2345:
+
+	set $koe_start, 0;
+
+	killmonsterall "06guild_01";
+
+	maprespawnguildid "06guild_01",$koegid,2;
+
+	sleep2 2000;
+
+	enablenpc "KoE Exit";
+
+	announce "[King of Emperium]: The King of Emperium is Over. The [ "+ getguildname($koegid) +" ] is The King of Emperium.",0;
+
+	hideonnpc "King of Emperium";
+
+	end;
+
+	
+
+OnEmpDead:
+
+	if ($koegid == getcharid(2) ) {
+
+		donpcevent strnpcinfo(0)+"::OnEmpSpawn";
+
+		end;
+
+	}
+
+	set $koegid, getcharid(2);
+
+	donpcevent "::OnRevKoE";
+
+	mapannounce "06guild_01","The emperium has been destroyed.",bc_map|bc_woe,"0x00CCFF",FW_NORMAL,12;
+
+	maprespawnguildid "06guild_01",$koegid,2;
+
+	monster "06guild_01",49,49,"EMPERIUM [ "+ getguildname($koegid) +" ]",2999,1,"KoESetter::OnEmpDead";
+
+	announce "[King of Emperium]: The King of Emperium has been taken by [ " + strcharinfo(0) + " ] of [ " + strcharinfo(2) + " ] guild.", 0;
+
+	end;
+
+
+
+L_end:
+
+	set $koe_start, 0;
+
+	announce "[King of Emperium]: The King of Emperium is been stoped by " + strcharinfo(0) + ". Everyone will be comming out of the  map in.. ",0;
+
+	sleep2 1000;
+
+	announce "[King of Emperium]: 3",0;
+
+	sleep2 1000;
+
+	announce "[King of Emperium]: 2",0;
+
+	sleep2 1000;
+
+	announce "[King of Emperium]: 1",0;
+
+	mapwarp "06guild_01","Crystilia",87,95;
+
+	killmonsterall "06guild_01";
+
+	hideonnpc "King of Emperium";
+
+	end;
+
+	
+
+OnEmpSpawn:
+
+	monster "06guild_01",49,49,"EMPERIUM [ "+ getguildname($koegid) +" ]",2999,1,"KoESetter::OnEmpDead";	
+
+	end;
+
+	
+
+OnPCDieEvent:
+
+	if ((strcharinfo(3) == "06guild_01") && ($koe_start == 1)) {
+
+		sleep2 500;
+
+		warp "Save",0,0;
+
+		end;
+
+	}
+
+}
+
+
+
+// KoE Exit
+
+06guild_01,49,56,5	script	KoE Exit	45,1,2,{
+
+	mes "[KoE Exit]";
+
+	if ( getguildmasterid( getcharid(2) ) == getcharid(0) ) {
+
+	mes "[Exit]";
+
+	mes "See ya.";
+
+	getitem 7859, 20; // configure prize here
+
+
+
+	next;
+
+	warp "Save",0,0;
+
+	disablenpc "KoE Exit";
+
+	close;
+
+	}
+
+		else {
+
+			mes "ask your guild master to see me";
+
+			next;
+
+			warp "Save",0,0;
+
+			close;
+
+			
+
+		}
+
+}
+
+
+
+// Flags
+
+prontera,139,179,5	script	King of Emperium #1::koe_flag	722,{
+
+	mes "[ ^ff0000King of Emperium^000000 ]";
+
+	mes "The Current King of Emperium is the [ ^0000ff"+ (( $koegid )? getguildname($koegid):"None") +"^000000 ] guild.";
+
+	close;
+
+	
+
+OnRevKoE:
+
+	flagemblem $koegid;
+
+	end;
+
+	
+
+OnInit:
+
+	flagemblem $koegid;
+
+	end;
+
+}
+
+
+
+06guild_01,1,1,0	script	Agit_Ar06	-1,{
+
+	end;
+
+
+
+}
+
+
+
+06guild_01	mapflag	nobranch
+
+06guild_01	mapflag	pvp	off
+
+06guild_01	mapflag	gvg
+
+06guild_01	mapflag	nomemo
+
+06guild_01	mapflag	nopenalty
+
+06guild_01	mapflag	noreturn
+
+06guild_01	mapflag	nosave	SavePoint
+
+06guild_01	mapflag	noteleport
+
+06guild_01	mapflag	pvp_noparty
+
+06guild_01	mapflag	nowarp
+
+06guild_01	mapflag	nowarpto
+
+06guild_01	mapflag	noicewall
+
+06guild_01	mapflag	novending
+

@@ -1,0 +1,101 @@
+// Event Warps
+
+prontera,165,167,0	script	Event#01	45,2,2,{
+
+	
+
+OnTouch:
+
+	if ( $@DiceEventa ) {
+
+		warp "quiz_01",204,90;
+
+		end;
+
+	}
+
+	if ( $@LMSEventStarta ) {
+
+		warp "quiz_01",140,285;
+
+		end;
+
+	}
+
+	if ( $@disguiseactivea ) {
+
+		set .@rand, rand(1,2);
+
+		switch(.@rand) {
+
+			case 1:
+
+				warp "quiz_00",4,123;
+
+				end;
+
+			case 2:
+
+				warp "quiz_00",4,108;
+
+				end;
+
+			default:
+
+				warp "quiz_00",4,108;
+
+				end;
+
+		}
+
+	}
+
+	message strcharinfo(0),"Event time must be up or no more event under progress.";
+
+	end;
+
+}
+
+
+
+// Waiting Room Refresh
+
+prontera,165,167,0	script	EventWarp	111,{
+
+	
+
+OnEventFind:
+
+OnInit:
+
+	delwaitingroom "EventWarp";
+
+	if ( $@DiceEvent ) {
+
+		waitingroom " Dice Event ",0;
+
+		end;
+
+	}
+
+	if ( $@LMSEventStart ) {
+
+		waitingroom " Last Man Standing ",0;
+
+		end;
+
+	}
+
+	if ( $@disguiseactive ) {
+
+		waitingroom " Disguise ",0;
+
+		end;
+
+	}
+
+	waitingroom "Event Warp",0,0;
+
+	end;
+
+}

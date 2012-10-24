@@ -1,0 +1,231 @@
+yggdrasil01,191,187,3	script	Haniel	443,{
+		mes "^8D38C9[Haniel]^000000";
+		mes "I'm an archangel who guards this tree of life.";
+		mes "What brings you here young adventurer?";
+		next;
+	switch(select("I want to have a wing like you!:I'm ready now please take my offering:Nothing, just checking you around.")) {
+	case 1:
+		mes "^8D38C9[Haniel]^000000";
+		mes "You have to pay tribute to our tree of life";
+		mes "that's why you have to train hard and prove yourself"; 
+		mes "that you are worthy of becoming one of us!";
+		next;
+		mes "^8D38C9[Haniel]^000000";
+		mes "Now bring me these items as a sign of your hardship:";
+		mes "5 Agate";
+		mes "30 Retribution Card";
+		mes "200 Fragment of Darkness";
+		mes "200 Crystal of Darkness";
+		mes "and 100 Soft Feather";
+		next;
+		mes "I'll be looking forward on it..";
+		mes "Farewell..";
+		close;
+	case 2:
+		if (countitem(7291) > 4 && countitem(4391) > 29 && countitem(7798) > 199 && 
+
+countitem(7799) > 199 && countitem(7063) > 99) {
+		mes "^8D38C9[Haniel]^000000";
+		mes "OOOhhh!! Let's see what you've got there!";
+		next;
+		mes "............";
+		next;		
+		mes ".........";
+		next;
+		mes "....";
+		next;
+		delitem 7291,5;
+		delitem 4391,30;
+		delitem 7798,200;
+		delitem 7799,200;
+		delitem 7063,100;
+		getitem 20091,1;
+		mes "Congratulations young fellow!";
+		mes "If you want to grow stronger look for my comrades";
+		announce ""+strcharinfo(0)+" has obtained Lunar Wing!","0x33FF66";
+		close;
+		}
+	else {
+		mes "^8D38C9[Haniel]^000000";
+		mes "OOOhhh!! Let's see what you've got there!";
+		next;
+		mes "............";
+		next;		
+		mes ".........";
+		next;
+		mes "....";
+		next;
+		mes "Please don't waste my precious time!!";
+		mes "Make sure that you completed all the task!";
+		next;
+		mes "Come back again when you're ready.";
+		next;
+		mes "5 Agate";
+		mes "30 Retribution Card";
+		mes "200 Fragment of Darkness";
+		mes "200 Crystal of Darkness";
+		mes "and 100 Soft Feather";
+		close;
+		}
+	case 3:
+		mes "^8D38C9[Haniel]^000000";
+ 		mes "Make your life more meaningful,";
+		mes "Just believe in yourself.";
+		close;
+}}
+mosk_dun03,187,208,6	script	Wounded Girl 	441,{
+		mes "^8D38C9[Wounded Girl]^000000";
+		mes "Oooouuuchhhhh";
+		next;
+		mes ".........";
+		next;
+	switch(select("What's wrong with you?:Give her the medicines.:Ignore her.")) {
+	case 1:
+		mes "^FF0000[You notice that she has a wound in her left arm.]^000000";
+		next;
+		mes "[I need to help her.]";
+		mes "^3355FF30 Blue Herb^000000";
+		mes "^3355FF30 Green Herb^000000";
+		mes "^3355FF30 Red Herb^000000";
+		mes "^3355FF30 White Herb^000000";
+		mes "^3355FF30 Yellow Herb^000000";
+		mes "^3355FF5 Medicine Bowl^000000";	
+		close;
+	case 2:
+		if (countitem(510) > 29 && countitem(511) > 29 && countitem(507) > 29 && countitem(509) 
+
+> 29 && countitem(508) > 29 && countitem(7134) > 4) { 
+		mes "^FF0000[She seems to be fine now.]^000000";
+		next;
+		mes "^8D38C9[Wounded Girl]^000000";
+		mes "Thank you very much for helping me treat my wound.";
+		mes "I am ^8D38C9Akriel^000000";
+		next;
+		mes "^8D38C9[Akriel]^000000";
+		mes "I aid girls who are unfortunate in having her own family."; 
+		next;
+		delitem 510,30;
+		delitem 507,30;
+		delitem 508,30;
+		delitem 509,30;
+		delitem 511,30;
+		delitem 7134,5;
+		getitem 6053,1;
+		mes "^8D38C9[Akriel]^000000";
+		mes "Take this as a token of my gratitude.";
+		next;
+		mes "^FF0000[You have a small conversation with her.]^000000";
+		next;
+		mes "^8D38C9[Akriel]^000000";
+		mes "Okay.. So you want to become strong,";
+		mes "I know someone who can help you,";
+		mes "his name is ^8D38C9Rogziel^000000 I heard that";
+		mes "he is somewhere in Lighthalzen.";
+		close;
+		}
+	else {	
+		mes "^8D38C9[Wounded Girl]^000000";
+		mes "Arrrggghh.......";
+		next;
+		mes ".........";
+		close;
+		}
+	case 3:
+		mes "^8D38C9[Wounded Girl]^000000";
+		mes ".........";
+		close;
+}}
+lighthalzen,55,255,5	script	Rogziel 	447,{
+		mes "^8D38C9[Rogziel]^000000";
+		mes "What a great day to start my training!";
+		next;
+	switch(select("I want to become like you!:Excuse me sir!:I'm done with my training!:Ignore him.")) {
+	case 1:
+		mes "^8D38C9[Rogziel]^000000";
+		mes "Wow that's the spirit!!";
+		mes "But you have a long way to go young one.";
+		close;
+	case 2:
+	if (countitem(6053) > 0) {
+		mes "I was sent here by Lady ^8D38C9Akriel^000000.";
+		mes "She said that you can help me with my training.";
+		next;
+		mes "^8D38C9[Rogziel]^000000";
+		mes "Okay!!";
+		mes "Bring me the following items:";
+		mes "10 Heroic Emblem";
+		mes "1 Lunar Wing and bring the token from ^8D38C9Akriel^000000.";
+		mes "Now hurry~";
+		close;
+		}
+	else {
+		mes "^8D38C9[Rogziel]^000000";
+		mes "I dont have time to spare!";
+		close;
+		}	
+	case 3:
+	if (countitem(20091) > 0 && countitem(6053) > 0 && countitem(968) > 9) {
+		mes "^8D38C9[Rogziel the Wrath of God]^000000";
+		mes "I see you've grown into such a fine being.";
+		next;
+		delitem 20091,1;
+		delitem 6053,1;
+		delitem 968,10;
+		getitem 25025,1;
+		mes "^8D38C9[Rogziel]^000000";
+		mes "Look for Lady ^8D38C9Sophia^000000 and bring this with you on your journey.";
+		mes "Goodluck!!";
+		announce ""+strcharinfo(0)+" has obtained Crimson Wing!","0x33FF66";
+		close;
+		}
+	else {
+		mes "^8D38C9[Rogziel]^000000";
+		mes "Get lost!";
+		close;
+		}
+	case 4:
+		mes "^8D38C9[Rogziel]^000000";
+		mes "Being young is so great!";
+		close;
+		
+}}
+mjolnir_04,199,187,5	script	Sophia 	446,{
+		mes "^8D38C9[Sophia]^000000";
+		mes "What are you looking for?";
+		next;
+		switch(select("Can I also have a wing like yours?:I have all the requirements.:Maybe next time.")) {
+	case 1:
+		mes "^8D38C9[Sophia]^000000";
+		mes "Sure";
+		mes "Just bring me the following items:";
+		mes "1 Lunar Wing";
+		mes "1 Crimson Wing";	
+		mes "and 2 Feather of Angel Wing";
+		close;
+	case 2:
+	if (countitem(20091) > 0 && countitem(25025) > 0 && countitem(7079) > 1) {
+		mes "^8D38C9[Sophia the Wisdom]^000000";
+		mes "This will be the end of your training.";
+		next;
+		delitem 20091,1;
+		delitem 25025,1;
+		delitem 7079,2;
+		getitem 20090,1;
+		mes "^8D38C9[Sophia]^000000";
+		mes "Congratulations!";
+		announce ""+strcharinfo(0)+" has obtained Little Angel Wing!","0x33FF66";
+		close;
+		}
+	else  {
+		mes "^8D38C9[Sophia]^000000";
+		mes "No time to waste, collect these items now:";
+		mes "1 Lunar Wing";
+		mes "1 Crimson Wing";
+		mes "1 Feather of Angel Wing";	
+		close;
+		}			
+	case 3:
+		mes "^8D38C9[Sophia]^000000";
+		mes "Take your time.";
+		close;
+}}
